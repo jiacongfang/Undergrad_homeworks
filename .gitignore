@@ -1,0 +1,9 @@
+# ignore all .aux .log .out .synctex.gz files
+*.aux
+*.log
+*.out
+*.synctex.gz
+
+.DS_Store
+
+/notes

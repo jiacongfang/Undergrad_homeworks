@@ -1,0 +1,136 @@
+
+\documentclass[11pt]{article}           
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.25cm}
+
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{sgame} % For Game Theory Matrices 
+% \usepackage{diagbox} % Conflict with sgame
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+%\usepackage{algorithm,algorithmicx}
+\usepackage[ruled]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage[hidelinks]{hyperref}
+\usepackage{extarrows}
+\usepackage{totcount}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+\usepackage{helvet}
+\usepackage{dsfont}
+% \usepackage{newtxmath}
+\usepackage[labelfont=bf]{caption}
+\renewcommand{\figurename}{Figure}
+\usepackage[english]{babel}
+\usepackage{datetime}
+\usepackage{lastpage}
+\usepackage{istgame}
+\usepackage{sgame}
+\usepackage{tcolorbox}
+% \newdateformat{mydate}{\shortmonthname[\THEMONTH]. \THEDAY \THEYEAR}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]\songti}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Solution]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\1{\mathds{1}}
+% \newcommand\1{\mathbf{1}}
+\newcommand\R{\mathbb{R}}
+\newcommand\E{\mathbb{E}}
+\newcommand\N{\mathbb{N}}
+\newcommand\NN{\mathcal{N}}
+\newcommand\per{\mathrm{per}}
+\newcommand\PP{\mathbb{P}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\Var{\mathrm{Var}}
+\newcommand\Cov{\mathrm{Cov}}
+\newcommand{\Exp}{\mathrm{Exp}}
+\newcommand{\arrp}{\xrightarrow{P}}
+\newcommand{\arrd}{\xrightarrow{d}}
+\newcommand{\arras}{\xrightarrow{a.s.}}
+\newcommand{\arri}{\xrightarrow{n\rightarrow\infty}}
+
+\definecolor{lightgray}{gray}{0.75}
+
+\DeclareMathOperator*{\argmax}{argmax} % 定义 \argmax 运算符
+\title{Homework \#3}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} Peking University}
+\chead{\kaishu }
+\rhead{\CJKfamily{zhkai} Machine Learning, 2024 Fall}
+\fancyfoot[R]{} 
+\fancyfoot[C]{\thepage\ /\ \pageref{LastPage} \\ \textcolor{lightgray}{Last Compile: \today}}
+% \regtotcounter{page}
+% \fancyfoot[C]{\kaishu 第\thepage 页共\totvalue{page}页}
+
+
+\begin{center}
+    {\LARGE \bf Homework 2}
+
+    {Name: 方嘉聪\ \  ID: 2200017849}            % Write down your name and ID here.
+\end{center}
+
+\begin{problem}{1}
+    已知 $(x_1, y_1), (x_2, y_2), \cdots, (x_n, y_n)$, 其中 $x_i \in \R^m$, $y_i \in \{\pm 1\}$.
+    证明以下两个优化问题的等价性。
+    \begin{align*}
+        \begin{aligned}
+            \max \,\,  & t \\
+            \text{s.t.} \,\, & y_i(w^\top x_i + b) \geq t, \forall i\in[n],  \\
+            & ||w||_2 = 1.
+        \end{aligned}
+        && \text{与} &&
+        \begin{aligned}
+            \min \,\,  & ||w||_2^2 \\
+            \text{s.t.} \,\, & y_i(w^\top x_i + b) \geq 1, \forall i\in[n].
+        \end{aligned}
+    \end{align*}
+
+    即说明两个问题的解的关系，以及两个问题求出的最优解$(w, b)$ 之间的关系。
+\end{problem}
+\begin{answer}
+我们从左侧问题出发逐步转化到右侧问题。首先，左侧问题的约束条件可以等价地写为
+\begin{align*}
+    y_i(w^\top x_i + b) \geq t \land ||w||_2 = 1 \iff y_i\left(\frac{w^\top}{||w||_2} \cdot x_i + b\right) \ge t \iff y_i\left(w^\top x_i + b'\right) \ge t\cdot ||w||_2.
+\end{align*}
+其中 $w^\top \in \R^n, b, b' \in \R$. 注意到上述不等式两边齐次, 那么我们可以令 $t\cdot||w||_2 := 1$. 那么有 
+\begin{align*}
+    \max t \iff \max \frac{1}{||w||_2} \iff  \min ||w||_2 \iff \min ||w||_2^2.
+\end{align*}
+类似的, 从右侧的优化问题出发转化到左侧问题. 因此, 左侧问题的求解等价于求解右侧问题. 设左侧问题的最优解为 $(w_1, b_1)$, 右侧问题的最优解为 $(w_2, b_2)$, 由上述推导过程有: 
+\begin{align*}
+    w_1 = \frac{w_2}{||w_2||_2}, \quad b_1 = \frac{b_2}{||w_2||_2}, \quad t = \frac{1}{||w_2||_2}.
+\end{align*}
+证毕.
+\end{answer}
+
+\end{document}

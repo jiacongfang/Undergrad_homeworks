@@ -1,0 +1,189 @@
+
+\documentclass[11pt]{article}           
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.25cm}
+
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=3pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{sgame} % For Game Theory Matrices 
+% \usepackage{diagbox} % Conflict with sgame
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+%\usepackage{algorithm,algorithmicx}
+\usepackage[ruled]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage[hidelinks]{hyperref}
+\usepackage{extarrows}
+\usepackage{totcount}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+\usepackage{helvet}
+\usepackage{dsfont}
+% \usepackage{newtxmath}
+\usepackage[labelfont=bf]{caption}
+\renewcommand{\figurename}{Figure}
+\usepackage[english]{babel}
+\usepackage{datetime}
+\usepackage{lastpage}
+\usepackage{istgame}
+\usepackage{sgame}
+\usepackage{tcolorbox}
+% \newdateformat{mydate}{\shortmonthname[\THEMONTH]. \THEDAY \THEYEAR}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]\songti}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Solution]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\1{\mathds{1}}
+% \newcommand\1{\mathbf{1}}
+\newcommand\R{\mathbb{R}}
+\newcommand\E{\mathbb{E}}
+\newcommand\N{\mathbb{N}}
+\newcommand\NN{\mathcal{N}}
+\newcommand\per{\mathrm{per}}
+\newcommand\PP{\mathbb{P}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\Var{\mathrm{Var}}
+\newcommand\Cov{\mathrm{Cov}}
+\newcommand{\Exp}{\mathrm{Exp}}
+\newcommand{\arrp}{\xrightarrow{P}}
+\newcommand{\arrd}{\xrightarrow{d}}
+\newcommand{\arras}{\xrightarrow{a.s.}}
+\newcommand{\arri}{\xrightarrow{n\rightarrow\infty}}
+
+\definecolor{lightgray}{gray}{0.75}
+
+\DeclareMathOperator*{\argmax}{argmax} % 定义 \argmax 运算符
+\DeclareMathOperator*{\argmin}{argmin} % 定义 \argmin 运算符
+\title{Homework \#3}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} Peking University}
+\chead{\kaishu }
+\rhead{\CJKfamily{zhkai} Machine Learning, 2024 Fall}
+\fancyfoot[R]{} 
+\fancyfoot[C]{\thepage\ /\ \pageref{LastPage} \\ \textcolor{lightgray}{Last Compile: \today}}
+% \regtotcounter{page}
+% \fancyfoot[C]{\kaishu 第\thepage 页共\totvalue{page}页}
+
+
+\begin{center}
+    {\LARGE \bf Homework 4}
+
+    {Name: 方嘉聪\ \  ID: 2200017849}            % Write down your name and ID here.
+\end{center}
+
+\begin{problem}{1}
+    对于如下原问题和对偶问题, 其中 $f(x), g(x)$ 为凸函数, $h(x)$ 为线性函数. 
+    \begin{align*}
+        \begin{aligned}
+            \mathbf{(P)}\quad \min_x \,\,  & f(x) \\
+            \text{s.t.} \,\, & g_i(x) \le 0 \\
+            & h_i(x) = 0
+        \end{aligned}
+        && \text{and} &&
+        \begin{aligned}
+            \mathbf{(D)}\quad \max_{\lambda, \mu} \,\,  & \mathcal{L}(\varphi(\lambda, \mu); \lambda, \mu) \\
+            \text{s.t.} \,\, & \lambda \ge 0.
+        \end{aligned}
+    \end{align*}
+    其中
+    \begin{align*}
+        \mathcal{L}(x;\lambda, \mu) := f(x) + \sum_i \lambda_i g_i(x) + \sum_i \mu_i h_i(x). \quad \varphi(\lambda, \mu) := \argmin_x \mathcal{L}(x;\lambda, \mu).
+    \end{align*}
+    以下为关于 $x^*, \lambda^*, \mu^*$ 的 KKT condition:
+    \begin{alignat}{2}
+        \label{eq:1}
+        &\textbf{1.Stationary:} \quad  &\left.\frac{\partial \mathcal{L}}{\partial x}\right|_{x^*, \lambda^*, \mu^*}  =  0 \\
+        \label{eq:2}
+        &\textbf{2.Primal feasible:} \quad &g_i(x^*)  \leq  0,\quad h_i(x^*) = 0 \\
+        \label{eq:3}
+        &\textbf{3.Dual feasible:} \quad  &\lambda_i^*  \geq  0 \\
+        \label{eq:4}
+        &\textbf{4.Complementary slackness:} \quad  &\lambda_i^* g_i(x^*)  =  0.
+    \end{alignat}
+    请证明:
+    \begin{enumerate}
+        \item $x^*, \lambda^*, \mu^*$ 满足 KKT condition 是 $x^*, \lambda^*, \mu^*$ 为原问题和对偶问题的最优解的必要条件. 即若 $x^*, \lambda^*, \mu^*$ 为原问题和对偶问题的最优解, 则 $x^*, \lambda^*, \mu^*$ 满足 KKT condition.
+        \item (Optional) KKT condition 是 $x^*, \lambda^*, \mu^*$ 为原问题和对偶问题的最优解的充分条件.
+    \end{enumerate}
+\end{problem}
+
+\begin{answer}
+\begin{enumerate}
+    \item (必要条件) 若 $x^*, \lambda^*, \mu^*$ 为原问题和对偶问题的最优解, \eqref{eq:2} 和 \eqref{eq:3} 显然成立. 
+    对于 \eqref{eq:1}, 结合课上已经完成的推导, 最优解满足 $x^* = \varphi(\lambda^*, \mu^*) = \argmin_x \mathcal{L}(x;\lambda^*, \mu^*)$, 即
+    \begin{align*}
+        \left.\frac{\partial \mathcal{L}}{\partial x}\right|_{x^*, \lambda^*, \mu^*} = 0.
+    \end{align*}
+    对于 \eqref{eq:4}, 记 Lagrange dual function 为 
+    \begin{align*}
+        s(\lambda, \mu) := \inf_x \mathcal{L}(x;\lambda, \mu) = \inf_x \left(f(x) + \sum_i \lambda_i g_i(x) + \sum_i \mu_i h_i(x)\right).
+    \end{align*}
+    由于 $f(x), g(x)$ 为 凸函数, $h(x)$ 为线性函数, 故满足强对偶性, 即$f(x^*) = s(\lambda^*, \mu^*)$. 进一步有
+    \begin{align*}
+        f(x^*) &= s(\lambda^*, \mu^*) = \inf_x \left(f(x) + \sum_i \lambda_i^* g_i(x) + \sum_i \mu_i^* h_i(x)\right) \\
+        &\le f(x^*) + \sum_i \lambda_i^* g_i(x^*) + \sum_i \mu_i^* h_i(x^*) \\
+        &\le f(x^*).
+    \end{align*}
+    故有
+    \begin{align*}
+        \sum_{i} \lambda_i^* g_i(x^*) + \sum_{i} \mu_i^* h_i(x^*) = 0. \implies \sum_i \lambda_i^* g_i(x^*) = 0.
+    \end{align*}
+    由于 $\forall i, \lambda_i^* g_i(x^*)\le 0$, 故 $\lambda_i^* g_i(x^*) = 0, \forall i$. 综上, $x^*, \lambda^*, \mu^*$ 满足 KKT condition.
+    \item (充分条件) 由于 $x^*, \lambda^*, \mu^*$ 满足 \eqref{eq:2} 和 \eqref{eq:3}. 故 $x^*$ 和 $\lambda^*,\mu^*$ 分别为原问题和对偶问题的可行解. 
+    
+    设原问题的最优解为 $x_\text{opt}$, 记 $f(x_\text{opt}) = f^*$. 可以证明(即弱对偶性), 对于任意 $\lambda \ge 0$ 和 $\mu$, 有
+    \begin{align}
+        \label{eq:5}
+        s(\lambda, \mu) \le f^*.
+    \end{align}
+    取 $\lambda = \lambda^*, \mu = \mu^*$, 有
+    \begin{align*}
+        s(\lambda^*, \mu^*) \le f^*.
+    \end{align*}
+    而由于 $x^*, \lambda^*, \mu^*$ 满足 \eqref{eq:1}, 那么
+    \begin{align*}
+        x^* = \varphi(\lambda^*, \mu^*) = \argmin_x \mathcal{L}(x;\lambda^*, \mu^*).
+    \end{align*}
+    故
+    \begin{align*}
+        s(\lambda^*, \mu^*) &= \inf_x \mathcal{L}(x;\lambda^*, \mu^*) \\
+        &= f(x^*) + \sum_i \lambda_i^* g_i(x^*) + \sum_i \mu_i^* h_i(x^*) \\
+        &= f(x^*) \le f^*.
+    \end{align*}
+    由于 $x^*$ 为原问题的可行解, 故 $f(x^*) \ge f^*$, 故 $f(x^*) = f^*$. 即 $x^*$ 为原问题的最优解. 结合 \eqref{eq:5}, 可知$\lambda^*, \mu^*$ 为对偶问题的最优解.
+    
+    综上, $x^*, \lambda^*, \mu^*$ 为原问题和对偶问题的最优解.
+\end{enumerate}
+\end{answer}
+
+\end{document}

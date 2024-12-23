@@ -1,0 +1,176 @@
+
+\documentclass[11pt]{article}           
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.25cm}
+
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=3pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{sgame} % For Game Theory Matrices 
+% \usepackage{diagbox} % Conflict with sgame
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+\usepackage{algorithm,algorithmicx}
+% \usepackage[ruled]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage[hidelinks]{hyperref}
+\usepackage{extarrows}
+\usepackage{totcount}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+\usepackage{helvet}
+\usepackage{dsfont}
+% \usepackage{newtxmath}
+\usepackage[labelfont=bf]{caption}
+\renewcommand{\figurename}{Figure}
+\usepackage[english]{babel}
+\usepackage{datetime}
+\usepackage{lastpage}
+\usepackage{istgame}
+\usepackage{sgame}
+\usepackage{tcolorbox}
+% \newdateformat{mydate}{\shortmonthname[\THEMONTH]. \THEDAY \THEYEAR}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]\songti}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Solution]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\1{\mathds{1}}
+% \newcommand\1{\mathbf{1}}
+\newcommand\R{\mathbb{R}}
+\newcommand\E{\mathbb{E}}
+\newcommand\N{\mathbb{N}}
+\newcommand\NN{\mathcal{N}}
+\newcommand\per{\mathrm{per}}
+\newcommand\PP{\mathbb{P}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\Var{\mathrm{Var}}
+\newcommand\Cov{\mathrm{Cov}}
+\newcommand{\Exp}{\mathrm{Exp}}
+\newcommand{\arrp}{\xrightarrow{P}}
+\newcommand{\arrd}{\xrightarrow{d}}
+\newcommand{\arras}{\xrightarrow{a.s.}}
+\newcommand{\arri}{\xrightarrow{n\rightarrow\infty}}
+
+\definecolor{lightgray}{gray}{0.75}
+
+\makeatletter
+\newenvironment{algo}
+  {% \begin{breakablealgorithm}
+    \begin{center}
+      \refstepcounter{algorithm}% New algorithm
+      \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+      \parskip 0pt
+      \renewcommand{\caption}[2][\relax]{% Make a new \caption
+        {\raggedright\textbf{\fname@algorithm~\thealgorithm} ##2\par}%
+        \ifx\relax##1\relax % #1 is \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+        \else % #1 is not \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+        \fi
+        \kern2pt\hrule\kern2pt
+     }
+  }
+  {% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+   \end{center}
+  }
+\makeatother
+
+\DeclareMathOperator*{\argmax}{argmax} % 定义 \argmax 运算符
+\DeclareMathOperator*{\argmin}{argmin} % 定义 \argmin 运算符
+\title{Homework \#3}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} Peking University}
+\chead{\kaishu }
+\rhead{\CJKfamily{zhkai} Machine Learning, 2024 Fall}
+\fancyfoot[R]{} 
+\fancyfoot[C]{\thepage\ /\ \pageref{LastPage} \\ \textcolor{lightgray}{Last Compile: \today}}
+% \regtotcounter{page}
+% \fancyfoot[C]{\kaishu 第\thepage 页共\totvalue{page}页}
+
+
+\begin{center}
+    {\LARGE \bf Homework 5}
+
+    {Name: 方嘉聪\ \  ID: 2200017849}            % Write down your name and ID here.
+\end{center}
+
+\begin{problem}{1}
+Consider the following AdaBoost algorithm:
+\begin{algo}
+    \caption{\textbf{AdaBoost Algorithm}}
+        \begin{algorithmic}[1]
+            \Require Data set $(x_1, y_1), (x_2, y_2), \cdots, (x_n, y_n)$ and a weak learner $\mathcal{A}$
+            \Ensure A strong classifier $F(x)$.
+            \State Initialize $D_0(i) \leftarrow 1/n, \forall i \in [n]$.
+            \For{$i = 1$ to $T$}
+                \State Train a classifier $h_t$ on $D_t$ using $\mathcal{A}$, where $h_t \in \{\pm 1\}$.
+                \State $\varepsilon_t \leftarrow \sum_{i=1}^{n}D_t(i) \1[y_i \neq h_t(x)]$
+                \State $\gamma_t \leftarrow 1 - 2\varepsilon_t$, $\alpha_t \leftarrow \frac{1}{2}\ln\frac{1+\gamma_t}{1-\gamma_t}$ 
+                \State $Z_t \leftarrow \sum_{i=1}^{n}D_t(i)\exp(-\alpha_t y_i h_t(x_i))$, is the normalization factor.
+                \State $D_{t+1}(i) \leftarrow D_t(i)\exp(-\alpha_t y_i h_t(x_i))/Z_t$.
+            \EndFor
+            \State \Return $F(x) = \sum_{t=1}^{T}\alpha_t h_t(x)$
+        \end{algorithmic}
+\end{algo}
+Prove the following proposition:
+
+Assume $\gamma_t \ge \gamma > 0$ for all $t = 1,2, \cdots, T$, the training loss of the strong classifier $F(x)$ has a upper bound:
+\begin{align*}
+    \frac{1}{n} \sum_{i=1}^{n} \1[y_i \cdot F(x_i) \le 0] \le (1 - \gamma^2)^{T/2}
+\end{align*}
+\textit{Hint:} Try to prove the exponential loss is upper bounded by $(1 - \gamma^2)^{T/2}$.
+\end{problem}
+
+\begin{answer}
+    We can prove that the training loss is upper bounded by the exponential loss, i.e.,
+    \begin{align*}
+        \frac{1}{n} \sum_{i=1}^{n} \1[y_i \cdot F(x_i) \le 0] \le \frac{1}{n} \sum_{i=1}^{n} \exp(-y_i F(x_i)) = \prod_{t=1}^{T}Z_t
+    \end{align*}
+    The last equality is proved in the class. And we know that
+    \begin{align*}
+        Z_t = 2\sqrt{\varepsilon_t(1-\varepsilon_t)} = \sqrt{1 - \gamma_t^2}
+    \end{align*}
+    Since $\gamma_t \ge \gamma > 0$, we have 
+    \begin{align*}
+        \sqrt{1 - \gamma_t^2} \le \sqrt{1 - \gamma^2}
+    \end{align*}
+    Thus, we have
+    \begin{align*}
+        \frac{1}{n} \sum_{i=1}^{n} \1[y_i \cdot F(x_i) \le 0] \le \prod_{t=1}^{T}Z_t  \le \prod_{i=1}^{T} \sqrt{1 - \gamma^2} = (1 - \gamma^2)^{T/2}
+    \end{align*}
+    This completes the proof.
+\end{answer}
+\textbf{Remark:} It implies that when $T = \Omega(\log n)$, $(1 - \gamma^2)^{T/2} < 1/n$, thus the training loss is 0.
+
+
+\end{document}

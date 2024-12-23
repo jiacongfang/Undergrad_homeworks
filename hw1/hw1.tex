@@ -1,0 +1,104 @@
+\documentclass[11pt]{article}           
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{diagbox}
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+%\usepackage{algorithm,algorithmicx}
+\usepackage[ruled]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage{hyperref}
+\usepackage{extarrows}
+% \usepackage{lastpage}
+\usepackage{totcount}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+\usepackage{helvet}
+\usepackage{dsfont}
+% \usepackage{newtxmath}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Solution]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\1{\mathds{1}}
+% \newcommand\1{\mathbf{1}}
+\newcommand\R{\mathbb{R}}
+\newcommand\E{\mathbb{E}}
+\newcommand\N{\mathbb{N}}
+\newcommand\NN{\mathcal{N}}
+\newcommand\per{\mathrm{per}}
+\newcommand\PP{\mathbb{P}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\Var{\mathrm{Var}}
+\newcommand\Cov{\mathrm{Cov}}
+\newcommand{\Exp}{\mathrm{Exp}}
+\newcommand{\arrp}{\xrightarrow{P}}
+\newcommand{\arrd}{\xrightarrow{d}}
+\newcommand{\arras}{\xrightarrow{a.s.}}
+\newcommand{\arri}{\xrightarrow{n\rightarrow\infty}}
+
+\title{Homework \#3}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} Peking University}
+\chead{}
+\rhead{\CJKfamily{zhkai} Machine Learning 2024 Fall}
+
+% \regtotcounter{page}
+% \fancyfoot[C]{\kaishu 第\thepage 页共\totvalue{page}页}
+
+
+\begin{center}
+    {\LARGE \bf Homework 1}
+
+    {Name: 方嘉聪\ \  ID: 2200017849}            % Write down your name and ID here.
+\end{center}
+
+\begin{problem}{1}
+    Given random variables $\displaystyle X\sim \mathcal{N}(0,1)$, for $\displaystyle t>0$, define:$$\bar{\Phi}(t):=\mathbb{P}\left[X\geq t\right] = \frac{1}{\sqrt{ 2\pi }}\int_{t}^\infty e^{-\frac{\tau^2}{2}}\dd\tau$$Find elementary function $\displaystyle f(t)$, such that $\displaystyle \bar{\Phi}(t)\sim f(t)$, i.e. $$\lim_{ t \to \infty } \frac{\bar{\Phi}(t)}{f(t)}= 1$$
+\end{problem}
+
+\begin{answer}
+    Let $\displaystyle \phi(x) = \frac{1}{\sqrt{ 2\pi }}e^{-\frac{x^2}{2}}$, we can prove: $$\left(\frac{x}{1+x^2}\right)\phi(x) < \bar{\Phi}(x) < \frac{\phi(x)}{x}.$$
+    1. For upper bound we have: $$\bar{\Phi}(x) = \int_{x}^\infty \phi(t)\dd t < \int_{x}^\infty \frac{t}{x}\phi(t)\dd t = \int_{\frac{x^2}{2}}^\infty \frac{1}{x\sqrt{ 2\pi }}e^{-m}\dd m = \frac{1}{x\sqrt{ 2\pi }}e^{-\frac{x^2}{2}} = \frac{\phi(x)}{x}.$$
+    
+    2. For lower bound, using $\displaystyle \phi'(x) = -x\phi(x)$, we have: 
+    \begin{align*}
+        \left(1 + \frac{1}{x^2}\right)\bar{\Phi}(x) &= \int_{x}^\infty \left(1+\frac{1}{x^2}\right)\phi(t)d t > \int_{x}^\infty \left(1+\frac{1}{t^2}\right)\phi(t)d t \\
+        &= \int_{x}^\infty \frac{-\phi'(t) t + \phi(t)}{t^2}d t = -\left(\frac{\phi(t)}{t}\right)\bigg|_{x}^\infty = \frac{\phi(x)}{x} \\
+        \implies \bar{\Phi}(x) &> \left(\frac{x}{1+x^2}\right)\phi(x)
+    \end{align*}
+    Thus, $$f(t) = \frac{\phi(t)}{t} = \frac{1}{t\sqrt{ 2\pi }}\exp\left(-\frac{t^2}{t}\right).$$Then we have $$\left(\frac{t^2}{1+t^2}\right) < \frac{\bar{\Phi}(t)}{f(t)} < 1 \implies \lim_{ t \to \infty } \frac{\bar{\Phi}(t)}{f(t)}= 1.$$
+        
+\end{answer}
+
+\end{document}

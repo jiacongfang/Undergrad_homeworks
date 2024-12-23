@@ -1,0 +1,187 @@
+
+\documentclass[11pt]{article}           
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.25cm}
+
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{sgame} % For Game Theory Matrices 
+% \usepackage{diagbox} % Conflict with sgame
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+%\usepackage{algorithm,algorithmicx}
+\usepackage[ruled]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage[hidelinks]{hyperref}
+\usepackage{extarrows}
+\usepackage{totcount}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+\usepackage{helvet}
+\usepackage{dsfont}
+% \usepackage{newtxmath}
+\usepackage[labelfont=bf]{caption}
+\renewcommand{\figurename}{Figure}
+\usepackage[english]{babel}
+\usepackage{datetime}
+\usepackage{lastpage}
+\usepackage{istgame}
+\usepackage{sgame}
+\usepackage{tcolorbox}
+% \newdateformat{mydate}{\shortmonthname[\THEMONTH]. \THEDAY \THEYEAR}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]\songti}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Solution]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\1{\mathds{1}}
+% \newcommand\1{\mathbf{1}}
+\newcommand\R{\mathbb{R}}
+\newcommand\E{\mathbb{E}}
+\newcommand\N{\mathbb{N}}
+\newcommand\NN{\mathcal{N}}
+\newcommand\per{\mathrm{per}}
+\newcommand\PP{\mathbb{P}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\Var{\mathrm{Var}}
+\newcommand\Cov{\mathrm{Cov}}
+\newcommand{\Exp}{\mathrm{Exp}}
+\newcommand{\arrp}{\xrightarrow{P}}
+\newcommand{\arrd}{\xrightarrow{d}}
+\newcommand{\arras}{\xrightarrow{a.s.}}
+\newcommand{\arri}{\xrightarrow{n\rightarrow\infty}}
+
+\definecolor{lightgray}{gray}{0.75}
+
+\DeclareMathOperator*{\argmax}{argmax} % 定义 \argmax 运算符
+\title{Homework \#3}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} Peking University}
+\chead{\kaishu }
+\rhead{\CJKfamily{zhkai} Machine Learning, 2024 Fall}
+\fancyfoot[R]{} 
+\fancyfoot[C]{\thepage\ /\ \pageref{LastPage} \\ \textcolor{lightgray}{Last Compile: \today}}
+% \regtotcounter{page}
+% \fancyfoot[C]{\kaishu 第\thepage 页共\totvalue{page}页}
+
+
+\begin{center}
+    {\LARGE \bf Homework 3}
+
+    {Name: 方嘉聪\ \  ID: 2200017849}            % Write down your name and ID here.
+\end{center}
+
+\begin{problem}{1}
+    在强化学习的模型中, 我们使用 $s_t$ 表示 $t$ 时刻的状态, $p$ 为转移概率, $r$ 为 reward function, $\gamma$ 为折扣因子. 
+    算子 $T$ 可以将一个 value function 转化为新的 value function. 定义
+    \begin{align*}
+        T(V)(s) := \max_{a\in A_s} \left[r(s, a) + \gamma \sum_{s'\in S} p(s'|s, a) V(s')\right].
+    \end{align*}
+    $V^{\pi}$ 表示 policy $\pi$ 对应的 value function: 
+    \begin{align*}
+        V^{\pi}(s_t) = \sum_{t'=t}^{\infty} \E_{p,\pi}[\gamma^{t'-t} r(s_{t'}, a_{t'})|s_t]. 
+    \end{align*}
+    最优 policy $\pi^* := \argmax_\pi \E_{s_1}[V^\pi(s_1)]$. 记 $V^* := V^{\pi^*}$. 
+
+    求证: $V^* = T(V^*)$, 即最优 policy 对应的 value function $V^*$ 为 Bellman optimality operator $T$ 的不动点.
+\end{problem}
+\begin{answer}
+    注意到 $V^\pi$ 满足 Bellman expectation equation, 即
+    \begin{align*}
+        V^\pi(s) = \E_{a\sim \pi}\left[r(s, a) + \gamma \sum_{s'\in S} p(s'|s, a) V^\pi(s')\right].
+    \end{align*}
+    而在最优策略 $\pi^*$ 下, 对应的 value function $V^*$ 满足 Bellman optimality equation, 即
+    \begin{align*}
+        V^* = V^{\pi^*} = \max_{a}\left[r(s, a) + \gamma \sum_{s'\in S} p(s'|s, a) V^{*}(s')\right].
+    \end{align*}
+    因此有 $V^* = T(V^*)$. 从而 $V^*$ 是 Bellman optimality operator $T$ 的不动点. 更严格的数学证明如下:
+    
+    \underline{注: 事实上, 我们还可以证明这一不动点是唯一的.}
+    
+    定义空间中的距离函数为 $d(V_1, V_2) = \lVert V_1 -  V_2 \rVert_\infty$. 在课上我们已经证明了如下引理:
+    
+    \begin{lemma}
+        $T$ is \textbf{contraction mapping} with respect to the infinity norm $\lVert \cdot \rVert_\infty$, i.e., for any $V_1, V_2 \in \R^{|S|}$, we have
+        \begin{align*}
+            \lVert T(V_1) - T(V_2) \rVert_\infty \leq \gamma \lVert V_1 - V_2 \rVert_\infty.
+        \end{align*}
+    \end{lemma}
+    先证明序列 $\{T^n(V)\} \to V^*, \, n\to \infty$. 记 $d(\cdot) = \lVert \cdot \rVert_\infty$. 利用范数的三角不等式, 我们有
+    \begin{align*}
+        d(T^n(V), T^m(V)) &\le d(T^{n}(V), T^{n+1}(V)) + d(T^{n+1}(V), T^{m+1}(V)) + d(T^m(V), T^{m+1}(V)) \\
+        \text{（由引理) }&\le d(T^{n}(V), T^{n+1}(V)) + \gamma d(T^{n}(V), T^{m}(V)) + d(T^m(V), T^{m+1}(V))
+    \end{align*}
+    那么有
+    \begin{align*}
+        d(T^n(V), T^{m}(V)) &\le \frac{d(T^{n}(V), T^{n+1}(V)) + d(T^m(V), T^{m+1}(V))}{ 1 - \gamma} \\
+        \text{（由引理) }&\le \frac{\gamma^n d(T(V), V) + \gamma^m d(T(V), V)}{1-\gamma} \\
+        &= \frac{\gamma^n + \gamma^m}{1-\gamma} d(T(V), V).
+    \end{align*}
+    考虑 $\gamma\in (0,1)$, 当 $n, m \to \infty$ 时, 有 $d(T^n(V), T^m(V)) \to 0$, 即序列 $\{T^n(V)\}$ 是 Cauchy 序列, 从而收敛到某个唯一的极限, 记为
+    \begin{align*}
+        V_\text{opt} := \lim_{n\to \infty} T^n(V). \implies V_\text{opt} = T(V_\text{opt}) = \max_a \left[r(s, a) + \gamma \sum_{s'\in S} p(s'|s, a) V_\text{opt}(s')\right].
+    \end{align*}
+    下面我们来证明 $V_\text{opt} = V^*$. 注意 $V^*(s) =  \max_\pi V^\pi(s)$. 记
+    \begin{align*}
+        T_\pi(V)(s) := \E_{a\sim \pi} \left[r(s, a) + \gamma \sum_{s'\in S} p(s'|s, a) V(s')\right].
+    \end{align*}
+    
+    1. 首先证明 $V^* \ge V_\text{opt}$. 对于任意 value function $V$和 policy $\pi$, 有
+    \begin{align*}
+        d(V_\pi, V) &= \lim_{n\rightarrow \infty} d(T_\pi^n(V), V) \\
+        &\le \sum_{r=1}^{\infty} d(T_{\pi}^{r}(V), T_\pi^{r-1}(V)), \quad \text{（由三角不等式）} \\
+        &\le \sum_{r=1}^{\infty} \gamma^{r-1} d(T_\pi(V), V) \\
+        &= \frac{d(T_\pi(V), V)}{1-\gamma}.
+    \end{align*}
+    这里$d(u,v) = \lVert u - v\rVert_\infty = \sup_s |u(s) - v(s)|$. 
+    
+    那么令 $V = V_\text{opt}$. 且对于任意 $\varepsilon >0$, 取 $\pi = \pi_\varepsilon$ 使得
+    \begin{align*}
+        T_{\pi_\varepsilon}(V_\text{opt})(s) &= \E_{a\sim \pi_\varepsilon} \left[r(s, a) + \gamma \sum_{s'\in S} p(s'|s, a) V_\text{opt}(s')\right] \\
+        &\ge  \max_a \left[r(s, a) + \gamma \sum_{s'\in S} p(s'|s, a) V_\text{opt}(s')\right] - \varepsilon(1-\gamma) \\
+        &=V_\text{opt}(s) - \varepsilon(1-\gamma). \\
+        \implies  V_\text{opt}(s) &- T_{\pi_\varepsilon}(V_\text{opt})(s) \le \varepsilon(1-\gamma).
+    \end{align*}
+    那么有 $d(V_{\pi_\varepsilon}, V_\text{opt}) \le \varepsilon \implies V_{\pi_\varepsilon} \ge V_\text{opt} - \varepsilon$. 由 $\varepsilon$ 的任意性, 有 $V^* \ge V_\text{opt}$.
+
+    2. 其次证明 $V^* \le V_\text{opt}$. 这里我们需要用到 $T_\pi$ 的单调性, 即对于任意两个 value function $V_1, V_2$ 且 $V_1 \le V_2$, 有 $T_\pi(V_1) \le T_\pi(V_2), \forall \pi$. 由定义可知, 对于任意 policy $\pi$, 有
+    \begin{align*}
+        T_\pi(V_\text{opt}) \le T(V_\text{opt}) \implies T^n_\pi(V_\text{opt}) \le T^{n-1}_\pi(V_\text{opt}) \le \cdots \le T_\pi(V_\text{opt}) \le T(V_\text{opt}). 
+    \end{align*}
+    这里重复使用 $n$ 次 $T_\pi$ 的单调性. 由 $T_\pi$ 类似的 contraction mapping 性质, 可以证明 
+    \[\lim_{n\rightarrow\infty}T_\pi^n(V_\text{opt}) \to V_\pi\]
+    那么对于任意 $\pi$, 有 $V_\pi \le V_\text{opt}$. 故 $V^* \le V_\text{opt}$.
+
+    综上, $V^* = V_\text{opt}$. 从而 $V^*$ 是 Bellman optimality operator $T$ 的唯一不动点.
+\end{answer}
+
+\end{document}
