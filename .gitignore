@@ -1,0 +1,11 @@
+# ignore all .aux .log .out .synctex.gz files
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.nav
+*.snm
+*.toc
+
+.DS_Store
+/FFTW3
