@@ -1,0 +1,119 @@
+\section{Definition}
+\subsection{Turing Machine}
+\begin{frame}
+    \frametitle{Deterministic Turing Machine}
+\begin{definition}[Deterministic Turing Machine]
+    A $k$-tape TM is a 7-tuple $(Q, \Sigma, \Gamma, \delta, q_0, q_{accept}, q_{reject})$:
+    \begin{itemize}
+        \item $Q$ sets of states, $\Sigma$ input alphabet, $\Gamma$ tape alphabet
+        \item $\delta: Q\times \Gamma^k \rightarrow Q\times \Gamma^k\times \{L,S,R\}^k$ transition function
+        \item $q_0$ initial state, $q_{accept}$ accepting state, $q_{reject}$ rejecting state
+    \end{itemize}
+\end{definition}
+\pause
+\begin{definition}[Computation of a TM]
+    A TM $M$ accepts input $w$ if a sequence of configurations $C_1, C_2, \ldots, C_k$ exists such that:
+    \begin{itemize}
+        \item $C_1$ is the start configuration of $M$ on input $w$;
+        \item each $C_i$ yeilds $C_{i+1}$ by applying $\delta$;
+        \item $C_k$ is an accepting configuration.
+    \end{itemize}
+\end{definition}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Universal Turing Machine}
+\begin{definition}[Universal Turing Machine]
+    A TM $U$ is a universal TM if it can \textbf{simulate} any TM $M$.
+\end{definition}
+
+\begin{theorem}
+    存在一个通用图灵机$U$，对于任意图灵机$M$和输入$x$, $U$能够在$O(T\log T)$时间内输出$M(x)$.
+\end{theorem}
+形式化书写和证明这里略去.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Nondeterministic Turing Machine}
+\begin{definition}[Nondeterministic Turing Machine]
+    A $k$-tape NTM is a 7-tuple $(Q, \Sigma, \Gamma, \delta, q_0, q_{accept}, q_{reject})$:
+    \begin{itemize}
+        \item $Q$ sets of states, $\Sigma$ input alphabet, $\Gamma$ tape alphabet
+        \item $\delta: Q\times \Gamma^k \rightarrow 2^{Q\times \Gamma^k\times \{L,S,R\}^k}$ transition function
+        \item $q_0$ initial state, $q_{accept}$ accepting state, $q_{reject}$ rejecting state
+    \end{itemize}
+\end{definition}
+\pause
+\begin{itemize}
+    \item 直觉上理解, NTM在每一步都可以选择多种可能的转移, 但只要有一种转移路径能够接受, 则NTM接受输入.
+    \item 运行时间: 对于函数$T: N\rightarrow N$, 一个NDTM $N$的运行时间是$T(n)$的, 如果对于任意输入长度为$n$的输入, $N$的所有分支都在$T(n)$步内停机.
+\end{itemize}
+\end{frame}
+\subsection{P and NP}
+\begin{frame}
+    \frametitle{Class P}
+    \begin{definition}[Class DTIME]
+        设函数$T: N\rightarrow N$, 那么$\text{DTIME}(T(n))$为所有可以在$O(T(n))$时间内被确定性图灵机判定(decided)的语言的集合.
+    \end{definition}
+    \begin{definition}[Class P]
+        $\text{P} = \bigcup_{c\in N} \text{DTIME}(n^c)$
+    \end{definition}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Class NP}
+    \begin{definition}[Class NTIME]
+        设函数$T: N\rightarrow N$, 那么$\text{NTIME}(T(n))$为所有可以在$O(T(n))$时间内被非确定性图灵机判定(decided)的语言的集合.
+    \end{definition}
+    \begin{definition}[Class NP]
+        $\text{NP} = \bigcup_{c\in N} \text{NTIME}(n^c)$
+    \end{definition}
+\end{frame}
+\begin{frame}
+    \frametitle{Class NP(Cont.)}
+    \begin{definition}[Another Definition of NP]
+        称一个语言$L \in $NP, 如果存在一个多项式函数$P: N \rightarrow N$, 和多项式时间的确定性图灵机$M$, 使得:
+        \begin{align*}
+            \forall x \in \{0,1\}^*, ~x\in L \iff \exists u \in \{0,1\}^{P(|x|)}, ~s.t.~ M(x,u) = 1
+        \end{align*}
+        把$u$称为$x$的证书(certificate), $M$称为$L$的验证机(verifier).
+    \end{definition}
+    \pause
+    \begin{itemize}
+        \item 直觉上理解, NP包括了所有可以在多项式时间内验证一个解是否正确的问题.
+        \item 上述两个定义是等价的, 这里不展开证明细节.
+    \end{itemize}
+    
+
+\end{frame}
+\subsection{Reduction and NP-complete}
+\begin{frame}
+    \frametitle{Polynomial-time Reduction}
+    \begin{definition}[Polynomial-time Reduction]
+        称一个语言$A$多项式时间归约(is polynomial time reducible)到另一个语言$B$, 记作$A\leq_p B$, 如果存在一个多项式时间可计算的函数$f:\Sigma^* \rightarrow \Sigma^*$使得:
+        \begin{align*}
+            \forall w, w\in A \iff f(w) \in B
+        \end{align*}
+    \end{definition}
+    \pause
+    若$A\leq_p B$:
+    \begin{itemize}
+        \item $B \in$ P $\implies A \in$ P
+        \item $A \le_p B, B\le_p C \implies A\le_p C$
+    \end{itemize}
+    直观上: $A\leq_p B$意味着$B$比$A$更困难. 设计规约$f$可以理解成设计一个\textcolor{red}{算法}, 将$A$的问题转化为$B$的问题.
+\end{frame}
+\begin{frame}
+    \frametitle{NP hard and NP complete}
+    \begin{definition}[NP-hard]
+        称一个语言$A$是NP-hard的, 如果对于任意$L\in$NP, $L\leq_p A$.
+    \end{definition}
+    \begin{definition}[NP-complete]
+        称一个语言$A$是NP-complete的, 如果$A$是NP-hard $\land A\in$NP.
+    \end{definition}
+    \pause
+    \begin{itemize}
+        \item 直观上, NP-complete问题是NP中最困难的问题.
+        \item 若存在一个NP-complete问题$A$可以在多项式时间内被解决, 那么P=NP.
+    \end{itemize}    
+\end{frame}

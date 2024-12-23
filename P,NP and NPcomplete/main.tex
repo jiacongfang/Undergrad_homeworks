@@ -1,0 +1,49 @@
+\documentclass{ctexbeamer}
+% \documentclass{beamer}
+\usetheme{Warsaw}
+\usepackage{graphicx}
+\usepackage{beamerbasetitle}
+\usepackage{listing}
+\usefonttheme[onlymath]{serif}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks,
+  allcolors=.,
+  urlcolor=blue,
+}
+\graphicspath{ {./images/} }
+\usepackage{multicol}
+\definecolor{PKUblack}{rgb}{0, 0, 0} % UBC Blue (primary)
+\definecolor{PKUred}{HTML}{b23333} % UBC Grey (secondary)
+
+\setbeamercolor{palette primary}{bg=PKUred,fg=white}
+\setbeamercolor{palette secondary}{bg=PKUblack,fg=white}
+\setbeamercolor{palette tertiary}{bg=PKUblack,fg=white}
+\setbeamercolor{palette quaternary}{bg=PKUblack,fg=white}
+\setbeamercolor{structure}{fg=PKUred} % itemize, enumerate, etc
+\setbeamercolor{section in toc}{fg=PKUred} % TOC sections
+
+% Override palette coloring with secondary
+\setbeamercolor{subsection in head/foot}{bg=PKUred,fg=white}
+
+\title{P, NP and NP-complete}
+\author{方嘉聪 2200017849}
+\institute{北京大学}
+\date{\today}
+\begin{document}
+    % \large
+    \begin{frame}
+        \titlepage
+    \end{frame}
+
+    \AtBeginSection[]
+    {
+        \begin{frame}<beamer>
+            \frametitle{目录}
+            \tableofcontents[currentsection]
+        \end{frame}
+    }
+    \input{sections/Definition.tex}
+    \input{sections/NPC_problems.tex}
+
+\end{document}

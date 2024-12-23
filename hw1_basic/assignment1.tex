@@ -1,0 +1,292 @@
+\documentclass[11pt]{article}
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=2pt,partopsep=0pt,parsep=\parskip,topsep=2pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{diagbox}
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+%\usepackage{algorithm,algorithmicx}
+\usepackage[ruled, linesnumbered]{algorithm2e}
+% \usepackage[linesnumbered]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage{hyperref}
+\usepackage{extarrows}
+% 这是一些字体选项
+\usepackage{helvet}
+% \usepackage{mathpazo}
+\usepackage{fontspec}
+% \setmainfont{Times New Roman}
+% \setmainfont{Comic Sans MS} % 比较fancy的字体
+% \setmainfont{Avenir}
+% \setmainfont{Palatino}
+
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep{\bfseries#1}\hskip\labelsep{\bfseries#2.}]}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Answer]{\begin{trivlist}
+\item[\hskip \labelsep{\bfseries\itshape#1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\E{\mathbb{E}}
+\newcommand\per{\mathrm{per}}
+% chktex-file 44
+% \renewcommand{\familydefault}{\sfdefault}
+
+\title{Homework \#1}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} Peking University}
+\chead{}
+\rhead{\CJKfamily{zhkai} Algorithm Design and Analysis (Honor Track)}
+
+\begin{center}
+    {\LARGE \bf Homework 1}\\
+    {Name: 方嘉聪\ \  ID: 2200017849}            % Write down your name and ID here.
+\end{center}
+
+\begin{problem}{1 (Textbook 1.18)}
+    对以下函数, 按照他们的阶从高到低排序; 如果两个函数的阶相同, 表示为$f(n) = \Theta(g(n))$.
+    \[ 2^{\sqrt{2 \log n}}, \ n \log n, \ \sum_{k=1}^n \frac{1}{k}, \ n 2^n, \ (\log n)^{\log n}, \ 2^{2n}, \ 2^{\log \sqrt{n}}  \]
+    \[n^3, \ \log{n!}, \ \log n, \ \log\log n, \ n^{\log\log n}, \ n!, \ n, \ \log{10^n}\]
+\end{problem}
+\begin{answer}
+我们用$>$表示阶的大小关系:
+\[ n! > 2^{2n} > n 2^n > (\log n)^{\log n} = n^{\log\log n} > n^3 > n \log n = \Theta(\log n!)> \]
+\[n = \Theta(\log 10^n) > 2^{\log \sqrt{n}} > 2^{\sqrt{2 \log n}} > \log n = \Theta(\sum_{k=1}^n \frac{1}{k}) > \log\log n\]
+\end{answer}
+
+\begin{problem}{2 (Textbook 1.19)}求解下列递推方程:
+\begin{enumerate}[label =$(\arabic*)$]
+    \item $\begin{cases}
+        T(n) = T(n-1) + n^2 \\
+        T(1) = 1
+    \end{cases}$
+    \item
+    $ \begin{cases}
+        T(n) = T(n/2) + T(n/4) + cn \\
+        T(1) = 1
+    \end{cases} $
+    \item
+    $ \begin{cases}
+        T(n) = 5 T(n/2) + (n \log n)^2 \\
+        T(1) = 1
+    \end{cases}$
+    \item 
+    $ \begin{cases}
+        T(n) = T(n - 1) + \frac{1}{n} \\
+        T(1) = 1
+    \end{cases}$
+\end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label =$(\arabic*)$]
+        \item 用迭代法:
+        \[ T(n) = n^2 + (n-1)^2 + \cdots + 4 + 1 = \frac{n(n+1)(2n+1)}{6} \]
+        \item 使用递归树法: 设数深为$k$, 那么$n/2^k \ge 1 \implies k \le \log n$:
+        \[ T(n) = \sum_{k=0}^{\log n} \left(\frac{3}{4}\right)^k cn = 4cn\left(1-\left(\frac{3}{4}\right)^{\log n}\right) = \Theta(n) \]
+        \item 由主定理, $f(n) = (n \log n)^2 = O(n^{\log_2 5 - \epsilon}) $, $T(n) = \Theta(n^{\log_2 5})$
+        \item 用迭代法:
+        \begin{align*}
+            T(n) = \sum_{k = 1}^{n} \frac{1}{k} = \Theta(\log n)
+        \end{align*}
+    \end{enumerate}
+\end{answer}
+\begin{problem}{3 (Textbook 1.21)}
+    设原问题规模为$n$, 从下述算法中选择一个最坏情况下时间复杂度最低的算法, 简述理由:
+    \begin{enumerate}
+        \item 算法A: 将原问题划分为规模减半的5个子问题, 在线性时间内合并结果.
+        \item 算法B: 将原问题划分为2个规模为$n-1$的子问题, 在常量时间内合并结果.
+        \item 算法C: 将原问题划分规模为$n/3$的9个子问题, 在$O(n^3)$内合并结果.
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    选择\textbf{算法A}, 理由如下:
+    \begin{enumerate}
+        \item 算法A: $T(n) = 5T(n/2) + O(n) \implies T(n) = \Theta(n^{\log_2 5})$.
+        \item 算法B: $T(n) = 2T(n-1) + O(1) \implies T(n) = \Theta(2^n) $.
+        \item 算法C: $T(n) = 9T(n/3) + O(n^3) \implies T(n) = \Theta(n^3)$.
+    \end{enumerate}
+    算法A在最坏情况下复杂度最低.
+\end{answer}
+
+\begin{problem}{4 (Complexity Bounds)}
+    For each blank, indicate whether $A_i$ is in $O, \Omega,$or $ \Theta$ of $B_i$. More than one space per row can be valid.
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            \textbf{A} & \textbf{B} & $O$ & $\Omega$ & $\Theta$ \\
+            \hline
+            $10 n$ & $n$ & $\surd$ & $\surd$ & $\surd$ \\
+            \hline
+            $10$ & $n$ &$\surd$ &  & \\
+            \hline
+            $n^2$ & $2n$ & & $\surd$ & \\
+            \hline
+            $n^{2021}$ & $2^n$ & $\surd$ &  & \\
+            \hline
+            $n ^ {\log 9}$ & $9^{\log n}$ & $\surd$ & $\surd$ & $\surd$ \\
+            \hline
+            $\log(n!)$ & $\log(n^n)$ & $\surd$ & $\surd$ & $\surd$ \\
+            \hline
+            $(3/2)^n$ & $(2/3)^n$ & & $\surd$ & \\
+            \hline
+            $3^n$ & $2^n$ &  & $\surd$ & \\
+            \hline
+            $n ^ {1/ \log n}$ & 1 & $\surd$ & $\surd$ & $\surd$ \\
+            \hline
+            $\log^5 n$ & $n^{0.5}$ & $\surd$ &  & \\
+            \hline
+            $n^2$ & $4^{\log n}$ & $\surd$ & $\surd$ & $\surd$\\
+            \hline
+            $n^{0.2}$ & $(0.2)^n$ & & $\surd$ & \\
+            \hline
+            $\log \log n$ & $\sqrt{\log n}$ & $\surd$ &  & \\
+            \hline
+            $\log(\sqrt{n})$ & $\sqrt{\log n}$ & & $\surd$ & \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{problem}
+\begin{problem}{5 (Gauging Complexity from Code)}
+    Refer to the algorithms below for solving these problems.
+Give the \textbf{worst-case run-time complexity} in Big-Oh notation for each of the algorithms below.
+\\
+\begin{algorithm}[H]\footnotesize
+    \caption{Search an element in an array of length $n$}
+    \KwIn{An array $A$ of size $n$ and an element $e$}
+    \KwOut{Index of the element $e$}
+    $i \leftarrow 0$\;
+    \While{$i < n$}{
+        \If{$A[i] = e$}{
+            \Return $i$\;
+        }
+        $i \leftarrow i + 1$\; 
+    }
+    \Return\ $-1$  \tcp*[f]{If element $e$ is not found} 
+\end{algorithm}
+\begin{algorithm}[H]\footnotesize
+    \caption{Replace an element in an array of length $n$ with a given element}
+    \KwIn{An array $A$ of size $n$, an element $e$ present in the array, and a new element $E$}
+    \KwOut{Updated array}
+    $i \leftarrow 0$\;
+    \While{$i < n$}{
+        currElement $\leftarrow A[i]$\;
+        \If{$currElement = e$}{
+            $A[i] \leftarrow E$\;
+            \Return $A$\;
+        }
+        \Else{
+            $A[i] \leftarrow currElement$\;
+        }
+        $i \leftarrow i + 1$\; 
+    }
+    \Return\ $A$  \tcp*[f]{If element $e$ is not found, return the original array}
+\end{algorithm}
+\begin{algorithm}[H]\footnotesize
+    \caption{Sort an array of length $n$ using bubble sort}
+    \KwIn{An array $A$ of size $n$}
+    \KwOut{Sorted array}
+    \For{$i \in \left[0, n-1\right)$}{
+        \tcc{Declare $i$ as the index having the current smallest element}
+        \For{$j \in \left[i+1, n\right)$}{
+            \tcc{Find the smallest element in the range [i, n)}
+            \If{$A[j] > A[j+1]$}{
+                $smallest \leftarrow j$
+            }
+        }
+        swap $(A[i] , A[smallest])$\;
+    }
+    \Return $A$\;
+\end{algorithm}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label = (\arabic*)]
+        \item \textbf{Algorithm 1}: 在最坏情况下,需要完整遍历一遍数组, 时间复杂度为$\Theta(n)$.
+        \item \textbf{Algorithm 2}: 在最坏情况下,替换的值在数组的最后一位, 需要完整遍历一遍数组, 时间复杂度为$\Theta(n)$.
+        \item \textbf{Algorithm 3}: 设最坏情况下所需操作数为$T(n)$, 则($c_1, c_2$为常数):
+        \[T(n) = \sum_{i=0}^{n-2}\left(c_1(n-i-1) + c_2\right) = \Theta(n^2)\] 故时间复杂度为$\Theta(n^2)$.
+    \end{enumerate}
+\end{answer}
+
+\begin{problem}{6 (Partial Sum of a 1D Array)}
+Given an array $A$ consisting of n integers $A[1],A[2],\cdots,A[n]$. 
+You want to obtain a 2D $n \times  n$ array $B$ where $B[i][j]$ (for $i<j$) 
+contains the sum of array entries $A[i]$ through $A[j]$, i.e., $A[i]+A[i+1]+\cdots+A[j]$. 
+The value of array entry $B[i][j]$ is left unspecified whenever $i>j$.
+\\Here's a basic algorithm to solve this problem:\\
+\begin{algorithm}[H]
+    \caption{Basic Algorithm}
+    \For{$i = 1$ to $n$}{
+        \For{$j = i+1$ to $n$}{
+            Add up array entries $A[i]$ through $A[j]$\;
+            store the result in $B[i][j]$
+        }
+    }
+\end{algorithm}
+\begin{enumerate}[label = (\arabic*)]
+    \item For some function $f$ you may choose, give a bound of $O(f(n))$ on the runtime of this algorithm.
+    \item For this same function $f$, prove that the runtime of the algorithm is also $\Omega(f(n))$ (This shows an asymptotically 
+    tight bound of $\Theta(f(n))$ on the runtime).
+    \item Although the algorithm you analysis in $(1)(2)$ is the most intuitive way to solve the problem, after all, 
+    it contains some highly unnecessary sources of inefficiency. Give a different algorithm to solve the problem, 
+    with an asymptotically better runtime. In other words, you should develop an algorithm with runtime $O(g(n))$, 
+    where $\lim_{n \rightarrow \infty} g(n)/f(n) = 0$.
+    
+\end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate} [label = (\arabic*)]
+        \item 设$T_1(n)$为$Basic\ Algorithm$的时间复杂度, 那么:
+        \begin{align*}
+            T_1(n) = \sum_{i=1}^{n} \left(1 + \sum_{j=i+1}^{n} \left(j-i+2 \right)\right) = \sum_{i=1}^{n} \left(\frac{n^2}{2} + \frac{i^2}{2} + \frac{5n}{2} - in - \frac{5i}{2} + 1\right) = \Theta(n^3)
+        \end{align*}
+        故取$f(n) = c n^3$($c$为常数), 则$T_1(n) = O(n^3)$.
+        \item 由于$T_1(n) = \Theta(n^3)$, 故$T_1(n) = \Omega(n^3)$.
+        \item 注意到对于$B[i][j](j>i)$, $\sum_{k=i}^{j-1} A[k]$已经在$B[i][j-1]$中计算过,无需重复计算, 可以用动态规划的思想优化算法:
+        \begin{algorithm}
+            \caption{Optimized Algorithm}
+            \For{$i = 1$ to $n$}{
+                $B[i][i] = A[i]$\;
+            }
+            \For{$i = 1$ to $n$}{
+                \For{$j = i+1$ to $n$}{
+                    $B[i][j] = B[i][j-1] + A[j]$\;
+                }
+            }
+        \end{algorithm}
+        \\设$T_2(n)$为$Optimized\ Algorithm$的时间复杂度, 那么:
+        \begin{align*}
+            T_2(n) = \sum_{i=1}^{n} \left(1 + \sum_{j=i+1}^{n} 1\right) = \sum_{i=1}^{n} (n-i+1) = \Theta(n^2)
+        \end{align*}
+        令$g(n) = c n^2$($c$为常数), 则$T_2(n) = O(n^2)$.
+    \end{enumerate}
+\end{answer}
+    
+\end{document}

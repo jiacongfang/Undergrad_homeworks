@@ -1,0 +1,257 @@
+\documentclass[11pt]{article}
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+
+\usepackage{caption}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{diagbox}
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+\usepackage{algorithm,algorithmicx}
+% \usepackage[ruled, linesnumbered]{algorithm2e}
+% \usepackage[linesnumbered]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata,positioning}
+\usepackage{hyperref}
+\usepackage{extarrows}
+\usepackage{wrapfig}
+% 这是一些字体选项
+\usepackage{helvet}
+% \usepackage{mathpazo}
+\usepackage{fontspec}
+% \setmainfont{Times New Roman}
+% \setmainfont{Comic Sans MS} % 比较fancy的字体
+% \setmainfont{Avenir}
+% \setmainfont{Palatino}
+
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+% \newenvironment{problem}[2][Problem]{\begin{trivlist}
+% \item[\hskip \labelsep{\bfseries#1}\hskip\labelsep{\bfseries#2.}]}{\hfill$\blacktriangleleft$\end{trivlist}}
+% 标题后强制换行
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+    \item[\hskip \labelsep{\bfseries#1}\hskip\labelsep{\bfseries#2.}]\mbox{}\newline}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Answer]{\begin{trivlist}
+\item[\hskip \labelsep{\bfseries\itshape#1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\DeclareMathOperator*{\minimize}{minimize}
+\DeclareMathOperator*{\maximize}{maximize}
+\newcommand\E{\mathbb{E}}
+\newcommand\per{\mathrm{per}}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\algrenewcommand{\algorithmiccomment}[1]{\hfill $//$ #1}
+% chktex-file 44
+% \renewcommand{\familydefault}{\sfdefault}
+
+\RequirePackage{algorithm}
+
+\makeatletter
+\newenvironment{breakablealgorithm}
+  {% \begin{breakablealgorithm}
+    \begin{center}
+      \refstepcounter{algorithm}% New algorithm
+      \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+      \parskip 0pt
+      \renewcommand{\caption}[2][\relax]{% Make a new \caption
+        {\raggedright\textbf{\fname@algorithm~\thealgorithm} ##2\par}%
+        \ifx\relax##1\relax % #1 is \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+        \else % #1 is not \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+        \fi
+        \kern2pt\hrule\kern2pt
+     }
+  }
+  {% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+   \end{center}
+  }
+\makeatother
+
+% set for automata
+\tikzset{>=stealth',shorten >=1pt,auto,node distance=2cm, % Increase node distance to 4cm
+                    thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}}
+
+
+\title{Homework \#8}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\captionsetup[figure]{labelfont={bf},name={Fig.},labelsep=period}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} Peking University}
+\chead{}
+\rhead{\CJKfamily{zhkai} Algorithm Design and Analysis (Honor Track)}
+
+\begin{center}
+    {\LARGE \bf Homework 8}\\
+    {Name: 方嘉聪\ \  ID: 2200017849}            % Write down your name and ID here.
+\end{center}
+
+\begin{problem}{1. (Applications of Max-Flow Min-Cut)}
+Review the statement of max-flow min-cut theorem and prove the following two statements.
+
+(a) Let $G=(L \cup R, E)$ be a unweighted bipartite graph. Then $G$ has a $L$-perfect matching (a matching with size $|L|$ ) if and only if, for every set $X \subseteq L, X$ is connected to at least $|X|$ vertices in $R$. You must prove both directions.
+
+\textit{Hint: Use the max-flow min-cut theorem.}
+
+(b) Let $G$ be an unweighted directed graph and $s, t \in V$ be two distinct vertices. Then the maximum number of edge-disjoint $s$ - $t$ paths equals the minimum number of edges whose removal disconnects $t$ from $s$ (i.e., no directed path from $s$ to $t$ after the removal).
+
+\textit{Hint: show how to decompose a flow of value $k$ into $k$ disjoint paths, and how to transform any set of $k$ edge-disjoint paths into a flow of value $k$.}
+\end{problem}
+\begin{answer}
+    (a) 必要性: 若$G$有$L$-perfect matching, 那么对于任意$X \subseteq L$, 取这一匹配对应的边, 则有$|X|$条边连接$X$到$R$, 满足条件.
+
+    充分性: 若对任意$X\subseteq L$, $X$连接到至少$|X|$个$R$中的点. 考虑一个新的图$G' = (V',E')$, 使得:
+    \begin{align*}
+        V' = V \cup \{s, t\}, \quad E' = E \cup \{(s, l) \mid l \in L\} \cup \{(r, t) \mid r \in R\}
+    \end{align*}
+    其中, $s,t$分别为源和汇, 且令每条边的的容量均为1. 那么要证明$G$有$L$-perfect matching, 等价于证明$G'$的最大流等于$|L|$. 由max-flow min-cut theorem, 等价于证明$G'$中的最小割$C_{\min}$为$|L|$.
+
+    考虑$G'$中一个大小为$|L|$的流$f$(存在性由已有条件保证), 注意到$(\{s\}, L\cup R\cup\{t\})$为一个大小恰好为$|L|$, 故$C_{\min} \le |L|$. 下面来证明, 对任意个割$C = (S,T)$, 都有$C \ge |L|$. 
+
+    注意到割$C$可以拆分为三个部分
+    \[
+    \{(s,l)\mid l \in L\cap T\} \cup \{(l,r)\mid l\in L\cap S\land r\in R\cap T \} \cup \{(r,t)\mid r\in R\cap S\}
+    \]
+    记$L_1 = L \cap S, L_2 = L\cap T, R_1 = R\cap T, R_2 = R\cap S$, 那么由题设, $L_1$至少与$R$中$|L_1|$个点相连, 而每条$L_1 \rightarrow R \rightarrow t$路径至少有一条边在割$C$中(要么横跨$L_1-R_1$, 要么横跨$R_2 - t$), 那么:
+    \begin{align*}
+        |C| \ge |L_2| + |L_1| = |L|
+    \end{align*} 
+    故$C_{\min} = |L|$, 从而$G$有$L$-perfect matching. 证毕.
+
+    (b) 对任意一个图$G = (V,E)$, 考虑如下一个新的图$G' = (V', E')$, 使得:
+    \begin{align*}
+        \forall v \in V/\{s,t\}, \text{ add } v_{\text{in}}, v_{\text{out}} \in V', \text{ add } (v_{\text{in}}, v_{\text{out}}) \in E' \text{ with capacity } 1; \\
+        \forall e = (u,v) \in E, \text{ add } (u_{\text{out}}, v_{\text{in}}) \in E' \text{ with capacity } 1.
+    \end{align*}
+    其中, 令$s_{\text{out}} = s, t_{\text{in}} = t$. 那么$G'$中任意一个大小为$k$的流$f$对应于$G$中的$k$条边不交$s-t$路径, 且反之亦然. 故$G$中边不交的$s-t$路径数最大值等于$G'$中的最大流值, 即使$G$中$s-t$不连通所需去除的最小边数. 证毕.
+\end{answer}
+
+\begin{problem}{2. (Trade Surplus)}
+Consider the following definition. We are given a set of $n$ countries that are engaged in trade with one another. For each country $i$, we have the value $s_i$ of its budget surplus; this number may be positive or negative, with a negative number indicating a deficit. For each pair of countries $i, j$, we have the total value $e_{ij}$ of all exports from $i$ to $j$; this number is always non-negative. We say that a subset $S$ of the countries is \textit{free-standing} if the sum of the budget surpluses of the countries in $S$, minus the total value of all exports from countries in $S$ to countries not in $S$, is non-negative.
+
+Give a \textbf{polynomial-time} algorithm that takes this data for a set of $n$ countries, and decides whether it contains a non-empty free-standing subset that is not equal to the full set. Analyze its running time.
+\end{problem}
+\begin{answer}
+    设图$G = (V,E)$, 形式化的, 我们的目标为判断是否存在一个非空的集合$S$, 使得:
+    \begin{align}
+        \sum_{i\in S} s_i - \sum_{i\in S, j\not\in S} e_{ij} \ge 0
+    \end{align}
+    等价于优化问题:
+    \begin{align}
+        \label{problem}
+        \minimize_{S \neq \varnothing\land S \neq V} \sum_{i \in S, j\not\in S} e_{ij} - \sum_{i\in S} s_i
+    \end{align}
+    而后判断最小值是否小于等于0即可. 考虑如下的图$G' = (V', E')$, 使得($M$是个足够大的常数):
+    \begin{align*}
+        V' = V \cup \{s,t\}, \quad \forall v \in V, \text{ add } (s,v),(v,t) \text{ to } E' \text{ with capacity } M,M-s_v 
+    \end{align*}
+    那么由最大流最小割定理, 优化问题[\ref{problem}]等价于在$G'$中找到一个最大流(设为$f_{\max}$), 则
+    $f_{\max} - |V|M$
+    即为问题\eqref{problem}的最小值. 故只需判断是否满足
+    \begin{align}
+        \label{constraint}
+        f_{\max} - |V|M\le 0
+    \end{align}即可, 若成立则令$S$. 注意到, 当问题\eqref{problem}的最小值恰为0时, 上述算法可能会得到一个退化的解$S = \varnothing$. 
+    为了避免这一问题, 对任意$v\in V$, 将$s_v$改为$s_v + \varepsilon$($\varepsilon$为一个较小的正常数), 这么做相当于将限制条件\eqref{constraint}放松到了
+    \begin{align}
+        f_{\max} - |V|M \le \varepsilon
+    \end{align}
+    得到解$S$后, 在验证是否满足条件\eqref{constraint}, 若否则说明\textit{free-standing}不包含$v$.遍历所有$v$直至找到合法解或者说明解不存在.
+    算法时间复杂度为$O(n |V'|^2|E'|) = O(n\cdot (n+2)^2\cdot (n^2+2n)) = O(n^5)$.
+\end{answer}
+
+\begin{problem}{3. (Flow Disconnecting with Multiple Terminals)}
+    Suppose we are given a directed network $G = (V, E)$ with a root node $r$, and a set of \textit{terminals} $T \subseteq V$. We'd like to disconnect many terminals from $r$, while cutting relatively few edges.
+
+    We make this trade-off precise as follows. For a set of edges $F \subseteq E$, let $q(F)$ denote the number of nodes $v \in T$ such that there is no $r-v$ path in the subgraph $(V, E-F)$. Give a polynomial-time algorithm to find a set $F$ of edges that maximizes the quantity $q(F)-|F|$. (Note that setting $F$ equal to the empty set is an option). Analyze the running time of your proposed algorithm.    
+\end{problem}
+\begin{answer}
+    对$\forall e \in E$, 令$c_e = 1$, 同时添加一个汇点$t$, 对$\forall v \in T$, 添加边$(v,t)$, 容量为1, 设这样新的到的图为$G'=(V',E')$. 考虑$G'$上的最小割问题, 我们来证明最小化割的问题等价于最大化$q(F) - |F|$.
+
+    考虑$G'$的一个割$(S_1, S_2)$, 设$T_1 = S_1 \cap T, T_2 = S_2 \cap T$, 取$F = \{(u,v)\mid (u,v)\in E \land u \in S_1\land v\in S_2\}$. 那么由割的定义, $q(F) \le |T_2|$. 若存在点$t \in T_1$, 使得不存在路径$r-t$, 则我们可以将$S_1$分成两部分
+    \[
+    S_1 = S'_1 \cup S''_1, \text{ 其中$\forall v \in S'_1$, 存在$r-v$路径, $\forall v \in S''_1$, 不存在$r-v$路径. }
+    \]
+    考虑一个新的割$(S'_1, S''_1 \cup T_2)$, 注意到$S'_1,S''_1$间没有边相连, 故这个新的割的大小小于原来的割. 故当取到最小割时, 有$q(F) = |T_2|$. 下面计算$(S_1, S_2)$的大小:
+    \[
+    |F| + |T_1| = |F| - |T_2| + |T| \ge |F|- q(F) + |T|
+    \]
+    当恰为最小割时取等. 注意到$|T|$是一个给定常量, 故最小割问题等价于最大化$q(F) - |F|$. 从而我们只需在$G'$上求解最小割问题即可. 时间复杂度为最小割问题的复杂度$O(|V'|^2|E'|)$.
+\end{answer}
+
+\begin{problem}{4. (Actress/Actor Chain Game)}
+    Some of your friends invent a game: you start with a set $X$ of $n$ actresses and a set $Y$ of $n$ actors, and two players $P_{0}$ and $P_{1}$. $P_{0}$ names an actress $x_{1} \in X, P_{1}$ names an actor $y_{1}$ who has appeared in a movie with $x_{1}, P_{0}$ names an actress $x_{2}$ who has appeared in a movie with $y_{1}$, and so on. Thus, $P_{0}$ and $P_{1}$ collectively generate a sequence $x_{1}, y_{1}, x_{2}, y_{2}, \ldots$ such that each actor/actress in the sequence has co-starred with the actress/actor immediately preceding. A player $P_{i}(i=0,1)$ loses when it is $P_{i}$ 's turn to move, and he/she cannot name a member of his/her set who hasn't been named before.
+
+    Suppose you are given a specific pair of such sets $X$ and $Y$, with complete information on who has appeared in a movie with whom. A strategy for $P_{i}$, in our setting, is an algorithm that takes a current sequence $x_{1}, y_{1}, x_{2}, y_{2}, \ldots$ and generates a legal next move for $P_{i}$ (assuming it's $P_{i}$ 's turn to move). Give a polynomial-time algorithm that decides which of the two players can force a win, in a particular instance of this game. Analyze the running time of your proposed algorithm.    
+\end{problem}
+\begin{answer}
+    我们来证明如下的论断: \textbf{若$X,Y$存在完美匹配, 则$P_1$(后手)必胜, 否则$P_0$(先手)必胜.} 注: 这里的匹配关系指$x\in X, y\in Y$且$x$与$y$在一部电影中出现过.
+
+    (1) 若$X,Y$存在完美匹配, 那么每次$P_1$只需要选择$P_0$选择的人对应的匹配的人即可, 显然$P_1$必胜.
+
+    (2) 若$P_1$必胜, 我们来证明$X,Y$存在完美匹配. 假设$X,Y$不存在完美匹配, 设$|X| = |Y| = n$, 最大匹配为$\{(x_{k_i}, y_{j_i})\}_{1\le i\le t}$, 其中$t<n$. 那么只要$P_0$第一步选择任意一个$x\in X/\{x_{k_i}\}_{1\le i \le t}$, 那么
+    \begin{itemize}
+        \item 若$P_1$选择了$y\in Y/\{y_{j_i}\}_{1\le i \le t}$, 则$(x,y)$构成了一个新的匹配, 这与最大匹配的假设矛盾. 
+        \item 若$P_1$选择了任意一个$y_{j_i}\in\{y_{j_i}\}_{1\le i \le t}$, 那么$P_0$只需选择对应匹配的$x_{k_i}$即可, 使用这个策略那么$P_0$必胜, 这与$P_1$必胜的条件矛盾. 
+    \end{itemize}
+    故若$P_1$必胜, 则$X,Y$存在完美匹配.
+
+故我们只需要判断$X,Y$是否存在完美匹配即可. 时间复杂度为$O(|V|\cdot|E|) = O(n^3)$(匈牙利算法). 如果使用Hopcroft-Karp算法, 时间复杂度为$O(\sqrt{|V|}\cdot|E|) $.
+\end{answer}
+
+
+\begin{problem}{5. (Job Scheduling of Multi-Processors)}
+    Suppose you're managing a collection of processors and must schedule a sequence of jobs over time. The jobs have the following characteristics. Each job $j$ has an arrival time $a_j$ when it is first available for processing, a length $\ell_j$ which indicates how much processing time it needs, and a deadline $d_{j}$ by which it must be finished. (We'll assume $0<\ell_{j} \leq d_{j}-a_{j}$). Each job can be run on any of the processors, but only on one at a time; it can also be pre-empted and resumed from where it left off (possibly after a delay) on another processor.
+
+Moreover, the collection of processors is not entirely static either: you have an overall pool of $k$ possible processors; but for each processor $i$, there is an interval of time $\left[t_{i}, t_{i}^{\prime}\right]$ during which it is available; it is unavailable at all other times.
+
+Given all this data about job requirements and processor availability, you'd like to decide whether the jobs can all be completed or not. Give a polynomial-time algorithm that either produces a schedule completing all jobs by their deadlines, or reports (correctly) that no such schedule exists. You may assume that all the parameters associated with the problem are integers.
+
+\textbf{Example.} Suppose we have two jobs $J_{1}$ and $J_{2}$. $J_{1}$ arrives at time 0, is due at time 4, and has length 3. $J_{2}$ arrives at time 1, is due at time 3, and has length 2. We also have two processors $P_{1}$ and $P_{2}$. $P_{1}$ is available between times 0 and 4; $P_{2}$ is available between times 2 and 3. In this case, there is a schedule that gets both jobs done:
+\begin{itemize}
+  \item At time 0 , we start job $J_{1}$ on processor $P_{1}$.
+  \item At time 1 , we pre-empt $J_{1}$ to start $J_{2}$ on $P_{1}$.
+  \item At time 2 , we resume $J_{1}$ on $P_{2}$. ( $J_{2}$ continues processing on $P_{1}$.)
+  \item At time 3, $J_{2}$ completes by its deadline. $P_{2}$ ceases to be available, so we move $J_{1}$ back to $P_{1}$ to finish its remaining one unit of processing there.
+  \item At time 4, $J_{1}$ completes its processing on $P_{1}$.
+\end{itemize}
+Notice that there is no solution that does not involve pre-emption and moving of jobs.
+\end{problem}
+\begin{answer}
+    我们考虑构造如下的网络图$G = (V,E)$: 
+    \begin{itemize}
+        \item 添加源点汇点$s,t$, 对任意一个可能时刻$t$,任务$J$,处理器$P$, 都添加一个对应节点.
+        \item 对于任意一个任务$J_i$,添加边$(s,J_i)$且$c(s,J_i) = l_{J_i}$, 代表任务$J_i$需要$l_{J_i}$的处理器时间.对任意时刻$t_j \in [a_{J_i}, d_{J_i}]$, 添加边$(J_i, t_j)$且$c(J_i, t_j) = 1$, 代表任务$J_i$在时刻$t_j$只能在一个处理器上运行.
+        \item 对任意一个处理器$P_j$, 添加边$(P_j, t)$且$c(P_j, t) = \infty$. 对任意时刻$t_k \in [t_{P_j}, t'_{P_j}]$, 添加边$(t_k, P_j)$且$c(t_k, P_j) = 1$, 代表处理器$P_j$在时刻$t_k$只能运行一个任务.
+    \end{itemize}
+    那么在图$G$上的任意一个整数流对应着一个任务的调度方案: 对所有的时刻$t$, 若满足$(J,t) = 1 $且$ (t,P) = 1$, 则说明这一时刻将任务$J$分配给处理器$P$. 而流的大小即所有任务进行的处理器时间之和, 故只需运行最大流算法, 并判断$|f| = \sum l_{J_i}$是否满足. 是则输出对应的调度方案, 否则输出无解. 
+
+    设有$n$个任务, $p$个处理器, $T$个时刻,则$|V| = n+p+T, |E| = O((n+p)T) $, 故使用Dinic算法的时间复杂度为$O(|V|^2|E|) = O((n+p+T)^2(n+p)T) = O(n^3p^3T^3) $.
+\end{answer}
+\end{document}

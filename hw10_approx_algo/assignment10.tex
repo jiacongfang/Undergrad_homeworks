@@ -1,0 +1,256 @@
+\documentclass[11pt]{article}
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+
+\usepackage{caption}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{diagbox}
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+\usepackage{algorithm,algorithmicx}
+% \usepackage[ruled, linesnumbered]{algorithm2e}
+% \usepackage[linesnumbered]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata,positioning}
+\usepackage{hyperref}
+\usepackage{extarrows}
+\usepackage{wrapfig}
+% 这是一些字体选项
+\usepackage{helvet}
+% \usepackage{mathpazo}
+\usepackage{fontspec}
+% \setmainfont{Times New Roman}
+% \setmainfont{Comic Sans MS} % 比较fancy的字体
+% \setmainfont{Avenir}
+% \setmainfont{Palatino}
+
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+% \newenvironment{problem}[2][Problem]{\begin{trivlist}
+% \item[\hskip \labelsep{\bfseries#1}\hskip\labelsep{\bfseries#2.}]}{\hfill$\blacktriangleleft$\end{trivlist}}
+% 标题后强制换行
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+    \item[\hskip \labelsep{\bfseries#1}\hskip\labelsep{\bfseries#2.}]\mbox{}\newline}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Solution]{\begin{trivlist}
+\item[\hskip \labelsep{\bfseries#1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\DeclareMathOperator*{\minimize}{minimize}
+\DeclareMathOperator*{\maximize}{maximize}
+\newcommand\E{\mathbb{E}}
+\newcommand\per{\mathrm{per}}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\algrenewcommand{\algorithmiccomment}[1]{\hfill $//$ #1}
+% chktex-file 44
+% \renewcommand{\familydefault}{\sfdefault}
+
+\RequirePackage{algorithm}
+
+\makeatletter
+\newenvironment{algo}
+  {% \begin{breakablealgorithm}
+    \begin{center}
+      \refstepcounter{algorithm}% New algorithm
+      \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+      \parskip 0pt
+      \renewcommand{\caption}[2][\relax]{% Make a new \caption
+        {\raggedright\textbf{\fname@algorithm~\thealgorithm} ##2\par}%
+        \ifx\relax##1\relax % #1 is \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+        \else % #1 is not \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+        \fi
+        \kern2pt\hrule\kern2pt
+     }
+  }
+  {% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+   \end{center}
+  }
+\makeatother
+
+% set for automata
+\tikzset{>=stealth',shorten >=1pt,auto,node distance=2cm, % Increase node distance to 4cm
+                    thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}}
+
+
+\title{Homework \#9}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\captionsetup[figure]{labelfont={bf},name={Fig.},labelsep=period}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} Peking University}
+\chead{}
+\rhead{\CJKfamily{zhkai} Algorithm Design and Analysis (Honor Track)}
+
+\begin{center}
+    {\LARGE \bf Homework 10}\\
+    {Name: 方嘉聪\ \  ID: 2200017849}            % Write down your name and ID here.
+\end{center}
+
+\begin{problem}{1.(Revisit 3-Dimensional Matching)}
+    Recall that in the last assignment we proved that 3-dimensional matching problem is NP-complete. Now let's consider the following maximization version: Given \textbf{disjoint} sets $X, Y,$ and $Z$, and a set $T\subseteq X\times Y\times Z$ of ordered triples, we want to find out the maximum size $|M|$ of a 3-dimensional matching $M \subseteq T$.
+
+    Give a $3$-approximation algorithm. Prove its approximation ratio and give its running time.
+\end{problem}
+\begin{answer}
+考虑如下的近似算法:
+\begin{algo}
+    \caption{3-Approximation Algorithm for 3-Dimensional Matching}
+    \begin{algorithmic}[1]
+        \Require Disjoint sets $X, Y, Z$ and a set $T\subseteq X\times Y\times Z$ of ordered triples
+        \Ensure A 3-dimensional matching $M\subseteq T$
+        \State $M \leftarrow \varnothing$, $U_X \leftarrow X, U_Y \leftarrow Y, U_Z \leftarrow Z$
+        \While{$T \neq \varnothing$}
+            \State 随机选取一个三元组$(x, y, z)\in T$;
+            \State 将$(x, y, z)$加入$M$;
+            \State 从$U_X, U_Y, U_Z$中删除$x, y, z$;
+            \State 从$T$中删除所有包含$x, y, z$的三元组.
+        \EndWhile
+        \State \Return $M$
+    \end{algorithmic}
+\end{algo}
+第5-6行保证了选取的三元组是合法的. 每次循环用时$O(|T|)$, 总的时间复杂度为$O(|T|^2)$. 下面我们证明这个算法的近似比为3.
+
+设最优解为$M^*$, 假设$|M^*| > 3|M|$. 对于任意一个三元组$(x,y,z) \in M$, 那么在$M^*$至多有3个对应的三元组$(x,\cdot,\cdot), (\cdot, y, \cdot), (\cdot, \cdot, z)$. 由于$|M^*| > 3|M|$, 那么在$M^*$存在一个三元组$(\bar{x}, \bar{y},\bar{z})$使得$\bar{x}, \bar{y},\bar{z}$都不在$M$中, 但由我们的算法$(\bar{x}, \bar{y},\bar{z})$应当被加入$M$中, 矛盾.
+故$3|M| \ge |M^*|$, 即近似比为3.
+
+一个紧实例为:
+\begin{align*}
+    X = \{x_1, x_2, x_3\}, Y = \{y_1, y_2, y_3\}, Z = \{z_1, z_2, z_3\},\\
+    T = \{(x_1,y_2,z_3), (x_1,y_1,z_1), (x_2,y_2,z_2), (x_3,y_3,z_3)\} 
+\end{align*}
+最优解为$M^* = \{(x_1,y_1,z_1), (x_2,y_2,z_2), (x_3,y_3,z_3)\}$, 而我们的算法可能得到$M = \{(x_1,y_2,z_3)\}$.
+\end{answer} 
+
+\begin{problem}{2. (Bounded Subset Sum)}
+    Suppose you are given a list of $N$ \textbf{positive} integers $L=$ $\left[a_{1}, a_{2}, \ldots, a_{N}\right]$, and a \textbf{positive} integer $C$. The problem is to find a subset $S \subseteq\{1,2, \ldots, N\}$ such that
+    $$
+    T(S)=\sum_{i \in S} a_{i} \leq C
+    $$
+    and $T(S)$ is as large as possible.
+    
+    (a) Prof. Luo proposes the following greedy algorithm for obtaining an approximate solution to this maximization problem:
+    \begin{algo}
+    \caption{Prof. Luo's Greedy Algorithm}
+    \label{alg:luo}
+    \begin{algorithmic}[1]
+    \State Initialize $S \leftarrow \varnothing, T=0$
+    \For{$i=1,2, \ldots, N$}
+        \If{$T+a_{i} \leq C$}
+            \State $S \leftarrow S \cup\{i\}$
+            \State $T \leftarrow T+a_{i}$
+        \EndIf
+    \EndFor
+    \State return $S$
+    \end{algorithmic}
+    \end{algo}
+    
+    Show that Prof. Luo's algorithm is not a $\rho$-approximation algorithm for any fixed value $\rho$. (Use the convention that $\rho>1$.)
+    
+    (b) Describe a 2-approximation algorithm for this maximization problem that runs in $O(N)$ time. Prove its approximation ratio.    
+\end{problem}
+\begin{answer}
+    (a) 给任意的$\rho > 0$, 设最优解为$T(S^*)$, 我们考虑如下的反例:
+    \begin{align*}
+        L = \bigg\{\left\lfloor\frac{C}{\rho}\right\rfloor - 1, C\bigg\}, \text{ 其中取$C$使得} \left\lfloor\frac{C}{\rho}\right\rfloor - 1 \ge 1.
+    \end{align*}
+    那么
+    \begin{align*}
+        T(S^*) = C, \quad T(S) = \left\lfloor\frac{C}{\rho}\right\rfloor - 1 \implies \frac{T(S^*)}{T(S)} > \frac{C}{C/\rho} > \rho.
+    \end{align*}
+    故对任意的$\rho > 1$, 罗老师的算法都不是$\rho$-近似算法.
+
+    (b) 不妨设$\forall i \in [N], a_i \in \left(0,C\right]$, 考虑如下的算法:
+    \begin{algo}
+        \begin{algorithmic}[1]
+            \State $S \leftarrow \varnothing, T \leftarrow 0$
+            \For {$i = 1,2,\cdots,N$}
+                \If {$a_i \ge C/2$}
+                    \State \Return $\{i\}$
+                \EndIf
+            \EndFor
+            \State \textbf{Run Prof. Luo's Greedy Algorithm(\ref{alg:luo})}.
+        \end{algorithmic}
+    \end{algo}
+    至多需扫描两遍数组$L$, 时间复杂度: $O(N)$. 下面我们证明这个算法的近似比为2.
+    
+    设最优解为$S^*$, 则$T(S^*) \le C$. 那么:
+    \begin{itemize}
+        \item 若存在$i$使得$a_i \ge C/2$, 那么直接返回$\{i\}$, 故$T(S) = C/2 \ge T(S^*)/2$, 近似比为2.
+        \item 若上述条件不成立, 那么调用了罗老师的算法. 若$L$中所有元素都被加入$T$中, 那么有$T(S) = T(S^*)$. 否则, 设第一个不满足$T + a_i \le C$的下标为$j$, 由于$a_j < C/2$, 那么
+        \begin{align*}
+            T + a_j > C \implies T > C - a_j \ge C/2 \implies T \ge T(S^*)/2  \implies T(S) \ge T \ge T(S^*)/2.
+        \end{align*}
+        故此时近似比为2.
+    \end{itemize} 
+    综上, 近似比为2. 证毕.
+\end{answer}
+
+\begin{problem}{3. (Hitting Set)}
+    We are given a set $A=\{a_1,\ldots,a_n\}$ and a collection $B_1,\ldots,B_m$ of subsets of $A$. Also, each element $a_i \in A$ has a weight $w_i \geq 0$. We call $H \subseteq A$ is a \textit{hitting set} if $H\cap B_i$ is not empty for each $i$. Now the problem is to find a hitting set $H$ that minimizes the total weight of the elements in $H$, $\sum_{a_i \in H}w_i$.
+
+    Let $b=\max_i|B_i|$. Give a $b$-approximation algorithm that runs in polynomial time. Prove the approximation ratio. (\textit{Hint: consider LP rounding.})
+\end{problem}
+
+\begin{answer}
+    设$\varphi(a_i) = 1$若$a_i \in H$. 考虑如下的线性规划:
+    \begin{align*}
+        \minimize \quad & \sum_{i=1}^n w_i \varphi(a_i)\\
+        \text{s.t.} \quad & \varphi(a_i) \in \{0,1\}, \quad \forall i = 1,2,\cdots,n\\
+        &\sum_{a_i \in B_j} \varphi(a_i) \ge 1, \quad \forall j = 1,2,\cdots,m
+    \end{align*}
+    考虑线性化松弛后的线性规划:
+    \begin{align*}
+        \minimize \quad & \sum_{i=1}^n w_i \varphi(a_i)\\
+        \text{s.t.} \quad & \varphi(a_i) \ge 0, \quad \forall i = 1,2,\cdots,n\\
+        &\varphi(a_i) \le 1, \quad \forall i = 1,2,\cdots,n \\
+        &\sum_{a_i \in B_j} \varphi(a_i) \ge 1, \quad \forall j = 1,2,\cdots,m
+    \end{align*}
+    考虑如下的近似算法:
+    \begin{algo}
+        \begin{algorithmic}[1]
+            \State $H \leftarrow \varnothing$
+            \State 解上述线性规划, 得到$\varphi(a_i)$;
+            \For {$i = 1,2,\cdots,n$}
+                \If {$\varphi(a_i) \ge 1/b$}
+                    \State \texttt{H.append($a_i$)}
+                \EndIf
+            \EndFor
+            \State \Return $H$
+        \end{algorithmic}
+    \end{algo}
+    对于任意一个$B_j$, $\sum_{a_i \in B_j} \varphi(a_i) \ge 1 \implies \exists\varphi(a_i) \ge 1/|B_j| \ge 1/b$. 故上述算法得到的解是一个合法的\textit{hitting set}.显然上述算法是多项式时间的. 下面我们证明这个算法的近似比为$b$.
+
+    设最优解为$H^*$, 记对应的权重代价为$w(H^*)$(与原线性规划的最优解相等), 记线性松弛后的最优解为$z^*$, 那么$w(H^*) \ge z^*$. 设上述近似算法的到的权重代价为$w(H)$, 那么:
+    \begin{align*}
+        z^* &= \sum_{i=1}^n w_i \varphi(a_i) = \sum_{\varphi(a_i) \ge 1/b} w_i \varphi(a_i) + \sum_{\varphi(a_i) < 1/b} w_i \varphi(a_i) \\
+        &\ge \sum_{\varphi(a_i) \ge 1/b} w_i \varphi(a_i) \ge \frac{1}{b} \sum_{\varphi(a_i) \ge 1/b} w_i  = \frac{1}{b} w(H) 
+    \end{align*}
+    故$w(H^*) \ge z^* \ge w(H)/b \implies b \ge w(H)/w(H^*)$. 故近似比为$b$, 证毕.
+\end{answer} 
+\end{document}

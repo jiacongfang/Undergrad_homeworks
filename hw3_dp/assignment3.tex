@@ -1,0 +1,439 @@
+\documentclass[11pt]{article}
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+
+\usepackage{caption}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{diagbox}
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+\usepackage{algorithm,algorithmicx}
+% \usepackage[ruled, linesnumbered]{algorithm2e}
+% \usepackage[linesnumbered]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage{hyperref}
+\usepackage{extarrows}
+% 这是一些字体选项
+\usepackage{helvet}
+% \usepackage{mathpazo}
+\usepackage{fontspec}
+% \setmainfont{Times New Roman}
+% \setmainfont{Comic Sans MS} % 比较fancy的字体
+% \setmainfont{Avenir}
+% \setmainfont{Palatino}
+
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep{\bfseries#1}\hskip\labelsep{\bfseries#2.}]}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Answer]{\begin{trivlist}
+\item[\hskip \labelsep{\bfseries\itshape#1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\E{\mathbb{E}}
+\newcommand\per{\mathrm{per}}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\algrenewcommand{\algorithmiccomment}[1]{\hfill $//$ #1}
+% chktex-file 44
+% \renewcommand{\familydefault}{\sfdefault}
+
+\RequirePackage{algorithm}
+
+\makeatletter
+\newenvironment{breakablealgorithm}
+  {% \begin{breakablealgorithm}
+    \begin{center}
+      \refstepcounter{algorithm}% New algorithm
+      \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+      \parskip 0pt
+      \renewcommand{\caption}[2][\relax]{% Make a new \caption
+        {\raggedright\textbf{\fname@algorithm~\thealgorithm} ##2\par}%
+        \ifx\relax##1\relax % #1 is \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+        \else % #1 is not \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+        \fi
+        \kern2pt\hrule\kern2pt
+     }
+  }
+  {% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+   \end{center}
+  }
+\makeatother
+
+
+
+
+\title{Homework \#1}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\captionsetup[figure]{labelfont={bf},name={Fig.},labelsep=period}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} Peking University}
+\chead{}
+\rhead{\CJKfamily{zhkai} Algorithm Design and Analysis (Honor Track)}
+
+\begin{center}
+    {\LARGE \bf Homework 3}\\
+    {Name: 方嘉聪\ \  ID: 2200017849}            % Write down your name and ID here.
+\end{center}
+
+\begin{problem}{1 (Commuting to Maximize Profit)}
+    Suppose you run a company with two offices, one in Beijing and the other 
+    in Shanghai. Each week, you must choose where to work, and your choice 
+    will affect your profit: in week $i$, you will earn $a_i$ CNY (China Yuan) 
+    if you work in Beijing, or $b_i$ CNY if you work in Shanghai. While you 
+    clearly would like to work in the location with the higher profit, 
+    each train ticket between Beijing and Shanghai (for either direction) 
+    \textbf{costs 500 CNY}. Given the lists $a_1, \dots, a_n$ and $b_1,\dots, b_n$, 
+    your goal is to find a schedule that maximizes your total profit, 
+    taking commuting costs into account. Since you live in Beijing, 
+    \textbf{your schedule must start and end there}.
+    \begin{enumerate}[label = (\arabic*)]
+        \item A natural greedy strategy is to always work in the office
+         with the higher profit. Give a (minimal) example showing that 
+         this strategy is not always optimal.
+        \item Design a \textbf{polynomial-time algorithm} in $n$ that finds 
+        the maximum total profit. Justify your algorithm's 
+        \textbf{correctness} and establish its \textbf{running time}. 
+        To get full credit for your solution, you should make your 
+        running time as small as possible.
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label = (\arabic*)]
+        \item 考虑$\{a_i\} = \{1, 400, 1\}$和$\{b_i\} = \{400, 1, 400\}$, 那么朴素贪心算法
+        得到的总收益为$-800$, 一直待在北京的总收益为$402$, 显然朴素贪心算法不是最优的.
+        \item 我们可以用动态规划来解决这个问题. 设$Opt(i, 0)$和$Opt(i, 1)$分别表示\textbf{第$i$周在北京或上海工作的最大收益}.
+        那么我们有如下的状态转移方程:
+        \begin{align*}
+            Opt(1, 0) &= a_1, \quad Opt(1, 1) = b_1-500, \\
+            Opt(i, 0) &= a_i + \max\{Opt(i-1, 0), Opt(i-1, 1) - 500\} 
+            \quad \text{for } i = 2, 3, \dots, n, \\
+            Opt(i, 1) &= b_i + \max\{Opt(i-1, 1), Opt(i-1, 0) - 500\}
+            \quad \text{for } i = 2, 3, \dots, n.
+        \end{align*}伪代码见下:
+        \begin{algorithm}[ht]
+            \caption{Maximize Profit by Dynamic Programming}
+            \begin{algorithmic}[1]
+            \Require Two lists of profits $\{a_i\}$ and $\{b_i\}$;
+            \Ensure The maximum total profit; 
+            \State $Opt[1][0] \leftarrow a_1, Opt[1][1] \leftarrow b_1 - 500$ 
+            \For{$i \leftarrow 2$ to $n$} 
+                \State $Opt[i][0] \leftarrow a_i + \max\{Opt[i-1][0], Opt[i-1][1] - 500\}$
+                \State $Opt[i][1] \leftarrow b_i + \max\{Opt[i-1][1], Opt[i-1][0] - 500\}$
+            \EndFor 
+            \State \Return $\max\{Opt[n][0], Opt[n][1] - 500\}$ 
+            \Statex \Comment Consider the last week work in Shanghai and then go back to Beijing.
+            \end{algorithmic}
+        \end{algorithm}
+        \\时间复杂度为$O(n)$. 算法正确性: 我们来证明这一问题具有最优子结构性质且无后效性.\\
+        注意到$n=1$时, 最优性显然成立. 假设$Opt(i-1, 0)$和$Opt(i-1, 1)$是最优的, 那么$Opt(i,0)$和$Opt(i,1)$也是最优的.
+        否则, \[\exists ~ Opt'(i-1, 0), Opt'(i-1, 1) ~ s.t.~ Opt'(i-1, 0) > 
+        Opt(i-1, 0) \lor Opt'(i-1, 1) > Opt(i-1, 1)\]这与假设的最优性矛盾.又注意到每次分解出的子问题是独立的, 无后效性, 故算法正确性得证.
+    \end{enumerate}
+\end{answer}
+\begin{problem}{2 (Processing Sheet Metal)}
+    You run a company that processes (two-dimensional) sheet metal. 
+    You have a price list indicating that a rectangular piece of 
+    sheet metal of dimensions $x_i \times y_i$ can be sold for 
+    $v_i$ dollars, where $i \in \{1, 2, \dots , n\}$. Starting 
+    from a raw piece of sheet metal of dimensions $A \times B$, 
+    you would like to make a sequence of horizontal or vertical 
+    cuts, each of which cuts a given piece into two smaller 
+    pieces, to produce pieces from your price list (and possibly 
+    some additional worthless scrap pieces). Design an algorithm 
+    that maximizes the total value of the pieces obtained by 
+    some sequence of cuts, prove that your algorithm is \textbf{correct}, 
+    and analyze its \textbf{running time}. \\
+    \textbf{Note that}:
+    \begin{itemize}
+        \item Your algorithm should return \textbf{both the maximum value that can be obtained and a description of the cuts that should be made to achieve it}.
+        \item The numbers $A,B$, and $x_i,y_i,v_i$ for $i \in \{1,2,\dots,n\}$ are all positive integers.
+        \item You can produce any number of copies of any of the pieces, i.e., no matter how many pieces of $x_i \times y_i$
+        you have produced, they can always be sold at price $v_i$.
+    \end{itemize}
+\end{problem}
+\begin{answer}
+设$Opt(i,j)$表示形状为$x_i \times y_j$的矩形的最大收益, 考虑遍历所有的切割方式, 那么我们有如下的状态转移方程:
+\begin{align*}
+    Opt(i, j) = \max_{1 \le k < i}\{Opt(k, j) + Opt(i-k, j)\}, \quad \forall i \in \{1, 2, \dots, A\}, j \in \{1, 2, \dots, B\}.\\
+    Opt(i, j) = \max_{1 \le k < j}\{Opt(i, k) + Opt(i, j-k)\}, \quad \forall i \in \{1, 2, \dots, A\}, j \in \{1, 2, \dots, B\}.
+\end{align*}    
+用一个二维数组$Cut$来记录切割的位置, 其中$Cut[i][j]$表示形状为$x_i \times y_j$的矩形的切割位置(可以建立一个结构体), 那么我们有如下的伪代码:
+\begin{breakablealgorithm}
+    \caption{Maximize the Total Value of the Pieces}
+    \begin{algorithmic}[1]
+    \Require The dimensions of the raw piece $A \times B$, the price list $\{(x_i, y_i, v_i)\}_{i=1}^{n}$;
+    \Ensure The maximum total value and a description of the cuts;
+    \State Initialize $Opt[i][j] = 0, ~\forall i \in \{1, 2, \dots, A\}, j \in \{1, 2, \dots, B\}$;
+    \State Initialize $Cut[i][j] = \varnothing, ~\forall i \in \{1, 2, \dots, A\}, j \in \{1, 2, \dots, B\}$;
+    \State Assign $Opt$ with {\itshape Base Case $\{x_i, y_i, v_i\}_{i=1}^{n}$}; \Comment Base Case: $O(n)$
+    \For{$i \leftarrow 1$ to $A$} 
+        \For{$j \leftarrow 1$ to $B$}
+            \For{$k \leftarrow 1$ to $i-1$}
+                \State $Opt[i][j] \leftarrow \max\{Opt[i][j], Opt[k][j] + Opt[i-k][j]\}$
+                \State $Cut[i][j] \leftarrow $ coordinates of the cut that achieves the maximum
+            \EndFor
+            \For{$k \leftarrow 1$ to $j-1$}
+                \State $Opt[i][j] \leftarrow \max\{Opt[i][j], Opt[i][k] + Opt[i][j-k]\}$
+                \State $Cut[i][j] \leftarrow $ coordinates of the cut that achieves the maximum
+            \EndFor
+        \EndFor
+    \EndFor
+    \State \Return{$Opt[A][B]$ and $Cut[A][B]$}
+    \end{algorithmic}
+\end{breakablealgorithm}
+我们用数学归纳法证明算法的正确性:
+\begin{enumerate}
+    \item 归纳奠基: 对于$Opt(x_i, y_i), \forall i \in \{1, 2, \dots, n\}$ 显然是符合最优性的.
+    \item 归纳假设: 假设对于任意尺寸小于等于$i \times j$的矩形, 算法得到的最大收益是最优的, 下面我们证明对于$i \times (j+1)$和$(i+1) \times j$的矩形, 算法得到的最大收益是最优的.
+    \item 归纳证明: 注意到算法考虑了$i \times (j+1)$(或$(i+1) \times j$)的所有切割后的子问题$i-k_i\times (j+1 - k_j)$, 由归纳假设知这些子问题都已得到最优解, 故算法得到的最大收益是最优的.
+    \item 终止条件: $Opt$二维数组是有限的, 算法显然能终止, 且最终选择了$Opt[A][B]$和$Cut[A][B]$.
+\end{enumerate}
+综上所述, 算法的正确性得证.时间复杂度为$O\left(\sum_{i=1}^{A}\sum_{j=1}^{B} (i + j) + n\right) = O(AB(A+B) + n)$.
+% 注: 考虑是否能把子问题切割的状态转移方程改为: 
+% \begin{align*}
+%     Opt(i, j) = \max_{1 \le k \le n}\{Opt(x_k, j) + Opt(i-x_k, j)\}, \quad \forall i \in \{1, 2, \dots, A\}, j \in \{1, 2, \dots, B\}.\\
+%     Opt(i, j) = \max_{1 \le k \le n}\{Opt(i, y_k) + Opt(i, j-y_k)\}, \quad \forall i \in \{1, 2, \dots, A\}, j \in \{1, 2, \dots, B\}.
+% \end{align*}   
+% 考虑到切割完的矩阵的位置不会影响价值, 每次切割时可以考虑按照$\{x_i, y_i\}$进行切割.这一情况下时间复杂度为$O(ABn)$.
+\end{answer}
+
+\begin{problem}{3 (Investing in the Stock)}
+    Suppose you are a wise investor looking at $n$ consecutive days
+     of a given stock, from some point in the past. The days are 
+     numbered $i = 1, 2, \dots , n$; for each day $i$, there’s a 
+     price $p(i)$ per share for the stock on that day. For certain
+      (possibly large) values of $k$, you want to study a so-called
+       $k-shot~ strategies$. The strategy is a collection 
+       of $m$ pairs of days$(b_1,s_1),\dots,(b_m,s_m)$,where $0 \le m \le k$ and
+       $1 \le b_1 <s_1 <b_2 <s_2 <\dots<b_m <s_m \le n$. We view these
+        as a set of up to $k$ non-overlapping intervals, during each 
+        of which you will buy $1000$ shares of the stock (on day $b_i$) 
+        and then sell it (on day $s_i$). The return of a given $k$-shot 
+        strategy is simply the profit obtained from the $m$ buy-sell transactions, namely,
+        \[ 1000 \sum_{i=1}^{m} \left(p(s_i) - p(b_i)\right). \]
+        Your goal is to design an efficient algorithm that determines, 
+        given the sequence of prices, the $k$-shot strategy with 
+        the maximum possible return. Prove the \textbf{correctness} and
+         analyze the \textbf{running time} of your algorithm. 
+         Your running time should be \textbf{polynomial in both $n$ and $k$}; 
+         it should not contain $k$ in the exponent.
+\end{problem}
+\begin{answer}
+    设$Opt(i, j)$为前$i$天进行$j$笔交易的最大收益, 那么对$\forall i \in \{2, 3, \dots, n\}, j \in \{1, 2, \dots, k\}$
+    我们有如下的状态转移方程:
+    \begin{align}
+        Opt(i, j) &= \max\{Opt(i-1, j), \max_{1 \le l < i}\{Opt(l, j-1) + 1000(p(i) - p(l))\}\},\label{eq3.1}
+    \end{align}
+    初始状态为:
+    \begin{align*}
+        Opt(1, j) &= 0, \quad \forall j \in \{0, 1, 2, \dots, k\}, \\
+        Opt(i, 0) &= 0, \quad \forall i \in \{1, 2, \dots, n\}
+    \end{align*}
+    其中\eqref{eq3.1}式是由于我们可以选择是否在第 $i$ 天卖出股票, 若是则我们可以通过遍历的方法在前 $i-1$ 天中选择一个最优的买入时机.
+    若否则即为 $Opt(i-1, j)$.
+    那么伪代码如下:
+    \begin{breakablealgorithm}
+        \caption{Maximize the Return of Stock}
+        \begin{algorithmic}[1]
+        \Require The sequence of prices $\{p(i)\}$, the number of transactions $k$;
+        \Ensure The maximum return of stock; 
+        \State $Opt[1][j] \leftarrow 0, ~\forall j \in \{0, 1, 2, \dots, k\}$ 
+        \State $Opt[i][0] \leftarrow 0, ~\forall i \in \{1, 2, \dots, n\}$ 
+        \For{$i \leftarrow 2$ to $n$} 
+            \For{$j \leftarrow 1$ to $k$}
+                \State $Opt[i][j] \leftarrow \max\{Opt[i-1][j], \max_{1 \le l < i}\{Opt[l][j-1] + 1000(p[i] - p[l])\}\}$
+            \EndFor
+        \EndFor 
+        \State \Return $\max_{j \in \{0, 1, 2, \dots, k\}}\{Opt[n][j]\}$ 
+        \end{algorithmic}
+    \end{breakablealgorithm}
+    由上述的讨论可知, 该算法的时间复杂度为$O(n^2 k )$.下面我们用数学归纳法证明算法的正确性: 
+    % {\huge \textbf{TODO: 证明算法的正确性.}}
+    \begin{enumerate}
+    \item 归纳奠基: $Opt(1, j) = 0, \forall j \in \{0, 1, \dots, k\} $显然是最优的.
+    \item 归纳假设: 假设$Opt(l, j-1), \forall l < i , j \le k $是最优的, 下面我们证明$Opt(i,j)$是最优的.
+    \item 归纳步骤: 注意到$Opt(i, j)$考虑是否在第 $i$ 天卖出股票, 根据归纳假设$Opt(l, j-1)$都是最优的, 通过上述的归纳转移方程知
+    $Opt(i, j)$考虑了所有的买入时机($l$), 故$Opt(i, j)$是最优的.
+    \item 终止条件: $Opt$二维数组是有限的, 算法显然能终止, 且最终选择了$\max_{j}\{Opt[n][j]\}$, 考虑了最后一天所有的可能情况的最大收益.
+    \end{enumerate}
+    综上所述, 算法的正确性得证.\\
+    这里也给出问题的另一种算法: \\
+    设$buy(i,j)$表示前 $i$ 天恰好进行 $j$ 笔交易且当前手中持有股票的最大收益, $sell(i,j)$表示前 $i$ 天恰好进行 $j$ 笔交易且当前手中不持有股票的最大收益.
+    那么我们有如下的状态转移方程:
+    \begin{align}
+        buy(i, j) &= \max\{buy(i-1, j), sell(i-1, j) - 1000p(i)\}, \label{eq3.2} \\
+        sell(i, j) &= \max\{sell(i-1, j), buy(i-1, j-1) + 1000p(i)\}.\label{eq3.3}
+    \end{align}
+    其中\eqref{eq3.2}式表示手中的股票是否是在第 $i$ 天买入的, 若否则即为 $buy(i-1, j)$, 若是则对应第$i-1$天不持有股票(即为$sell(i-1, j)$, 注意需要扣除$1000p(i)$), 取二者最大即可.
+    \eqref{eq3.3}式表示手中的股票是否是在第 $i$ 天卖出的, 若否则即为 $sell(i-1, j)$, 若是则对应第$i-1$天持有股票(即为$buy(i-1, j-1)$, 注意需要加上$1000p(i)$), 取二者最大即可.
+    伪代码如下:
+    \begin{breakablealgorithm}
+        \caption{Maximize the Return of Stock}
+        \begin{algorithmic}[1]
+        \Require The sequence of prices $\{p(i)\}$, the number of transactions $k$;
+        \Ensure The maximum return of stock; 
+        \State $buy[1][j] \leftarrow -1000p(1), ~\forall j \in \{0, 1, 2, \dots, k\}$ 
+        \State $sell[1][j] \leftarrow 0, ~\forall j \in \{0, 1, 2, \dots, k\}$ 
+        \For{$i \leftarrow 2$ to $n$} 
+            \For{$j \leftarrow 1$ to $k$}
+                \State $buy[i][j] \leftarrow \max\{buy[i-1][j], sell[i-1][j] - 1000p[i]\}$
+                \State $sell[i][j] \leftarrow \max\{sell[i-1][j], buy[i-1][j-1] + 1000p[i]\}$
+            \EndFor
+        \EndFor 
+        \State \Return $\max_{j \in \{0, 1, 2, \dots, k\}}\{sell[n][j]\}$ 
+        \end{algorithmic}
+    \end{breakablealgorithm}
+    这一算法的时间复杂度为$O(nk)$.算法正确性证明类似上面的归纳法, 这里略去.
+\end{answer}
+
+\begin{problem}{4 (Number of Shortest Paths)}
+    To assess how "well-connected" two nodes in a directed graph 
+    are, we may not only look at the length of the shortest path 
+    between them, but can also count the number of shortest paths. 
+    Suppose we are given a directed graph $G=(V,E)$ where $|V|=n$ and $|E|=m$,
+    with cost $c_e$ on each edge $e\in E$.The costs maybe positive or
+     negative, but every cycle in the graph has strictly positive cost. 
+     We are also given two nodes $s, t \in V$. Give an $O(mn)$ algorithm
+      that computes the number of shortest $s - t$ paths in $G$. 
+      (You don’t have to list all the paths; just the number suffices.)
+\end{problem}
+\begin{answer}
+    从\textit{Bellman Ford}算法出发加以修改. 设$Opt(i,\omega)$为$s \rightarrow \omega$的边数恰为$i$的最短路径长度,
+    $N(i,\omega)$为上述路径的条数, $Opt(t)$为$s \rightarrow t$的最短路径长度, $N(t)$为对应长度的路径的条数.
+    那么根据定义有如下初始化条件(初始条件下, $s \rightarrow s$的最短路径长度为$0$, 路径条数为$1$):
+    \begin{align*}
+        Opt(i, s) = 0, \quad Opt(i, s') = +\infty, \quad \forall s' \neq s, \\
+        N(i, s) = 1, \quad N(i, s') = 0, \quad \forall s' \neq s.
+    \end{align*}
+    进一步有如下状态转移方程($\forall i \in \{1, 2, \dots, n-1\}$):
+    \begin{align}
+        Opt(i, r) &= \min_{w, (w,r) \in E}\{Opt(i-1, w) + c_{(w,r)}\}, \quad \forall r \in V, \label{eq4.1} \\
+        N(i, r) &= \sum_{w, (w,r) \in E}\{N(i-1, w) \cdot \mathbb{I}(Opt(i-1, w) + c_{(w,r)} = Opt(i, r))\}, \quad \forall r \in V. \label{eq4.2}
+    \end{align}
+    其中$\mathbb{I}(\cdot)$为指示函数. \eqref{eq4.2}式计算了与已知最短路同长度的路径的个数.\\
+    类似\textit{Bellman Ford}算法, 时间复杂度为\[O\left(n\sum_{v \in V}n_v\right) = O(mn)\]
+    其中$n_v$为节点$v$的出度. 接着有:
+    \begin{align}
+        Opt(t) &= \min_{i}\{Opt(i, t)\}, \\
+        N(t) &= \sum_{i}\{N(i, t) \cdot \mathbb{I}(Opt(i, t) = Opt(t))\}.
+    \end{align}
+    最后的结果为$N(t)$.时间复杂度为$O(n)$.伪代码如下:
+    \begin{breakablealgorithm}
+        \caption{Number of Shortest Paths}
+        \begin{algorithmic}[1]
+        \Require{A directed graph $G=(V,E)$, two nodes $s, t \in V$}
+        \Ensure{The number of shortest $s-t$ paths}
+        \State $Opt[0][s] \leftarrow 0, ~Opt[0][s'] \leftarrow +\infty, N[0][s] \leftarrow 1, ~N[0][s'] \leftarrow 0, ~\forall s' \neq s$\;
+        \For{$i \leftarrow 1$ \textit{to} $n-1$}
+            \For{$r \in V$}
+                \State $Opt[i][r] \leftarrow +\infty$, $N[i][r] \leftarrow 0$\;
+                \State $Opt[i][r] \leftarrow \min_{w, (w,r) \in E}\{Opt(i-1, w) + c_{(w,r)}\}$\;
+                \State $N[i][r] \leftarrow \sum_{w, (w,r) \in E \land Opt[i][r] = Opt[i][w] + c_{(w,r)}} N[i-1][w]$
+            \EndFor
+        \EndFor
+        \State $Opt \leftarrow \min_{i}\{Opt[i][t]\}$\;
+        \State $N \leftarrow \sum_{i \land Opt[i][t] = Opt}N[i][t]$\;
+        \State \Return{$N$}
+        \end{algorithmic}
+    \end{breakablealgorithm}
+    由上述的讨论可知, 该算法的时间复杂度为$O(mn)$.
+\end{answer}
+
+\begin{problem}{5 (Running a Sales Company)}
+    You are running a company that sells trucks, and predictions 
+    tell you the quantity of sales to expect over the next $n$ months.
+    Let $d_i$ denote the number of sales you expect in month $i$. 
+    We'll assume that all sales happen at the beginning of the 
+    month, and trucks not sold are \textit{stored} until the beginning of 
+    the next month. You can store at most $S$ trucks, and it 
+    costs $C$ to store a single truck for a month. You receive 
+    shipments of trucks by placing orders for them, and there is 
+    fixed ordering fee of $K$ each time you place an order 
+    (regardless of the number of trucks you order). You start out 
+    with no trucks. The problem is to design an algorithm that 
+    decides how to place orders so that you satisfy all the 
+    demands $\{d_i\}$, and \textbf{minimize the costs}. \\
+    \textbf{In summary:}
+    \begin{itemize}
+        \item There are two parts of the cost: $(1.)$ Storage: it costs $C$ 
+        for every truck on hand that is not needed that month; $(2.)$ 
+        ordering Fees: it costs $K$ for every order placed.
+        \item In each month you need enough trucks to satisfy 
+        the demand $d_i$, but the number left over after satisfying
+         the demand for the month should not exceed the inventory 
+         limit $S$.
+    \end{itemize}
+    Give an algorithm that solves this problem in $O(nS)$ time.
+\end{problem}
+\begin{answer}
+    设$Opt(i, s)$表示第$i$个月\textbf{开始时}剩余$s$辆车的最小花费. 那么我们所要求的是$Opt(n, 0)$, 总大小是$n(S+1)$的表格.
+    设第$i-1$天剩余车辆为$z$, 下面我们分情况讨论:
+    \begin{enumerate}
+        \item 初始值: $Opt(1, 0) = 0, ~Opt(1, j) = +\infty, ~\forall j \in \{1, 2,\dots,S\}$.
+        \item $0 \le z < \min\{s + d_i, S\}$时, 说明我们需要进货, 那么( $\forall i \in \{2,3,\dots, n\}$ )
+        \begin{align}
+            Opt_1(i, s) = \min_{z < \min(s+d_i, S)}\{Opt(i-1, z) + K + zC\} \label{eq5_1}
+        \end{align}
+        \item $s+d_i \le z \le S$时, 说明我们不需要进货, 那么( $\forall i \in \{2,3,\dots, n\}$ )
+        \begin{align}
+            Opt_2(i, s) = \min_{s+d_i \le z \le S}\{Opt(i-1, z) + zC\} \label{eq5_2}
+        \end{align}
+        \[\implies Opt(i,s) = \min\{Opt_1(i,s), Opt_2(i,s)\}\]
+    \end{enumerate}
+    对于\eqref{eq5_1}式, 注意到不论第$i-1$个月剩余车辆是多少, 我们都需要进货, 那么当$z = 0$时取到最小值
+    (这是由于多出来的货车会额外有储存的成本). 对于\eqref{eq5_2}式, 注意到不论第$i-1$个月剩余车辆是多少, 我们都不需要进货, 那么类似的当$z = s+d_i$时取到最小值.
+    因此\[Opt(i, s) = \begin{cases}
+        \min \{Opt(i-1, 0) +K, Opt(i-1, s+d_i) + (s+d_i)C\}, & \text{if } s+d_i \le S, \\
+        Opt(i-1, 0) + K, & \text{if } s+d_i > S.
+    \end{cases} \]
+    综合上述讨论, 我们可以得到如下的伪代码:
+    \begin{breakablealgorithm}
+        \caption {Minimize the Costs of Ordering Trucks}
+        \begin{algorithmic}[1]
+        \Require The demands $\{d_i\}$, the storage limit $S$, the storage cost $C$, the ordering fee $K$
+        \Ensure The minimum cost
+        \State $Opt[1][0] \leftarrow 0, Opt[1][j] \leftarrow +\infty, ~\forall j \in \{1, 2,\dots,S\}$\;
+        \For{$i \leftarrow 2$ \textit{to} $n$}
+            \For{$s \leftarrow 0$ \textit{to} $S$}
+                \If{$s+d_i \le S$}
+                    \State $Opt[i][s] \leftarrow \min\{Opt(i-1, 0) +K, Opt(i-1, s+d_i) + (s+d_i)C\}$\;
+                \Else
+                    \State $Opt[i][s] \leftarrow Opt[i-1][0] + K$\;
+                \EndIf
+            \EndFor
+        \EndFor
+        \State \Return $Opt[n][0]$
+        \end{algorithmic}
+    \end{breakablealgorithm}
+由于循环内部每次计算$Opt[i][s]$均为常数时间, 故总的时间复杂度为$O(nS)$.
+\end{answer}
+\end{document}
