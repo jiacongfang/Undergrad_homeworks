@@ -1,0 +1,247 @@
+\documentclass[11pt]{article}           
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{diagbox}
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+%\usepackage{algorithm,algorithmicx}
+\usepackage[ruled]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage[hidelinks]{hyperref}
+\usepackage{extarrows}
+\usepackage{lastpage}
+\usepackage{totcount}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+\usepackage{helvet}
+\usepackage{dsfont}
+\usepackage{threeparttable}
+\usepackage{multirow}
+\usepackage{tabularx}
+% \usepackage{newtxmath}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]\songti}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Solution]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\1{\mathds{1}}
+% \newcommand\1{\mathbf{1}}
+\newcommand\R{\mathbb{R}}
+\newcommand\E{\mathbb{E}}
+\newcommand\N{\mathbb{N}}
+\newcommand\NN{\mathcal{N}}
+\newcommand\per{\mathrm{per}}
+\newcommand\PP{\mathbb{P}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\Var{\mathrm{Var}}
+\newcommand\Cov{\mathrm{Cov}}
+\newcommand{\Exp}{\mathrm{Exp}}
+\newcommand{\arrp}{\xrightarrow{P}}
+\newcommand{\arrd}{\xrightarrow{d}}
+\newcommand{\arras}{\xrightarrow{a.s.}}
+\newcommand{\arri}{\xrightarrow{n\rightarrow\infty}}
+
+\title{Homework \#3}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} 北京大学}
+\chead{}
+\rhead{\CJKfamily{zhkai} 2024年秋\ 社会统计学(张春泥)}
+\fancyfoot[C]{\thepage\ /\ \pageref{LastPage} \\ \textcolor{lightgray}{最后编译时间: \today}}
+
+
+
+\begin{center}
+    {\LARGE \bf Homework 2}
+
+    {姓名:方嘉聪\ \  学号: 2200017849}            % Write down your name and ID here.
+\end{center}
+\begin{problem}{1}
+    以往研究显示, 焦虑、害怕和担忧是人们面对风险时最常见的三种消极情绪。某课题组在新型冠状病毒肺炎疫情初期进行了一项网络问卷调查, 以此了解疫情期间的社会心理。问卷中对消极情绪的测量由焦虑程度、担忧程度和害怕程度三道情绪题构成, 这三道访题的题干均表述为“想到新型冠状病毒肺炎, 您的焦虑(/害怕/担忧)程度是? ”选项均采用五级量表：一点也不焦虑(/害怕/担忧)、不太焦虑(/害怕/担忧)、一般、比较焦虑(/害怕/担忧)、非常焦虑(/害怕/担忧)。随后, 研究者按照选项所体现的负面情绪的强度, 从0到4赋分, 0表示一点也不焦虑(/害怕/担忧), 4表示非常焦虑(/害怕/担忧), 分数越高表明受访者越焦虑(/害怕/担忧), 假设受访者对这三种情绪上的得分呈正态分布。表 \ref{tab:1.1} 描述了接受调查的10000名受访者在这三道情绪题上分数的均值和标准差。表 \ref{tab:1.2} 提供了样本中受访者A和B两人分别回答这三道情绪题的得分。
+    \begin{table}[H]
+        \centering
+        \caption{情绪题得分的统计描述 ($N=10000$)}
+        \label{tab:1.1}
+        \begin{tabularx}{0.8\textwidth}{X>{\centering\arraybackslash}Xc}
+            \hline
+            \textbf{} & \textbf{均值} & \textbf{标准差} \\
+            \hline
+            Q1焦虑程度	& 2.9	& 0.85 \\
+            Q2害怕程度	& 2.7	& 0.88 \\
+            Q3担忧程度	&3.1	& 0.81 \\
+            \hline
+        \end{tabularx}
+    \end{table} 
+    \begin{table}[H]
+        \centering
+        \caption{两名受访者在三道情绪题上的具体得分}
+        \label{tab:1.2}
+        \begin{tabularx}{0.8\textwidth}{|>{\centering\arraybackslash}X|c|c|c|}
+            \hline
+            \textbf{ID} & \textbf{Q1焦虑程度} & \textbf{Q2害怕程度} & \textbf{Q3担忧程度} \\
+            \hline
+            受访者A	& 3	& 3 & 4 \\
+            受访者B	& 4	& 4 & 2 \\
+            \hline
+        \end{tabularx}
+    \end{table} 
+    问：请你根据表 \ref{tab:1.1} 和表 \ref{tab:1.2} 提供的信息, 评估这两名受访者谁在面对新型冠状病毒肺炎疫情时的负面情绪更为强烈? 
+\end{problem}
+\begin{answer}
+    我们通过计算标准分来比较二者的负面情绪强度. 记受访者 $A,B$ 在三道情绪题上的标准分分别为$Z_{i1}, Z_{i2}, Z_{i3}, i\in\{A, B\}$. 那么
+    \begin{align*}
+        Z_{A1} = \frac{3-2.9}{0.85} = 0.12, \quad Z_{A2} = \frac{3-2.7}{0.88} = 0.34, \quad Z_{A3} = \frac{4-3.1}{0.81} = 1.11, \\
+        Z_{B1} = \frac{4-2.9}{0.85} = 1.29, \quad Z_{B2} = \frac{4-2.7}{0.88} = 1.48, \quad Z_{B3} = \frac{2-3.1}{0.81} = -1.36.
+    \end{align*}
+    由于题目没有指出三种情绪的各自权重, 这里直接按照等权重相加以比较. 我们有
+    \begin{align*}
+        Z_A = \sum_{i=1}^{3}Z_{Ai} = 1.57 > Z_B = \sum_{i=1}^{3}Z_{Bi} = 1.41.
+    \end{align*}
+    故受访者A在面对新型冠状病毒肺炎疫情时的负面情绪更为强烈.
+\end{answer}
+
+\begin{problem}{2}
+    思维模式(mindset)是心理学家卡罗尔·德韦克(Carol S. Dweck)提出的一项重要理论。她将人应对成功与失败、成绩与挑战时的两种基本心态分为两种思维模式：成长型思维(growth mindset)和固定型思维(fixed mindset)。成长型思维模式的人认为人的能力和品质可以不断改变和培养, 个人努力比天赋更重要, 他们将失败视作学习的机会, 积极寻求挑战。固定型思维模式的人认为人的能力和品质更多由先天决定, 他们更满足于现有成果, 用成功来印证自己的卓越, 往往害怕失败并尽量避免失败, 因为失败会证明自己一无是处。 \footnote{在作业中提供了德韦克在Mindset一书中关于思维模式的一些定性案例(见mindset补充资料.pdf), 如需对研究背景有更多了解, 可参考.}德韦克为了研究思维模式对人的行为及后果的影响, 在过去数十年进行了大量的、不同角度的心理学实验。
+    \begin{table}[H]
+        \centering
+        \caption{受表扬类型与孩子的目标选择、失败归因和事后评价}
+        \label{tab:2.1}
+        \renewcommand{\arraystretch}{0.8} % 调整行距
+        \begin{tabularx}{0.85\textwidth}{>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}Xc}
+        \toprule
+        \multirow{2}{*}{} & & \multicolumn{2}{c}{受表扬的类型} \\
+        \cmidrule{3-4} & & \textbf{被夸赞智力} & \textbf{被夸赞努力} \\
+        \midrule
+        \multicolumn{4}{l}{\textbf{选择的目标类型}} \\
+        表现型目标&                      & 55\%        & 23\%        \\
+        学习型目标&                      & 45\%        & 77\%        \\
+        \\
+        \multicolumn{3}{l}{\textbf{被告知失败后的归因}} \\
+        \multicolumn{3}{l}{$~~$归因于能力不足:} \\
+        & 均值                          & 19.79       & 7.70        \\
+        & 标准差                        & 7.18        & 6.20        \\
+        \multicolumn{3}{l}{$~~$归因于努力不足:} \\
+        & 均值                          & 4.07        & 14.83       \\
+        & 标准差                         & 3.43        & 7.70        \\
+        \\
+        \multicolumn{3}{l}{\textbf{对测试的事后评价}} \\
+        \multicolumn{3}{l}{$~~$继续解题的意愿程度:}\\
+        & 均值                            & 3.24        & 5.20        \\
+        & 标准差                          & 0.83        & 1.00        \\
+        \multicolumn{3}{l}{$~~$解题的有趣程度:}\\
+        & 均值                            & 3.86        & 4.99        \\
+        & 标准差                          & 1.01        & 0.55        \\
+        \multicolumn{2}{l}{\textbf{样本数}}     & $\mathbf{290}$    & $\mathbf{300}$         \\
+        \bottomrule
+        \end{tabularx}
+    \end{table}
+    表 \ref{tab:2.1} 来自于她与合作者在20世纪90年代进行的一项实验。 在这项实验中, 她们在一所公立小学招募了一批五年级(9-11岁)的孩子, 将孩子们随机分成A、B两组。实验的第一阶段, 她们让所有孩子先完成一组简单的测试题, 无论孩子实际解题结果如何, 实验员都会告诉孩子“你完成得不错, 至少80\%的题都回答正确。”不过, 实验员会对A组孩子继而夸赞他们的智力(“你真聪明”/“You must be smart at these problems”), 会对B组孩子继而夸赞他们付出的努力(“你做题真尽力”/“You must have worked hard at these problems”)。随后, 实验员让孩子选择他们之后希望解决的题目类型, 题目的类型按目标描述分为 \underline{表现型目标} (比如, 自己擅长的题目/容易的题目/能够展现自己能力的题目)和 \underline{学习型目标} (比如, 虽然自己不一定做得出来但通过解题可以学到新知识的题目)。第二阶段, 实验员让孩子限时完成第二组难度较高的测试。无论孩子实际解题结果如何, 实验员都会告诉孩子他们完成得很失败, 回答正确的题目不到50\%。接着, 实验员让孩子们对这一失败进行自我评价和归因, 即多大程度上是由于能力不足、多大程度上是由于解题不够努力, 对这两方面归因分别形成了评分。第三阶段, 实验员会让孩子回答想继续尝试解题的意愿程度(分值越高, 继续尝试的意愿越强), 以及评价刚才的解题测试的有趣程度(分值越高, 表明孩子越觉得测试有趣)。
+
+    根据表 \ref{tab:2.1} 解答以下五道题:
+    \begin{enumerate}[label=(\arabic*)]
+        \item 检验被夸赞智力的孩子与被夸赞努力的孩子在对目标类型的选择上是否存在差异? (设显著性水平为0.01)
+        \item 请检验被夸赞智力的孩子是否比被夸赞努力的孩子更倾向于将解题失败归因于能力不足, 而非努力不足? (设显著性水平为0.01; {\kaishu 提示：能力和努力是不同的维度, 应分开检验})
+        \item 请计算被夸赞智力和被夸赞努力的孩子在继续解题意愿程度差值的99\%置信区间.
+        \item 请分别对被夸赞智力和被夸赞努力的孩子求他们评价解题有趣程度的99\%双侧置信区间, 并以此检验这两组孩子对解题有趣程度评价上是否存在差异? 
+        \item 综合(1)到(4)的分析结果, 你得出什么结论? ({\kaishu 主要结合证据、必要时结合研究背景, 表达应言简意赅, 字数最多不超过300字})
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label=(\arabic*)]
+        \item 记被夸赞智力的孩子和被夸赞努力的孩子在选择表现型目标的比例分别为$p_1, p_2$. 考虑原假设和备择假设为
+        \begin{align*}
+            H_0: p_1 = p_2, \quad H_1: p_1 \neq p_2.
+        \end{align*}
+        我们有 $n_1 = 290, n_2 = 300$, 那么:
+        \begin{align*}
+            \widehat{p} &= \frac{m_1 + m_2}{n_1 + n_2} = \frac{0.55\times 290 + 0.23 \times 300}{290 + 300} \approx 0.39. \\
+            Z &= \frac{\widehat{P_1} - \widehat{P_2}}{\sqrt{\widehat{p}(1-\widehat{p})\left(\frac{1}{n_1} + \frac{1}{n_2}\right)}} = \frac{0.55 - 0.23}{\sqrt{0.39\times 0.61\left(\frac{1}{290} + \frac{1}{300}\right)}} \\
+            &\approx 7.97 > Z_{0.005} = 2.58.
+        \end{align*}
+        故拒绝原假设, 即在显著性水平0.01下, 这两个组别在对目标类型的选择上存在显著差异.
+        \item \begin{itemize}
+            \item \underline{能力维度:} 记被夸赞智力和被夸赞努力的孩子在归因于能力不足的均值分别为$\mu_{1}', \mu_2'$. 考虑原假设和备择假设为
+            \begin{align*}
+                H_0: \mu_1' = \mu_2', \quad H_1: \mu_1' > \mu_2'.
+            \end{align*}
+            注意到
+            \begin{align*}
+                Z = \frac{\bar{X}'_1 - \bar{X}'_2}{\sqrt{S_1^2/n_1 +S_2^2/n_2}} = \frac{19.79 - 7.70}{\sqrt{7.18^2/290 + 6.20^2/300}} \approx 21.86 > Z_{0.01} = 2.33.
+            \end{align*}
+            故拒绝原假设, 即显著性水平0.01下, 被夸赞智力的组别相对更倾向将其归因于能力不足.
+            \item \underline{努力维度:} 记被夸赞智力和被夸赞努力的孩子在归因于努力不足的均值分别为$\mu_{1}'', \mu_2''$. 考虑原假设和备择假设为
+            \begin{align*}
+                H_0: \mu_1'' = \mu_2'', \quad H_1: \mu_1'' < \mu_2''.
+            \end{align*}
+            注意到
+            \begin{align*}
+                Z = \frac{\bar{X}''_1 - \bar{X}''_2}{\sqrt{S_1^2/n_1 +S_2^2/n_2}} =  \frac{4.07 - 14.83}{\sqrt{3.43^2/290 + 7.70^2/300}} \approx -22.05 < -Z_{0.01} = -2.33.
+            \end{align*}
+            故拒绝原假设, 即显著性水平0.01下, 被夸赞智力的组别相对更 \underline{不倾向} 将其归因于努力不足
+        \end{itemize}
+        综上, 在显著性水平为0.01下, 被夸赞智力的孩子比被夸赞努力的孩子更倾向于将解题失败归因于能力不足, 而非努力不足.
+        \item 注意到 
+        \begin{align*}
+            \hat{\sigma}_{\hat{X}_1 - \hat{X}_2} = \sqrt{\frac{S_1^2}{n_1} + \frac{S_2^2}{n_2}} = \sqrt{\frac{0.83^2}{290} + \frac{1.00^2}{300}} \approx 0.08.
+        \end{align*}
+        被夸赞智力和被夸赞努力的孩子在继续解题意愿程度差值的99\%置信区间为( $Z_{\alpha/2} = 2.58$.)
+        \begin{align*}
+            \bigg[(\bar{X}_1 - \bar{X}_2) - Z_{\alpha/2}\hat{\sigma}_{\bar{X}_1 - \bar{X}_2},(\bar{X}_1 - \bar{X}_2) + Z_{\alpha/2}\hat{\sigma}_{\bar{X}_1 - \bar{X}_2} \bigg] = [-2.15, -1.77]. 
+        \end{align*}
+        \item \begin{itemize}
+            \item \underline{被夸赞智力:} 正态样本均值区间估计。在置信度为99\%下, 评价解题有趣程度的双侧置信区间为            
+            \begin{align*}
+                Z_{\alpha/2}\frac{S_1}{\sqrt{n_1}} =0.15\implies \bigg[\bar{X}_1 - Z_{\alpha/2}\frac{S_1}{\sqrt{n_1}}, \bar{X}_1 + Z_{\alpha/2}\frac{S_1}{\sqrt{n_1}}\bigg] =  [3.71, 4.01] := I_1.
+            \end{align*}
+            \item \underline{被夸赞努力:} 在置信度为99\%下, 评价解题有趣程度的双侧置信区间为
+            \begin{align*}
+                Z_{\alpha/2}\frac{S_2}{\sqrt{n_2}} = 0.08\implies \bigg[\bar{X}_2 - Z_{\alpha/2}\frac{S_2}{\sqrt{n_2}}, \bar{X}_2 + Z_{\alpha/2}\frac{S_2}{\sqrt{n_2}}\bigg] = [4.91, 5.07] := I_2.
+            \end{align*}
+            \item \underline{差异检验:} 注意到置信度99\%下, 被夸赞智力和被夸赞努力的孩子评价解题有趣程度的置信区间$I_1, I_2$不相交, 即$I_1 \cap I_2 = \emptyset$. 这表明在显著性水平为0.01下, 这两组孩子对解题有趣程度评价上存在显著差异.
+            % 记被夸赞智力和被夸赞努力的孩子在评价解题有趣程度上的均值分别为$\mu_1, \mu_2$. 考虑原假设和备择假设为
+            % \begin{align*}
+            %     H_0: \mu_1 = \mu_2, \quad H_1: \mu_1 \neq \mu_2.
+            % \end{align*} 
+            % 注意到
+            % \begin{align*}
+            %     Z = \frac{\bar{X}_1 - \bar{X}_2}{\sqrt{S_1^2/n_1 + S_2^2/n_2}} = \frac{3.86 - 4.99}{\sqrt{1.01^2/290 + 0.55^2/300}} \approx -16.80 < -Z_{0.005} = -2.58.
+            % \end{align*}
+            % 拒绝原假设. 故在显著性水平0.01下, 这两组孩子对解题有趣程度评价上存在显著差异.
+        \end{itemize}
+        \item 1). 在统计意义上, 被夸赞智力的孩子更倾向于选择表现型目标和将失败归因于能力不足, 同时对测试的事后评价(继续解题意愿与有趣程度)较低. 而被夸赞努力的孩子则更倾向于选择学习型目标和将失败归因于努力不足, 同时对测试的事后评价较高. 
+        
+        2). 进而初步表明 \underline{被夸赞智力的孩子更有可能倾向于固定型思维, 而被夸赞努力的孩子更有可能} \underline{倾向于成长型思维}. 
+        
+        3). 这与德韦克的理论大体相符, 即成长型思维的人更倾向于接受挑战, 并从失败中学习, 而固定型思维的人则更倾向于避免失败, 并将失败归因于自身能力不足. 同时思维模式的不同会在行为和选择中体现出来, 进而影响到个体的学习和发展.
+    \end{enumerate}
+\end{answer}
+
+\end{document}

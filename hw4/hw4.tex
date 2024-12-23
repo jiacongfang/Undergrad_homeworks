@@ -1,0 +1,175 @@
+\documentclass[11pt]{article}           
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{diagbox}
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+%\usepackage{algorithm,algorithmicx}
+\usepackage[ruled]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage[hidelinks]{hyperref}
+\usepackage{extarrows}
+\usepackage{lastpage}
+\usepackage{totcount}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+\usepackage{helvet}
+\usepackage{dsfont}
+\usepackage{threeparttable}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{makecell}
+\usepackage{caption}
+% \usepackage{newtxmath}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]\songti}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Solution]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\1{\mathds{1}}
+% \newcommand\1{\mathbf{1}}
+\newcommand\R{\mathbb{R}}
+\newcommand\E{\mathbb{E}}
+\newcommand\N{\mathbb{N}}
+\newcommand\NN{\mathcal{N}}
+\newcommand\per{\mathrm{per}}
+\newcommand\PP{\mathbb{P}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\Var{\mathrm{Var}}
+\newcommand\Cov{\mathrm{Cov}}
+\newcommand{\Exp}{\mathrm{Exp}}
+\newcommand{\arrp}{\xrightarrow{P}}
+\newcommand{\arrd}{\xrightarrow{d}}
+\newcommand{\arras}{\xrightarrow{a.s.}}
+\newcommand{\arri}{\xrightarrow{n\rightarrow\infty}}
+
+\renewcommand{\arraystretch}{0.9}
+
+
+\title{Homework \#3}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} 北京大学}
+\chead{}
+\rhead{\CJKfamily{zhkai} 2024年秋\ 社会统计学(张春泥)}
+\fancyfoot[C]{\thepage\ /\ \pageref{LastPage} \\ \textcolor{lightgray}{最后编译时间: \today}}
+
+
+
+\begin{center}
+    {\LARGE \bf Homework 4}
+
+    {姓名:方嘉聪\ \  学号: 2200017849}            % Write down your name and ID here.
+\end{center}
+\begin{problem}{1}
+    \begin{enumerate}[label=(\arabic*)]
+        \item 变量分布见表\ref{tab:1.1}:
+    \begin{table}[H]
+        \centering
+        \caption{相关变量的均值及标准差分布($N=15862$)}
+        \label{tab:1.1}
+        \begin{tabularx}{0.9\textwidth}{l>{\centering\arraybackslash}X>{\centering\arraybackslash}X}
+            \hline
+            \textbf{变量} & \textbf{均值} & \textbf{方差}  \\
+            \hline
+            居民收入对数 & 7.44 & 0.43 \\
+            性别(男=0)   & 0.48 & 0.50 \\
+            教育年限 & 10.67 & 3.12 \\
+            工作年限 & 19.72 & 10.25\\
+            党员身份(非党员=0) & 0.24 & 0.43 \\
+            \hline
+        \end{tabularx}
+    \end{table} 
+    \item 回归分析结果见表\ref{tab:1.2}:
+    \begin{table}[H]
+        \centering 
+        \caption{居民收入影响因素的多元线性回归模型回归表($N=15862$)}
+        \label{tab:1.2}
+        \begin{tabularx}{0.9\textwidth}{l>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X}
+            \hline
+            \textbf{变量} & \textbf{模型1} & \textbf{模型2} & \textbf{模型3} & \textbf{模型4}  \\
+            \hline
+            \multirow{2}{*}{性别($\text{男}=0$)} & $-0.163^{**}$ & $-0.125^{**}$ & $-0.114^{**}$ & $-0.113^{**}$\\
+             & (.006) & (.006) & (.006) & (.006)\\
+            \multirow{2}{*}{工作年限}   & $0.044^{**}$ & $0.046^{**}$ & $0.044^{**}$ & $0.046^{**}$ \\
+                & (.001) & (.001) & (.001) & (.001)\\
+            \multirow{2}{*}{工作年限的平方项} &$-0.001^{**}$ & $-0.001^{**}$ & $-0.001^{**}$ & $-0.001^{**}$ \\
+                & (.000) & (.000) & (.000) & (.000)\\
+            \multirow{2}{*}{教育年限} & \multirow{2}{*}{/} & $0.035^{**}$ & $0.031^{**}$ & $0.036^{**}$ \\
+             &  & (.001) & (.001) & (.001)\\
+            \multirow{2}{*}{党员身份($\text{非党员}=0$)} & \multirow{2}{*}{/} & \multirow{2}{*}{/} & $0.071^{**}$ & $0.230^{**}$ \\
+             &  &  & (.008) & (.026)\\
+            \multirow{2}{*}{教育年限 $\times$ 党员身份} & \multirow{2}{*}{/} & \multirow{2}{*}{/} & \multirow{2}{*}{/} & $-0.014^{**}$ \\
+             &  &  &  & (.002)\\ \\
+            \multirow{2}{*}{截距项} & $7.001^{**}$ & $6.558^{**}$ & $6.591^{**}$ & $6.538^{**}$ \\
+             & (.011) & (.017) & (.017) & (.019)\\
+            $R^2$ & 0.2045 & 0.2575 & 0.2614 & 0.2633 \\
+            \hline
+        \end{tabularx}
+        \begin{tablenotes}
+            \footnotesize
+            \item 注：$*: p<0.05, **:p<0.01$. 括号中的数字为标准误. / 表示模型不包含该变量. (教育年限 $\times$ 党员身份)表示教育年限与党员身份的交互项.
+        \end{tablenotes}
+    \end{table}
+    \item 为检验教育年限和党员身份对因变量的影响的联合效应, 考虑使用以下两个模型:
+    \begin{align*}
+        \text{限制性模型: 模型1} \quad &\text{logearn} = \beta_0 + \beta_1 \text{sex} + \beta_2 \text{exp} + \beta_3 \text{exp}^2 + \varepsilon, \\
+        \text{非限制性模型: 模型3} \quad &\text{logearn} = \beta_0 + \beta_1 \text{sex} + \beta_2 \text{exp} + \beta_3 \text{exp}^2 + \beta_4 \text{edu} + \beta_5 \text{cpc} + \varepsilon.
+    \end{align*}
+    考虑显著性水平$\alpha=0.01$下, 原假设与备择假设分别为:
+    \begin{align*}
+        H_0: \beta_4 = \beta_5 = 0, \quad H_1: \beta_4 \neq 0 \lor \beta_5 \neq 0.
+    \end{align*} 
+    $F$ 值为 
+    \begin{align*}
+        F = \frac{(\text{SSE}_R - \text{SSE}_U)/q}{\text{SSE}_U/(n-K)} = \frac{(2347.24-2179.22)/2}{2179.22/(15862 - 6)} = 611.26 > F_{0.01}(2, 15856) = 4.61.
+    \end{align*}
+    故拒绝原假设. 即在显著性水平$\alpha=0.01$下, 教育年限和党员身份对因变量的影响具有显著联合效应.
+    \item  斜率系数$\beta_1$表示取值等于1的类别(虚拟变量)与参照组之间在因变量上的均值差, 若取值对调, 则差值的符号会变为相反数. 
+
+    在模型1中将男女取值对调后, 性别对应的变量估计的斜率系数会变为原有的相反数, 同时截距项变为新参照组的截距. 具体地, 模型1可改写为
+    \[
+    \text{logearn} = \beta_0' + \beta_1' \text{sex} + \beta_2 \text{exp} + \beta_3 \text{exp}^2 + \varepsilon, \text{ 其中 } \beta_1' = -\beta_1, \beta_0' = \beta_0 + \beta_1.
+    \]
+    若带入回归结果, 则有
+    \[
+    \text{logearn} = 6.838 + 0.163 \text{sex} +  0.044 \text{exp} - 0.001 \text{exp}^2 + \varepsilon.
+    \]
+    \item 根据回归模型(即模型4)的估计结果, 解释如下:
+    \begin{itemize}
+        \item {\kaishu 教育年限变量的主效应($\beta_4 = 0.036$):} 在控制其他变量不变的情况下, 教育年限每增加一个单位, 居民收入的对数期望值将增加$0.036$个单位. 说明教育年限对居民收入有 \underline{正向}影响.
+        \item {\kaishu 党员身份虚拟变量(参照组 $\text{非党员}=0$, $\beta_5 = 0.230$)的主效应:} 在控制其他变量不变的情况下, 党员收入的对数期望值相较于非党员将增加$0.230$个单位. 说明党员身份对居民收入有 \underline{正向}影响.
+        \item {\kaishu 教育年限与党员身份的交互效应:} 偏回归系数 $\beta_6 = -0.014$刻画了这两个变量对因变量的非线性作用, 表明教育年限对收入的作用和党员身份对收入的作用间存在着 \underline{相互削弱} 的关系。
+    \end{itemize}
+\end{enumerate}
+
+\end{problem}
+\end{document}
