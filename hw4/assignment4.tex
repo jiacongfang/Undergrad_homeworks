@@ -1,0 +1,392 @@
+\documentclass[11pt]{article}
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+
+\usepackage{caption}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{diagbox}
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+\usepackage{algorithm,algorithmicx}
+% \usepackage[ruled, linesnumbered]{algorithm2e}
+% \usepackage[linesnumbered]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata, positioning}
+\usepackage{hyperref}
+\usepackage{extarrows}
+% 这是一些字体选项
+\usepackage{helvet}
+% \usepackage{mathpazo}
+\usepackage{fontspec}
+% \setmainfont{Times New Roman}
+% \setmainfont{Comic Sans MS} % 比较fancy的字体
+% \setmainfont{Avenir}
+% \setmainfont{Palatino}
+
+\RequirePackage{algorithm}
+
+\makeatletter
+\newenvironment{breakablealgorithm}
+  {% \begin{breakablealgorithm}
+    \begin{center}
+      \refstepcounter{algorithm}% New algorithm
+      \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+      \parskip 0pt
+      \renewcommand{\caption}[2][\relax]{% Make a new \caption
+        {\raggedright\textbf{\fname@algorithm~\thealgorithm} ##2\par}%
+        \ifx\relax##1\relax % #1 is \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+        \else % #1 is not \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+        \fi
+        \kern2pt\hrule\kern2pt
+     }
+  }
+  {% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+   \end{center}
+  }
+\makeatother
+
+% set for automata
+\tikzset{
+        ->,  % makes the edges directed
+        >=stealth, % makes the arrow heads bold
+        node distance=2cm, % specifies the minimum distance between two nodes. Change if n
+        every state/.style={thick, fill=gray!10}, % sets the properties for each ’state’ n
+        initial text=$start$, % sets the text that appears on the start arrow
+        }
+
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+\newcommand{\mP}{\mathbf{P}}
+\newcommand{\NP}{\mathbf{NP}}
+\newcommand{\NPC}{\mathbf{NP}\text{-complete}}
+\newcommand{\coNP}{\mathbf{coNP}}
+\newcommand{\PSPACE}{\mathbf{PSPACE}}
+\newcommand{\PSPACEC}{\mathbf{PSPACE}\text{-complete}}
+\newcommand{\EXP}{\mathbf{EXP}}
+\newcommand{\NEXP}{\mathbf{NEXP}}
+\newcommand{\NL}{ \mathbf{NL}}
+\newcommand{\NLC}{\mathbf{NL}\text{-complete}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\1}{\mathbf{1}}
+
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep{\bfseries#1}\hskip\labelsep{\bfseries#2.}]}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Answer]{\begin{trivlist}
+\item[\hskip \labelsep{\bfseries\itshape#1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\E{\mathbb{E}}
+\newcommand\per{\mathrm{per}}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\algrenewcommand{\algorithmiccomment}[1]{\hfill $//$ #1}
+% chktex-file 44
+% \renewcommand{\familydefault}{\sfdefault}
+
+\title{Homework \#3}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\captionsetup[figure]{labelfont={bf},name={Fig.},labelsep=period}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} Peking University}
+\chead{}
+\rhead{\CJKfamily{zhkai} Introduction to Theory of Computation, 2024 Spring}
+
+\begin{center}
+    {\LARGE \bf Homework 4}\\
+    {Name: 方嘉聪\ \  ID: 2200017849}            % Write down your name and ID here.
+\end{center}
+
+\begin{problem}{1.(16 points)}
+    A cut in an undirected graph is a seperation of the vertices $V$ into two disjoint subsets $S$ and $T$. The size of a cut is the number of edges that have one endpoint in $S$ and the other in $T$. Let
+    \begin{align*}
+        \textbf{MAX-CUT} = \{ \left\langle G,k \right\rangle \mid G \text{ has a cut of size $k$ or more }\}.
+    \end{align*}
+    \begin{enumerate}[label = \alph*.)]
+        \item (6 points) Give a randomized algorithm that, given an graph $G$ such that $G$ has a cut of size $k$ or more, outputs a cut of expected size at least $k/2$. 
+        \item (10 points) Show that \textbf{MAX-CUT} is $\NPC$.(Hint: Show that $\neq$SAT $\le_p$ \textbf{MAX-CUT}.) 
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    a.) 考虑如下的随机算法:
+    \begin{breakablealgorithm}
+        \centering
+        \begin{algorithmic}[1]
+            \Require Graph $G = (V, E)$.
+            \Ensure A cut $(S, T)$ of expected size at least $k/2$.
+            \State Assign each vertex $v \in V$ to $S$ or $T$ randomly with equal probability.
+            \State \Return $(S, T)$.
+        \end{algorithmic}
+    \end{breakablealgorithm}
+    记得到的割为$C$, 那么对于$\forall (u,v) \in E $, $\PP[(u,v)\in C] = 1/2$. 记示性随机变量$\1_e$表示$e$是否在$C$中, 那么:
+    \begin{align*}
+        E[|C|] = \sum_{e \in E} E[\1_e] = \sum_{e \in E} \PP[e \in C] = \frac{1}{2} \sum_{e \in E} 1 = \frac{1}{2} |E| \ge \frac{k}{2}.
+    \end{align*}
+    因此$C$的期望大小至少为$k/2$, 证毕.
+
+    b.) 首先证明$\textbf{MAX-CUT} \in \NP$. 对于$\forall \left\langle G, k \right\rangle \in \textbf{MAX-CUT}$, 存在一个证书$u$表示一个割 $S, T$. 用一个多项式时间的验证机$M$验证$(S,T)$是否合法的割且大小不小于$k$, 即:
+    \begin{align*}
+        \left\langle G, k \right\rangle \in \textbf{MAX-CUT} \iff \exists u ~s.t.~ M(G, k, u) = 1.
+    \end{align*}
+    $u$显然是多项式长度的, 故$\textbf{MAX-CUT} \in \NP$.
+
+    下面证明$\textbf{MAX-CUT} \in \NP$-hard. 对$\forall \psi \in \neq$SAT, 设$\psi$是一个$n$个变量$m$个子句的3CNF, 那么我们构造一个图$G = (V, E)$如下:
+    \begin{enumerate}
+        \item 对每个变量$x_i$, 分别添加$3m$个标号为$x_i$和$\neg x_i$的节点.
+        \item 所有标号为$x_i$与$\neg x_i$的节点之间两两连边. 
+        \item 对于每个子句$C_j$, 若$C_j = (x_i \lor x_k \lor x_l)$, 那么在$x_i, x_k, x_l$对应标号的节点之间连边,注意不要重复使用一个节点. 
+    \end{enumerate}
+    注意到取$3m$个$x_i/\neg x_i$足以保证第3步中有足够的冗余节点用来连接每个子句. 
+    \\我们来证明如下结论:
+    \begin{align*}
+        \psi \in \neq \text{SAT} \iff \left\langle G, 9nm^2+2m \right\rangle \in \textbf{MAX-CUT}.
+    \end{align*}
+    1.) $\Rightarrow$: 若$\psi \in \neq$SAT, 考虑$\psi$的任意一个合法赋值$A$, 令$S = \{x \mid x = 1 \text{ in assignment } A\}$, $T = \{x \mid x = 0 \text{ in assignment } A\}$. 考虑割$(S,T)$, 注意到$x_i, \neg x_i$不能同时在$S/T$中, 这一部分的割的大小为$n\cdot (3m)^2 = 9nm^2$. 而对于每个子句$C_j$, 由$\neq$-assignment 的定义, $C_j$中至少有一个变量取值为0, 那么每个子句对应的三角形有两条边在割中, 这一部分的割的大小为$2m$. 因此总的割的大小为$9nm^2+2m$. 即$\left\langle G, 9nm^2+2m \right\rangle \in \textbf{MAX-CUT}$.
+
+    2.) $\Leftarrow$: 若$\left\langle G, 9nm^2+2m \right\rangle \in \textbf{MAX-CUT}$. 那么$G$的割的大小至少为$9nm^2 + 2m$. 首先说明标号相同的节点分别位于$S,T$中, 否则考虑最简单的情况, 如果标号为$x_i$的节点中有$3m-1$个在$S$中, 1个在$T$中, 那么此时割的大小不超过$2m + (n-1)9m^2 + 3m(3m-1) < 9nm^2+2m$, 矛盾. 再说明对于每个子句产生的三角形, 不可能有存在割使得三角形的三个边都在割中. 进而其他条件给定, 如果割只包含一条边, 那么总的割大小严格小于$9nm^2+2m$, 矛盾. 因此每个子句对应的三角形恰有两条边在割中. 那么我们令$x_i = 1$当且仅当$x_i$对应的节点在$S$中, 就得到了一个合法的$\neq$-assignment. 因此$\psi \in \neq$SAT.  
+
+    综上所述, $\neq$SAT $\le_p$ \textbf{MAX-CUT}, 即\textbf{MAX-CUT}是$\NPC$.
+\end{answer}
+\begin{problem}{2.(16 points)}
+    A language is called unary if every string in it is the form $1^i$ (the string of $i$ ones) for some $i > 0$. Show that if there exists an $\NP$-complete unary language, then $\NP = \mP$. 
+    
+    Hint: If there is a $n^c$ time reduction from 3SAT to a unary language $L$, then this reduction can only map size $n$ instances of 3SAT to some string of the form $1^i$ where $i \le n^c$. Use this observation to obtain a polynomial-time algorithm for 3SAT using the downward self-reducibility argument of Theorem 2.18 in our textbook.
+\end{problem}
+% \textbf{Note that: } 3SAT is \textit{downward self-reducible} which means given an algorithm that solves 3SAT at an inputs of length smaller than $n$, we can solve 3SAT at an input of length $n$. Using the Cook-Levin reduction, one can show that all $\NPC$ problems have a similar property.
+\begin{answer}
+    思路: 用类似于课本中Theorem 2.18的递归迭代方法, 来证明$\text{SAT} \in \mP$, 进而$\NP = \mP$.
+
+    设$L$是一个$\NP$-complete的unary语言, 那么$L$中的每个字符串都是形如$1^i$的(不妨令$I = \{i\}$).设存在一个时间复杂度为$n^c$的规约$f$将SAT映射到$L$, 即
+    \begin{align*}
+        \forall \psi \in \text{SAT}, f(\psi) = 1^i, ~\text{ where size of $\psi$ is $n$}, ~i \le n^c.
+    \end{align*}  
+    考虑如下的算法$A$:
+    \begin{breakablealgorithm}
+        \centering
+        \begin{algorithmic}[1]
+            \Require a CNF $\psi_n$ with $|\psi_n| = n$, and the array $I$ represents whether $1^i \in L$ or not.
+            \Ensure 1 if $\psi_n$ is satisfiable, 0 otherwise.
+            \If {$n = 1$}
+                \State Compute $\psi$ directly and return the result.
+            \EndIf
+            \State Compute $f(\psi_n) = 1^i$ in $n^c$ time.
+            \If {$I[i]$ is already computed}
+                \State \Return $I[i]$.
+            \Else
+                \State Recursively compute $A(\psi_n\mid x_1 = 0)$, where $\psi_{n'} = (\psi_n\mid x_1 = 0)$ means the simplified formula with assignment $x_1 = 0$. Notice that $|\psi_{n'}| < |\psi_n|$.
+                \If {$A(\psi_n \mid x_1 = 0) = 1$}
+                    \State $I[i]\leftarrow 1 $, then \Return 1.
+                \Else
+                    \State $r \leftarrow A(\psi_n\mid x_1 = 1)$
+                    \State $I[i] \leftarrow r$, then \Return $r$.
+                \EndIf
+            \EndIf
+        \end{algorithmic}
+    \end{breakablealgorithm}
+    时间复杂度分析: 对每个$i$, 我们会创建2个分支(这是由于$1^i$是否属于$L$我们通过数组$I$存储下来, 通过两次调用$A(x_1 = 0/1)$即可得到, 后续直接查询即可), 由于$i \le n^c$, 那么最多有$2n^c$个分支. 而每个分支中只需要调用一次规约函数$f$(复制$I$后传参), 故时间复杂度为$O(n^c)$. 那么总的时间复杂度:
+    \begin{align*}
+        T(n) \le 2n^c \cdot O(n^c) = O(n^{2c}).
+    \end{align*}
+    故$\text{SAT} \in \mP$, 进而$\NP = \mP$. 证毕.
+\end{answer}
+
+\begin{problem}{3.(16 points)}
+    Prove that the following language SPACETM is $\PSPACEC$:
+    \begin{align*}
+        \textbf{SPACETM} = \{ \left\langle M, w, 1^n \right\rangle \mid \text{ DTM $M$ accepts $w$ in space $n$ }\}.
+    \end{align*}
+\end{problem}
+\begin{answer}
+    先证明$\textbf{SPACETM} \in \PSPACE$.考虑如下的算法:
+    \begin{breakablealgorithm}
+        \centering
+        \caption{Universal DTM $U$ to simulate $M$ on input $w$}
+        \begin{algorithmic}[1]
+            \Require $\left\langle M, w, 1^n \right\rangle$
+            \State $U$ simulates $M$ on input $w$. If $M$ uses more than $n$ space, $U$ rejects immediately.
+            \If {$M$ accepts $w$ in space $O(n)$}
+                \State \Return Accept.
+            \Else
+                \State \Return Reject.
+            \EndIf
+        \end{algorithmic}
+    \end{breakablealgorithm}
+    那么$U$的空间复杂度是$\text{Poly}(\left\lvert\langle M, w, 1^n \right\rangle\rvert)$的, 故$\textbf{SPACETM} \in \PSPACE$.
+    
+    下面证明\textbf{SPACETM}是$\PSPACE$-hard的. $\forall A \in \PSPACE$, 那么存在时间复杂度为$p(n)$的DTM $M$使得$A = L(M)$, 其中$p(n)$是多项式函数, $n$为输入长度. 考虑如下的映射:
+    \begin{align*}
+        f: w \rightarrow \left\langle M, w, 1^{p(|w|)} \right\rangle.
+    \end{align*}
+    $f$显然是多项式时间的. 且有:
+    \begin{align*}
+        w \in A \iff f(w) \in \textbf{SPACETM}
+    \end{align*}
+    因此$\forall A \in \PSPACE, A \leq_p \textbf{SPACETM}$, 即\textbf{SPACETM}是$\PSPACE$-hard的. 
+    
+    综上所述, \textbf{SPACETM}是$\PSPACE$-complete的. 证毕.
+\end{answer}
+
+\begin{problem}{4.(16 points)}
+    The class \textbf{DP} is defined as the ser of language $L$ for which there are two language $L_1 \in \NP, L_2 \in \coNP$  such that $L = L_1 \cap L_2$. (Don't confuse \textbf{DP} with $\NP\cap \coNP$, which may seem superficially similar.) Show that:
+    \begin{enumerate}[label = \alph*.)]
+        \item (6 points) $\text{EXACT INDSET} \in \textbf{DP}$.
+        \item (10 points) Every language in $\textbf{DP}$ is polynomial-time reducible to $\text{EXACT INDSET}$.
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    {\bf Note that: }
+    \begin{align*}
+        \text{EXACT INDSET} = \{ \left\langle G, k \right\rangle \mid \text{the largest independent set in $G$ has size exactly $k$}\}\\
+        \text{INDSET} = \{ \left\langle G, k \right\rangle \mid \text{the largest independent set in $G$ has size at least $k$}\}
+    \end{align*} 
+    a.) 令$L = \{\left\langle G, k \right\rangle \mid G \text{ has no independent set of size $\ge k+1$} \}$, 那么:
+    \begin{align*}
+        \text{EXACT INDSET} = \text{INDSET} \cap L
+    \end{align*}
+    由于$\neg L = \{\left\langle G, k \right\rangle\mid G \text{ has an independent set of size $k+1$}\} \in \NP$, 故$L \in \coNP$, 又由于$\text{INDSET} \in \NP$, 故$\text{EXACT INDSET} \in \textbf{DP}$.
+
+    b.) 对$\forall A \in \textbf{DP}, \exists A_1 \in \NP, A_2 \in \coNP, ~s.t.~ A = A_1 \cap A_2$. 由于$\text{INDSET} \in \NPC$, 类似课上的证明同理可以得到$L\in \coNP$-complete的. 那么存在多项式时间的规约$\varphi_1, \varphi_2$使得
+    \begin{align*}
+        w \in A \iff w\in A_1 \land w\in A_2 \iff \varphi_1(w) \in \text{3SAT} \land \varphi_2(w) \in \neg \text{3SAT} 
+    \end{align*}
+    而从3SAT可以构造合法规约$\psi: \text{3SAT} \rightarrow \text{EXACT INDSET}$, 类似证明$\text{3SAT} \le_p \text{INDSET}$的方法构造$G = (V,E)$. 令
+    \begin{align*}
+        &V: \text{ 每个字句$C_i \in \psi$ 对应含7个点的团, 分别对应$C_i$中7种可行的赋值方式.} \\
+        &E: \text{ 在团内部两两加边, 在互斥的赋值对应的点之间加边}
+    \end{align*}
+    可以使得$\forall w \in \text{3SAT with $k$ clauses} \iff \psi(w) = \left\langle G, k \right\rangle \in \text{EXACT INDSET}$.
+    同理可以构造出合法归约$\widehat{\psi}: \neg\text{3SAT} \rightarrow \text{EXACT INDSET}$.
+
+    故对$\forall w \in A$, 存在多项式时间规约$f_1, f_2$(把上面讨论的两次规约步骤复合一下即可), 使得
+    \begin{align*}
+        f_1(w) = \left\langle G_1, k_1 \right\rangle \in \text{EXACT INDSET}, \quad f_2(w) = \left\langle G_2, k_2 \right\rangle \in \text{EXACT INDSET}.
+    \end{align*}
+    考虑如下的规约$f$:
+    \begin{align*}
+        f(w) = \left\langle (n \cdot G_1) \cup G_2 , n k_1 + k_2 \right\rangle.
+    \end{align*}
+    其中$n$ 是一个足够大的常数, $n\cdot G_1\cup G_2$表示$n$个图$G_1$和1个$G_2$合并成一个新的图. 那么$f$是多项式时间的, 且有$w \in A \iff  f(w) \in \text{EXACT INDSET}$. 故任意的$A \in \textbf{DP}$都可以多项式时间规约到$\text{EXACT INDSET}$, 即$\text{EXACT INDSET}$是$\textbf{DP}$-complete的. 证毕.
+\end{answer}
+
+\begin{problem}{5.(16 points)}
+    Show that the following language is $\NLC$:
+    \[
+    \{ \left\langle G\right\rangle \mid G \text{ is strongly connected digraph}\}.
+    \]
+\end{problem}
+\begin{answer}
+    不妨设$A = \{ \left\langle G\right\rangle \mid G \text{ is strongly connected digraph}\}$. 首先证明$A \in \NL$, 对任意的一个图$G = (V,E)$, 设$V = \{1,2, \cdots, n\}$, 考虑如下的算法:
+    \begin{breakablealgorithm}
+        \centering
+        \begin{algorithmic}[1]
+            \Require Directed graph $G = (V, E)$
+            \Ensure Accept if $G$ is strongly connected, reject otherwise.
+            \For {$i$ from 1 to $n$}
+                \State Check whether $\left\langle G,i,i+1\right\rangle \in \textit{PATH}$ (let $i+1 = 1$ if $i = n$).
+            \EndFor
+            \If {All the above checks are true}
+                \State \Return \textbf{Accept}.
+            \Else
+                \State \Return \textbf{Reject}.
+            \EndIf
+        \end{algorithmic}
+    \end{breakablealgorithm} 
+    注意到$\textit{PATH}\in \NL$, 那么第2行可以在$O(\log n)$的空间内完成. 循环时重复使用同一空间则总的空间复杂度为$O(\log n)$, 因此$A \in\NL$. 
+
+    下面证明$A$是$\NL$-hard的. 对任意有向图$G = (V,E)$, 如下构造出一个新的图$G' = (V', E')$: 
+    \begin{align*}
+        &\text{令 }~V' = V, E' = E , \text{ 选取两个点 } s,t, ~\forall v \in  V/\{s,t\}, \text{ 向$E'$中添加边 } ~(t,v), (v,s) . 
+    \end{align*}
+    那么我们可以证明如下引理:
+    \begin{lemma}
+        $G'$ 是强连通图当且仅当 $\left\langle G,s,t \right\rangle \in \text{PATH}$. 
+    \end{lemma} 
+    \begin{proof}
+        1). $\Rightarrow$: 如果$G'$是一个强连通图, 那么存在路径$s \rightsquigarrow t$, 注意到由$G$构造$G'$时只添加了$t\rightarrow u\rightarrow s$, 那么$\forall e \in E'/E, e \notin \{s\rightsquigarrow t\}$. 因此$s \rightsquigarrow t$是$G$中的一条路径, 即$\left\langle G,s,t \right\rangle \in \textit{PATH}$.
+    
+        2). $\Leftarrow$: 若$\left\langle G,s,t \right\rangle \in \textit{PATH}$, 那么$\forall u, v \in G'$, 在$G'$中存在有向边$u \rightarrow s, t \rightarrow v$与路径$s \rightsquigarrow t$, 因此存在路径
+            $u \rightarrow s \rightsquigarrow t \rightarrow v$
+        连接$u$和$v$, 由于$u,v$是任意的, 故$G'$是强连通图.
+    \end{proof}
+    回到本题, 给定任意的$\left\langle G,s,t \right\rangle$, 上述的构造过程$f: G\rightarrow G'$只需要空间$O(\log\left\lvert\langle G,s,t \right\rangle\rvert)$的工作带(按顺序遍历点, 只在工作带上记录当前的点, 在输出纸带上添加相应的边), 由引理:
+    \begin{align*}
+        \left\langle G,s,t \right\rangle \in \textit{PATH} \iff G' = f\left(\left\langle G,s,t \right\rangle\right) \text{ is strongly connected}.
+    \end{align*}
+    故$f$是一个对数空间规约,那么$\textit{PATH} \leq_l A$, 即$A$是$\NL$-hard的. 
+    
+    综上所述, $A$是$\NLC$.
+\end{answer} 
+
+\begin{problem}{6.(20 points)}
+    Prove that in the certificate deinifion of $\NL$, if we allow the verifier machine to move its head back and forth on the certificate, then the class being defined changes to $\NP$.
+\end{problem}
+\begin{answer}
+    记$\NL^*$为允许验证机在证书上来回移动的复杂性类. 
+
+    1). 首先证明$\NL^* \subseteq \NP$. 对于$\forall A \in \NL^*$, 存在空间复杂度为$O(\log n)$的验证机$M$, 以及多项式时间函数$p(n)$, 使得对于
+    \[\forall x \in \Sigma^*,~ x \in A \iff \exists u \in \{0, 1\}^{p(|x|)} ~s.t.~ M(x, u) = 1.\]
+    注意到任意一个空间复杂度为$O(\log n)$的验证机可以在多项式时间内被模拟(遍历空间的所有可能状态即可). 那么存在一个多项式时间的DTM $M'$, 使得对于
+    \[\forall x \in \Sigma^*,~ x \in A \iff \exists u \in \{0, 1\}^{p(|x|)} ~s.t.~ M'(x, u) = 1.\] 
+    因此$A \in \NP$, 即$\NL^* \subseteq \NP$.
+
+    2). 接着证明$\NP \subseteq \NL^*$.  $\forall A \in \NP$, 设存在一个NDTM $N$使得$L(N) = A$. 那么:
+    \begin{align*}
+        x \in A \iff \exists &\text{ configurations } C_1, C_2, \cdots, C_T, ~s.t.~\\
+        & (1)~ C_1 \text{ is the start configuration of } N \\
+        & (2)~ C_T \text{ is the accept configuration of } N \\
+        & (3)~ \forall i \in [1, T-1], ~C_i \vdash C_{i+1} \text{ under the transition function of } N.
+    \end{align*}
+    那么我们可以如下构造一个空间复杂度为$O(\log n)$的验证机$M$, 其中$\left\langle \cdot\right\rangle$表示编码:
+    \begin{breakablealgorithm}
+        \centering
+        \begin{algorithmic}[1]
+            \Require string $x$ and certificate $u = \left\langle C_1C_2\cdots C_T \right\rangle$
+            \Ensure 1 if $N$ accepts $x$, 0 otherwise.
+            \State Check if $C_1$ is the start configuration of $N$.
+            \State Check if $C_T$ is the accept configuration of $N$.
+            \For{$i = 1$ to $T-1$}
+                \State Check if $C_i \vdash C_{i+1}$ under the transition function of $N$.
+            \EndFor
+        \end{algorithmic}
+    \end{breakablealgorithm}
+    首先证书$u = \left\langle C_1C_2\cdots C_T \right\rangle$的长度显然是$\text{Poly}(n)$的. 第1,2步按顺序检查格局中的每个字符, 这样做的空间复杂度是$O(\log n)$的. 第3行可以每次检查两个格局之间的转移是否合法(一次检查一个字符), 这样做的空间复杂度也是$O(\log n)$的. 因此$A \in \NL^*$, 即$\NP \subseteq \NL^*$.
+
+    综上所述, $\NL^* = \NP$.
+
+    \textcolor{red}{除了课上给出的这种证明, 这里尝试一个其他证明(麻烦助教一并看一下):}
+
+    设$\NL^*$定义中的验证机为$M$, $M$的空间复杂度为$O(\log |x|)$, 那么$M$最多运行$2^{O(\log |x|)} = O(|x|^c)$步(其中$c$是一个常数). 我们允许$M$在证书上来回移动, 那么每次最多访问整个证书纸带(由定义, 设证书长度为多项式$p(|x|)$), 那么$M$每一步的时间复杂度为为$O(p(|x|))$, 故整个验证过程的时间复杂度为$O(|x|^c \cdot p(|x|))$.  因此, $M$是多项式时间验证机, 且:
+    \begin{align*}
+        x \in A \iff \exists u \in \{0, 1\}^{p(|x|)} ~s.t.~ M(x, u) = 1.
+    \end{align*}
+    这即是$\NP$的定义, 故$\NL^* = \NP$.
+
+    \textcolor{red}{这种证明不太正确。。。}
+\end{answer}
+\end{document}

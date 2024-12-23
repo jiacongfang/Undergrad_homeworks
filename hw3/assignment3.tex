@@ -1,0 +1,341 @@
+\documentclass[11pt]{article}
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+
+\usepackage{caption}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{diagbox}
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+\usepackage{algorithm,algorithmicx}
+% \usepackage[ruled, linesnumbered]{algorithm2e}
+% \usepackage[linesnumbered]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata, positioning}
+\usepackage{hyperref}
+\usepackage{extarrows}
+% 这是一些字体选项
+\usepackage{helvet}
+% \usepackage{mathpazo}
+\usepackage{fontspec}
+% \setmainfont{Times New Roman}
+% \setmainfont{Comic Sans MS} % 比较fancy的字体
+% \setmainfont{Avenir}
+% \setmainfont{Palatino}
+
+\RequirePackage{algorithm}
+
+\makeatletter
+\newenvironment{breakablealgorithm}
+  {% \begin{breakablealgorithm}
+    \begin{center}
+      \refstepcounter{algorithm}% New algorithm
+      \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+      \parskip 0pt
+      \renewcommand{\caption}[2][\relax]{% Make a new \caption
+        {\raggedright\textbf{\fname@algorithm~\thealgorithm} ##2\par}%
+        \ifx\relax##1\relax % #1 is \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+        \else % #1 is not \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+        \fi
+        \kern2pt\hrule\kern2pt
+     }
+  }
+  {% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+   \end{center}
+  }
+\makeatother
+
+% set for automata
+\tikzset{
+        ->,  % makes the edges directed
+        >=stealth, % makes the arrow heads bold
+        node distance=2cm, % specifies the minimum distance between two nodes. Change if n
+        every state/.style={thick, fill=gray!10}, % sets the properties for each ’state’ n
+        initial text=$start$, % sets the text that appears on the start arrow
+        }
+
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+\newcommand{\mP}{\mathbf{P}}
+\newcommand{\NP}{\mathbf{NP}}
+\newcommand{\PSPACE}{\mathbf{PSPACE}}
+\newcommand{\EXP}{\mathbf{EXP}}
+\newcommand{\NEXP}{\mathbf{NEXP}}
+
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep{\bfseries#1}\hskip\labelsep{\bfseries#2.}]}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Answer]{\begin{trivlist}
+\item[\hskip \labelsep{\bfseries\itshape#1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\E{\mathbb{E}}
+\newcommand\per{\mathrm{per}}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\algrenewcommand{\algorithmiccomment}[1]{\hfill $//$ #1}
+% chktex-file 44
+% \renewcommand{\familydefault}{\sfdefault}
+
+\title{Homework \#3}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\captionsetup[figure]{labelfont={bf},name={Fig.},labelsep=period}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} Peking University}
+\chead{}
+\rhead{\CJKfamily{zhkai} Introduction to Theory of Computation, 2024 Spring}
+
+\begin{center}
+    {\LARGE \bf Homework 3}\\
+    {Name: 方嘉聪\ \  ID: 2200017849}            % Write down your name and ID here.
+\end{center}
+
+\begin{problem}{1.(18 points)}
+    Prove that the following language is in $\mP$.
+
+    \textbf{Horn-statisfiability}:
+    \begin{align*}
+        \text{CNF}_H = \{ \left\langle\phi\right\rangle \mid \phi \text{ is a statisfiable Horn formula}\}
+    \end{align*}
+    A Horn clause is a clause with at most one postive literal and any number of negative literals. A Horn formula is a propositional formula formed by conjunctions of Horn clauses.
+\end{problem}
+\begin{answer}
+    设一个formula 为$\phi = \bigwedge_i\left(\bigvee_j v_{i,j}\right)$, 其中$v_{i,j}$可以$p$或$\neg p$. 考虑如下的多项式时间算法算法判断$\phi$是否是Horn可满足的:
+    \begin{breakablealgorithm}
+        \centering
+        \begin{algorithmic}[1]
+            \Require $\phi$
+            \Ensure $\phi$ is Horn-satisfiable?
+            \While{$\phi$ contains some clause}
+            \If{all the clauses currently existing contain negative literals}
+            \State Set all the negative literals to be false. 
+            \State \Return {\textbf{True}}
+            \ElsIf{there exists an empty clause}
+            \State \Return {\textbf{False}}
+            \Else 
+            \State at lease one clause contains a positive literal.
+            \State Set the positive literal $p$ to be true. 
+            \State Remove the clause containing $p$ and remove all $\neg p$ in other clauses.
+            \EndIf
+            \EndWhile
+            \State \Return {\textbf{True}}
+        \end{algorithmic}
+    \end{breakablealgorithm}
+    第8-10行中, 如果一个clause中有$p$, 那么令$p = 1$, 这个clause已满足可以删去, 而$\neg p = 0$不会影响所在clause的满足性, 故可以删去. 第5行中如果存在clause为空, 那么显然不满足. 由于每次循环至少有一个clause被删除, 而每次循环是多项式时间的(遍历常数次整个formula即可), 故整个算法是多项式时间的. 所以$\text{CNF}_H \in \mP$. 证毕.
+\end{answer}
+\begin{problem}{2.(14 points)}
+    Suppose $L_1, L_2 \in \NP$. Then is $L_1 \cap L_2 \in \mathbf{NP}$? What about $L_1 \cup L_2$?
+\end{problem}
+\begin{answer}
+   考虑通过$\NP$的两种定义来证明$L_1\cap L_2 \in \NP, L_1\cup L_2 \in \NP$.
+   \begin{enumerate}[label = (\arabic*)]
+    \item \textbf{Verifier definition}: 由于$L_1, L_2 \in \NP$, 不妨设符号集为$\Sigma$. 那么(对$i = 1,2$)存在多项式时间的函数$p_i: \mathbb{N} \rightarrow \mathbb{N}$, 与多项式时间的TM $M_i$ 使得
+    \begin{align*}
+        L_i = \{x \mid \exists u_i \in \Sigma^{p_i(|x|)} ~s.t.~ M_i(x,u_i) = 1\} 
+    \end{align*}
+    那么根据定义有:
+    \begin{align*}
+        L_1 \cup L_2 = \{x \mid &\exists u \in \widehat{\Sigma}^{(p_1(|x|) + p_2(|x|) + 1)}, \text{where }u = u_1\#u_2, \\
+        &~s.t.~ u_1 \in \Sigma^{p_1(|x|)} \land u_2 \in \Sigma^{p_2(|x|)} \land(M_1(x,u_1) = 1 \lor M_2(x,u_2) = 1) \}  
+    \end{align*}
+    其中$\widehat{\Sigma} := \Sigma \cup \{\#\}$, $\#$是一个特殊的分割符. 设$p: \mathbb{N} \rightarrow \mathbb{N}$为$p(|x|) = p_1(|x_1|) + p_2(|x_2|)+1$, 那么$p$显然是多项式时间的. 类似的, 存在一个多项式时间的TM $M$(分别模拟运行$M_1,M_2$,再对结果取或即可), 使得$M$可以判断$u$是否满足条件. 所以$L_1 \cup L_2 \in \NP$. 
+
+    类似的我们来证明 $L_1 \cap L_2 \in \NP$. 我们有:
+    \begin{align*}
+    L_1 \cap L_2 = \{x \mid &\exists u \in \widehat{\Sigma}^{(p_1(|x|) + p_2(|x|) + 1)}, \text{where }u = u_1\#u_2, \\
+    &~s.t.~ u_1 \in \Sigma^{p_1(|x|)} \land u_2 \in \Sigma^{p_2(|x|)} \land(M_1(x,u_1) = 1 \land M_2(x,u_2) = 1) \}
+    \end{align*}
+        同样的, 设$p: \mathbb{N} \rightarrow \mathbb{N}$为$\widehat{p}(|x|) = p_1(|x_1|) + p_2(|x_2|)+1$, 那么$\widehat{p}$显然是多项式时间的. 类似的, 存在一个多项式时间的TM $M$(分别模拟运行$M_1,M_2$,再对结果取与即可), 使得$M$可以判断$u$是否满足条件. 所以$L_1 \cap L_2 \in \NP$.
+    \item \textbf{NDTM definition}: 由于$L_1, L_2 \in \NP$, 不妨设符号集为$\Sigma$. 那么(对$i = 1,2$)存在一个多项式时间$T_i(n)$的NDTM $N_i$ 使得$L(N_i) = L_i$. 考虑如下算法:
+    \begin{breakablealgorithm}       
+        \caption{\textbf{Verifier for $L_1 \cup L_2$}}
+        \centering
+        \begin{algorithmic}[1]
+            \Require $x$( Suppose $|x| = n$)
+            \Ensure $x \in L_1 \cup L_2$?
+            \State Run $N_1(x)$ for $T_1(n)$ steps, output is $b_1$.
+            \State Run $N_2(x)$ for $T_2(n)$ steps, output is $b_2$.
+            \State \Return $b_1 \lor b_2$
+            \end{algorithmic}
+    \end{breakablealgorithm}
+    容易发现, 该算法的时间复杂度为$O(T_1(n) + T_2(n)) = O(T(n))$, 其中$T(n)$是一个多项式时间函数. 所以$L_1 \cup L_2 \in \NP$. 类似的对于$L_1 \cap L_2 \in \NP$, 有如下的算法: 
+    \begin{breakablealgorithm}       
+        \caption{\textbf{Verifier for $L_1 \cup L_2$}}
+        \centering
+        \begin{algorithmic}[1]
+            \Require $x$( Suppose $|x| = n$)
+            \Ensure $x \in L_1 \cup L_2$?
+            \State Run $N_1(x)$ for $T_1(n)$ steps, output is $b_1$.
+            \State Run $N_2(x)$ for $T_2(n)$ steps, output is $b_2$.
+            \State \Return $b_1 \land b_2$
+            \end{algorithmic}
+    \end{breakablealgorithm}
+    故$L_1 \cap L_2 \in \NP$. 证毕.
+    \end{enumerate}
+\end{answer}
+
+\begin{problem}{3.(12 points)}
+    Prove that \[L = \{w \mid w \text{ is a binary representation of a prime number}\}\in \NP\]
+\emph{Tips: A natural number $n$ is a prime number if and only if for any prime factor $p$ of $n-1$, there exists an $a \in \{2, \cdots, n-1\}$ such that $a^{n-1}  = 1 \bmod n$ and $a^{(n-1)/p} \neq 1 \bmod n$.}
+\end{problem}
+\begin{answer}
+    \textcolor{red}{注: 下面是一个错误的解答!!!}
+
+    对于$x = n\in \mathbb{Z}$, 那么$|x| = \log n$. 考虑certificate为$a$和不超过$n-1$的所有素因子的二进制序列(两两之间用特殊的分隔符$\#$分开), 记为$u$. 注意到素因子的个数不超过$\log n$, 那么:\[|u| =  O((\log n + 1)|x|) = O(\log^2 n) = \text{Poly}(\log n)\]
+    这样的证书是合法的. 考虑如下的verifier算法(构造图灵机$M$):
+    \begin{breakablealgorithm}
+        \caption{\textbf{Verifier for $L$}}
+        \centering
+        \begin{algorithmic}[1]
+            \State 如下构造图灵机$M$: 
+            \State \textbf{Input: } $x=n$, certificate $u$
+            \State \quad 按照特殊的分隔符$\#$将$u$分为$a$与若干个素因子$p_1, p_2, \cdots, p_k$.
+            \State \quad 对于$u$中的每个素因子$p$, 验证$a^{n-1} = 1\bmod n$及$a^{(n-1)/p}  \neq 1\bmod n $.
+            \State \quad 如果上述条件都满足, 则$M $\textbf{ accept}, 否则$M $\textbf{ reject}.
+        \end{algorithmic}
+    \end{breakablealgorithm}
+    对$\forall p$, 验证$a^{n-1} = 1 \bmod n$以及$a^{(n-1)/p} \neq 1 \bmod n$可以用快速幂实现, 时间复杂度是$O(\log n)$. 所以上述的算法是$O(\log n \cdot \log n) = \text{Poly}(\log n)$的, 且满足$\forall x \in L \iff \exists u, ~s.t.~ M(x,u) = 1$. 故$L \in \NP$. 证毕.
+
+    \textcolor{red}{
+        正确的做法应该使用递归的证书, 具体见下: 
+    }
+
+    考虑$n$对应的证书为$[a,c(n)]$, 其中 \[c(n) := \{[p_1, a_1, c(p_1)]\#[p_2, a_2, c(p_2)]\#\cdots\#[p_k, a_k, c(p_k)]\}\]其中$p_i$为素因子, $a_i$为hint用以判断的指数, $c(p_i)$为$p_i$对应的证书.  
+
+    考虑如下定义的图灵机$M$:
+    \begin{breakablealgorithm}
+        \centering 
+        \begin{algorithmic}[1]
+            \Require $x = n$, certificate $[a,c(n)]$
+            \Ensure $x \in L$?
+            \State 遍历进行分割并验证证书形式, 反复使用除法验证$n-1$的所有素因子是否恰为$p_1, p_2, \cdots, p_k$.
+            \State 递归调用$M$, 输入为$[p_i, a_i, c(p_i)]$
+            \State 对于每个$p_i$, 验证$a^{n-1} = 1 \bmod n$以及$a^{(n-1)/p_i} \neq 1 \bmod n$.
+            \State 如果上述条件都满足, 则$M $\textbf{ accept}, 否则$M $\textbf{ reject}.
+        \end{algorithmic}
+    \end{breakablealgorithm}
+    下面证明一下$M$的运行时间是$\text{Poly}(\log n)$的.
+    \begin{itemize}
+        \item 考虑$n\ge 2$, 设素因数分解为(考虑以2为底)\[n = \prod_{i=1}^{k} p_k^{m_k} \implies \log n = \sum_{i=1}^{k} m_k \log p_k \ge \sum_{i=1}^{k} \log p_k \ge k \implies k \le \log n \]
+        即素因子的个数是$O(\log n)$, 进而$|[p_1, p_2, \cdots, p_k]| = O(\log^2 n)$.
+        下面证明总的证书的长度$L(n)$是$\text{Poly}(\log n)$的. 首先我们有\[L(n) \le c \log^2 n + \sum_{p|n-1}L(p)\]
+        我们归纳的证明$L(n) = O(\log^3 n)$, 当$n = 2$时, $L(2) = O(1)$, 假设对于$n\le k-1$成立, 那么对于$n = k$(注意$k$是奇数):
+        \begin{align*}
+            L(k) &\le c\log^2 k + \sum_{p|k-1}L(p) \le c\log^2 k + \sum_{p|k-1, p>2}O(\log^3 p) + O(1) \\
+            &\le c\log^2 k + O(\log^3 k) \le c'\log^3 k
+        \end{align*}
+        故$L(n) = O(\log^3 n)$.
+        \item 对于$M$的运行时间, 分为验证证书合法、检验素因子、递归调用、检查$a_i$条件, 类似的可以用归纳法证明$M$的运行时间是$O(\log^4 n)$的.
+    \end{itemize}
+\end{answer}
+
+\begin{problem}{4.(14 points)}
+    Let \textbf{HALT} be the Halting language. Show that \textbf{HALT} is $\NP$-hard. Is it $\NP$-complete? 
+\end{problem}
+
+\begin{answer}
+    由于\textbf{HALT}是不可计算的, 所以\textbf{HALT}不是$\NP$-complete的. 下面我们来证明\textbf{HALT}是$\NP$-hard的. 只需证明$\forall A \in \NP, A \le_p$ \textbf{HALT}, 即存在多项式时间的函数$f(\cdot)$使得$\forall x\in A$等价于$f(x) = \left\langle M,x\right\rangle \in \textbf{HALT}$: 
+    
+    设存在NDTM $N$使得$L(N) = A$, 考虑如下的算法(规约):
+    \begin{breakablealgorithm}
+        \centering
+        \begin{algorithmic}[1]
+        \State 如下构造图灵机$M$:
+        \State \quad \textbf{Input:} $x$
+        \State \quad \textbf{Procedure:}
+        \State \quad \quad 模拟运行$N(x)$, 看是否被接受.
+        \State \quad \quad 如果accept, 则$M$ \textbf{halt}, 否则$M$ \textbf{loop forever}.
+        \end{algorithmic}
+    \end{breakablealgorithm}
+    注意到$N$是多项式时间的, 虽然$M$不是多项式时间的(可能loop forever), 但上述的算法是一个多项式时间的规约(给定$x$, 生成$\left\langle M,x\right\rangle$是多项式时间的), 且满足$\forall x \in A \iff f(x) = \langle M, x\rangle \in \textbf{HALT}$. 故对$\forall A \in L, A \le_p \textbf{HALT}$, 即\textbf{HALT}是$\NP$-hard的. 证毕.
+\end{answer}
+
+\begin{problem}{5.(14 points)}
+    Show that, if $\NP = \mP$, then every language $A \in \mP$, except $A = \varnothing$ and $A = \Sigma^*$, is $\NP$-complete.
+\end{problem}
+\begin{answer}
+    首先证明$\forall A \neq \varnothing \text{ or } \Sigma^*$, $A \in \NP$-complete, 即需要证明对于$\forall B \in \NP$, \[\forall \text{ string } w \in B \iff f(w) \in A \text{ where f($\cdot$) is a poly-time computable function.} \]
+    由于$A \neq \varnothing \text{ or } \Sigma^*$, 那么$\exists \text{ string } x, y ~s.t.~ x\in A \land y \notin A $. 那么对$\forall s\in \Sigma^*$, 由于$\mP = \NP$, 存在一个\textbf{多项式时间}的确定性图灵机$M$可以判定$x$是否属于$\NP$, 考虑如下的算法:
+    \begin{breakablealgorithm}
+        \centering
+        \begin{algorithmic}[1]
+            \State 如下构造$f(\cdot): \Sigma^* \rightarrow \Sigma^*$:
+            \State \quad \textbf{Input:} $s$
+            \State \quad 如果$M(s) = 1$, 则返回$x$, 否则返回$y$.
+        \end{algorithmic}
+    \end{breakablealgorithm}
+    那么显然$f(\cdot)$是多项式时间的, 且满足$\forall s \in \Sigma^*, s \in B \iff f(s) \in A$. 所以$A$是$\NP$-complete的. 
+
+    下面证明$A = \varnothing \text{ or } \Sigma^*$不是$\NP$-complete的. 
+
+    对于$\forall B \in \NP$, 当$A = \varnothing$时, $\forall x \in \Sigma^*$, 对任意的多项式时间的函数$f: \Sigma^* \rightarrow \Sigma^*$, $f(x) \notin A$恒成立, 所以不存在满足条件的规约$f(\cdot)$使得$B \le_p A$, 即$\varnothing$不是$\NP$-complete的. 
+    \\当$A = \Sigma^*$时, 无论$x \in \Sigma^*$是否属于$B$, $f(x) \in A$恒成立, 所以不存在满足条件的规约$f(\cdot)$使得$B \le_p A$, 即$\Sigma^*$不是$\NP$-complete的. 证毕. 
+\end{answer}
+
+\begin{problem}{6.(28 points)}
+    Let $\phi$ be a 3-CNF. An $\neq$-assignment to the variables of $\phi$ is one where each clause contains two literals with \textbf{unequal truth values}. In other words, an $\neq$-assignment satisfies $\phi$ without assigning three true literals in any clauses.
+    \begin{enumerate}[label = \alph*.)]
+        \item Show that the negation of any $\neq$-assignment to $\phi$ is also an $\neq$-assignment.
+        \item let $\neq$-SAT be the collection of 3CNFs that have an $\neq$-assignment. Show that we obtain a polynomial-time reduction from 3SAT to $\neq$-SAT by replacing each clause 
+        \begin{align*}
+            c_i = (y_1 \lor y_2 \lor y_3)
+        \end{align*}
+        with the two clauses
+        \begin{align*}
+            (y_1 \lor y_2 \lor z_i) \quad \text{and} \quad (\overline{z}_i \lor y_3 \lor b)
+        \end{align*}
+        where $z_i$ is a new variable for each clause $c_i$ and $b$ is a single addtional new variable.
+        \item Conclude that $\neq$-SAT is $\NP$-complete. 
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label = \alph*.)]
+        \item 一个$\phi$的$\neq$-assignment, 使得每个clause中有两个literal的真值不相等. 考虑这样的赋值的否定, 则每个clause中仍有两个literal的真值不相等(各自取反后仍不相等), 所以否定的$\neq$-assignment仍然是$\neq$-assignment. 证毕.
+        \item 设$\phi \in 3$-SAT, 考虑一个可满足$\phi$的赋值, 那么所有clause $c_i = (y_1\lor y_2\lor y_3)$, $y_j(j=1,2,3)$不能全为0. 显然替换是多项式时间的, 且得到的是一个3CNFs(记为$\phi'$), 分类讨论证明$\phi' \in \neq$-SAT:
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{c|c|c|c|c|c|c|c}
+                \toprule
+                $y_1$ & $y_2$ & $y_3$ & $z_i$ & $\overline{z}_i $& $b$ & $y_1\lor y_2\lor z_i$ & $\overline{z}_i\lor y_3\lor b$ \\
+                \midrule
+                1 & 1 & 1 & 0 & 1 & 0 & 1 & 1 \\
+                1 & 1 & 0 & 0 & 1 & 0 & 1 & 1 \\
+                1 & 0 & 1 & 1 & 0 & 0 & 1 & 1 \\
+                1 & 0 & 0 & 0 & 1 & 0 & 1 & 1 \\
+                0 & 1 & 1 & 1 & 0 & 0 & 1 & 1 \\
+                0 & 1 & 0 & 0 & 1 & 0 & 1 & 1 \\
+                0 & 0 & 1 & 1 & 0 & 0 & 1 & 1 \\
+                \bottomrule
+            \end{tabular}
+        \end{table}
+        注意到对$y_j(j=1,2,3)$的所有可能情况, 按照上表来确定$z_i, b$的赋值, 这样得到的新赋值首先满足了$\phi'$的每个clause, 其次每个clause中有两个literal的真值不相等. 所以$\phi' \in \neq$-SAT. 证毕.
+        \item 由上一问知$3\text{-SAT} \le_p \neq$-SAT. 注意到类似$3$-SAT的证明, 给定一个formula, 可以将其$\neq$-assignment作为证书, 通过多项式时间的算法来判定是否是可满足的, 故$\neq$-SAT $ \in \NP$, 由于$\neq$-SAT是$\NP$-hard的, 所以$\neq$-SAT是$\NP$-complete的. 证毕.
+    \end{enumerate}
+\end{answer}
+\end{document}

@@ -1,0 +1,180 @@
+\documentclass[11pt]{article}
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+
+\usepackage{caption}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=2pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=2pt,partopsep=0pt,parsep=\parskip,topsep=2pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{diagbox}
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+%\usepackage{algorithm,algorithmicx}
+\usepackage[ruled, linesnumbered]{algorithm2e}
+% \usepackage[linesnumbered]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage{hyperref}
+\usepackage{extarrows}
+% 这是一些字体选项
+\usepackage{helvet}
+% \usepackage{mathpazo}
+\usepackage{fontspec}
+% \setmainfont{Times New Roman}
+% \setmainfont{Comic Sans MS} % 比较fancy的字体
+% \setmainfont{Avenir}
+% \setmainfont{Palatino}
+
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+\newenvironment{problem}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep{\bfseries#1}\hskip\labelsep{\bfseries#2.}]}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Solution]{\begin{trivlist}
+\item[\hskip \labelsep{\bfseries#1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\E{\mathbb{E}}
+\newcommand\per{\mathrm{per}}
+\newcommand{\NP}{\mathbf{NP}}
+\newcommand{\coNP}{\mathbf{coNP}}
+\newcommand{\PSPACE}{\mathbf{PSPACE}}
+\newcommand{\EXP}{\mathbf{EXP}}
+\newcommand{\NEXP}{\mathbf{NEXP}}
+\newcommand{\BPP}{\mathbf{BPP}}
+\newcommand{\ZPP}{\mathbf{ZPP}}
+\newcommand{\RP}{\mathbf{RP}}
+\newcommand{\NL}{\mathbf{NL}}
+\newcommand{\Ppoly}{\mathbf{P/poly}}
+\newcommand{\PH}{\mathbf{PH}}
+\newcommand{\IP}{\mathbf{IP}}
+% chktex-file 44
+% \renewcommand{\familydefault}{\sfdefault}
+
+\title{Homework \#1}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\captionsetup[figure]{labelfont={bf},name={Fig.},labelsep=period}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} Peking University}
+\chead{}
+\rhead{\CJKfamily{zhkai} Introduction to Theory of Computation, 2024 Spring}
+
+\begin{center}
+    {\LARGE \bf Final Exam}\\
+    {\bf Time: 150+15 mins $~~$ Total Scores: 115}            % Write down your name and ID here.
+\end{center}
+
+\begin{problem}{1.(20 points)}
+    Decide if the following statements are TRUE(T) or FALSE(F) or UNKNOWN(U). You don't need to prove your answers.
+    \begin{enumerate}[label=(\alph*)]
+        \item The class of non-regular languages is closed under the operation of complementation.
+        \item The intersection of a regular language and a context-free language must be regular.
+        \item The class of non-context-free languages is closed under intersection.
+        \item Let $L = \{a^m b^n \mid m \neq n^2 + 1\}$. $L$ is a regular language.
+        \item There exists a language $A$ such that both $A$ and $\overline{A}$ are not Turing-recognizable.
+        \item If $A$ and $B$ are two Turing-recognizable languages, then $A \backslash B = A \cap \overline{B}$ is also Turing-recognizable.
+        \item If $\NP = \coNP$, then $\BPP \subseteq \NP$.
+        \item The language $\text{no-PATH} = \{(G,s,t)\mid \text{there is no path from $s$ to $t$ in $G$}\}$, is in $\NL$.
+        \item In our proof for $\text{TQBF} \in \IP$, the sumcheck protocol we designed has acceptance probability $1$ for the completeness part.
+        \item The XOR of $(\log n)^{\log \log n}$ bits is computable by $\mathbf{AC}^0$ circuits of size $\texttt{poly}(n)$.
+    \end{enumerate} 
+\end{problem}
+\begin{answer}
+    TFFFT FTTTF.
+\end{answer}
+\newpage
+\begin{problem}{2.(15 points)}
+    Let $X = \{\left\langle M,w \right\rangle\mid M \text{ is a single tape TM that never modifies the portion} $
+    \\$\text{of the tape that contains the input } w\}$
+
+    \begin{enumerate}[label=(\alph*)]
+        \item (8 points) Is $X$ decidable by any Turing Machines? Prove your answer.
+        \item (7 points) Is there a (non-uniform) circuit family that can compute $X$? Prove your answer.
+    \end{enumerate}
+\end{problem}
+
+\begin{problem}{3.(15 points)}
+    \bf 本题与22年第3题基本相同, 将其中 a uniform $\mathbf{AC}^0$ family 改为 a non-uniform $\mathbf{AC}^0$ family.
+\end{problem}
+\newpage
+\begin{problem}{4.(12 points)}
+    There are two creatures both claiming to be oracles for the Independent Set decision problem. Given any undirected graph and an integer $k$, each of them will give a yes/no answer (i.e., where there is a independent set of size $\ge k$) in constant time. Furthermore, they always give the same answer for the same instance. However, there is only one true oracle and the other is an impostor.  
+
+    Suppose you have a large undirected graph on which the two creatures give different answers. Is it possible to expose the liar within time polynomial in the size of the graph? Explain your answer.
+\end{problem}
+
+\begin{answer}
+    Possible. Use the reduction from decision to search problem.
+\end{answer}
+\newpage
+\begin{problem}{5.(15 points)}
+    Two groups in PKU are building teams for the next competition. Each team is comprised of $n$ students and 1 professor. $k$ topic areas of CS are included in this competition. For each topic areas, a student is either an expert or not.
+    
+    It is guranteed that Team1 led by Prof1 will win if it includes at least one student expert from each of the $k$ topic areas(irrespective of what Team2 does). Otherwise, team2 will win.
+
+    There are $2n$ students and the professors do their selection as follows. First, students are arbitarily organized into an ordered sequence of pairs $P_1, P_2, \cdots, P_n$. Prof1 starts by picking one student from $P_1$ (with the other student in $P_1$ going to Prof2), then Prof2 picks one student from $P_2$ (with the other student in $P_2$ going to Prof1), and so on, until all students are assigned to some team.
+
+    Consider the language $\texttt{SPC}$ defined as follows: 
+    \begin{align*}
+        \texttt{SPC} = &\{\left\langle P_1,P_2,\cdots, P_n, k\right\rangle\mid \text{Team1 has a winning strategy for the ordered sequence of student}
+        \\&\text{pairs } P_1, P_2, \cdots, P_n\}
+    \end{align*}
+    Here each $P_i$ includes a student pair $(a,b)$ and their expert areas, i.e.
+    \begin{align*}
+        P_i = \{(a_1, a_2), \{\text{expert areas of } a_1\}, \{\text{expert areas of } a_2\}\}
+    \end{align*}
+    \begin{enumerate}[label=(\alph*)]
+        \item (5 points) Is $\texttt{SPC}$ in $\PSPACE$? Prove your answer.
+        \item (10 points) Is $\texttt{SPC}$ $\PSPACE$-complete? Prove your answer.
+    \end{enumerate}
+    \textbf{Notice:} The definition of TQBF is as the following:
+    \begin{align*}
+        \text{TQBF} = &\{\left\langle \psi \right\rangle\mid \psi \text{ is a true quantified boolean formula of the form} 
+        \\&\exists x_1\forall x_2\exists x_3 \forall x_4 \cdots Q_nx_n~\phi(x_1,x_2,\cdots,x_n) \text{ where $\phi$ is a boolean formula.} \}
+    \end{align*}
+\end{problem}
+\newpage
+\begin{problem}{6.(18 points)}
+    $~$
+    \begin{enumerate}[label = (\alph*)]
+        \item (4 points) Is it true that $\mathbf{BPL} \subseteq \text{(non-uniform)}\mathbf{AC}$? Prove your answer.
+        \item (4 points) Is it true that $\mathbf{BPL} \subseteq \text{(non-uniform)}\mathbf{AC}^1$? Prove your answer.
+    \end{enumerate}
+\end{problem}
+\newpage
+\begin{problem}{7.(20 points)}
+Define MA to be a subset of $\IP$, such that we can only allow the prover to send one message $z$ first and the verifier can then verify use some randomness $y$. Specifically, the definition is as the following.
+
+A language $L$ is in MA if there exists a polynomial-time deterministic TM $M$ and polynomial $p,q$ such that for every input string $x$ of length $n$,
+\begin{itemize}
+    \item (completeness) if $x\in L \implies \exists z \in \{0,1\}^q ~s.t.~ \Pr_{y \in_{R} \{0,1\}^p}[M(x,y,z) = 1]\ge 2/3$;
+    \item (soundness) if $x\notin L \implies \forall z \in \{0,1\}^q ~s.t.~ \Pr_{y \in_{R} \{0,1\}^p}[M(x,y,z) = 0]\ge 2/3$.
+\end{itemize}
+\begin{enumerate}[label = (\alph*)]
+    \item (10 points) Is it true that $\text{MA} \subseteq \text{AM}[2]$? Prove your answer.
+    \item (10 points) If we change the completeness of MA to have success probability 1 instead of $2/3$( i.e. perfect completeness), then does this change the definition of MA? Prove you answer.
+\end{enumerate}
+{\bf 注:原本的第7题与22年第7题相同, 一位同学在考前向助教询问过这道题, 故临时更换题目.}
+\end{problem}
+\end{document}
