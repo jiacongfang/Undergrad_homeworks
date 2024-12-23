@@ -1,0 +1,339 @@
+\documentclass[11pt]{article}           
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.25cm}
+
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=1pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{sgame} % For Game Theory Matrices 
+% \usepackage{diagbox} % Conflict with sgame
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+%\usepackage{algorithm,algorithmicx}
+\usepackage{algorithm,algorithmicx}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage[hidelinks]{hyperref}
+\usepackage{extarrows}
+\usepackage{totcount}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+\usepackage{helvet}
+\usepackage{dsfont}
+% \usepackage{newtxmath}
+\usepackage[labelfont=bf]{caption}
+\renewcommand{\figurename}{Figure}
+\usepackage{lastpage}
+\usepackage{istgame}
+\usepackage{tcolorbox}
+% \newdateformat{mydate}{\shortmonthname[\THEMONTH]. \THEDAY \THEYEAR}
+
+\RequirePackage{algorithm}
+
+\makeatletter
+\newenvironment{algo}
+  {% \begin{breakablealgorithm}
+    \begin{center}
+      \refstepcounter{algorithm}% New algorithm
+      \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+      \parskip 0pt
+      \renewcommand{\caption}[2][\relax]{% Make a new \caption
+        {\raggedright\textbf{\fname@algorithm~\thealgorithm} ##2\par}%
+        \ifx\relax##1\relax % #1 is \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+        \else % #1 is not \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+        \fi
+        \kern2pt\hrule\kern2pt
+     }
+  }
+  {% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+   \end{center}
+  }
+\makeatother
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]\songti}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Solution]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\1{\mathds{1}}
+% \newcommand\1{\mathbf{1}}
+\newcommand\R{\mathbb{R}}
+\newcommand\E{\mathbb{E}}
+\newcommand\N{\mathbb{N}}
+\newcommand\NN{\mathcal{N}}
+\newcommand\per{\mathrm{per}}
+\newcommand\PP{\mathbb{P}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\ReLU{\mathrm{ReLU}}
+\newcommand{\Exp}{\mathrm{Exp}}
+\newcommand{\arrp}{\xrightarrow{P}}
+\newcommand{\arrd}{\xrightarrow{d}}
+\newcommand{\arras}{\xrightarrow{a.s.}}
+\newcommand{\arri}{\xrightarrow{n\rightarrow\infty}}
+\newcommand{\iid}{\overset{\text{i.i.d}}{\sim}}
+
+% New math operators
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Corr}{Corr}
+\DeclareMathOperator{\MSE}{MSE}
+\DeclareMathOperator{\Bias}{Bias}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+
+\definecolor{lightgray}{gray}{0.75}
+
+
+\begin{document}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} 北京大学}
+\chead{}
+\rhead{\CJKfamily{zhkai} 2024年秋\ 信息学中的概率统计(王若松)}
+\fancyfoot[R]{} 
+\fancyfoot[C]{\thepage\ /\ \pageref{LastPage} \\ \textcolor{lightgray}{最后编译时间: \today}}
+
+
+\begin{center}
+    {\LARGE \bf Homework 7}
+
+    {姓名:方嘉聪\ \  学号: 2200017849}            % Write down your name and ID here.
+\end{center}
+
+\begin{problem}{1}
+    给定未知参数 $\theta$ 的估计量 $\hat{\theta} = \hat{\theta}(X_1, X_2, \cdots, X_n)$, 证明
+    \begin{align*}
+        \mathrm{MSE}(\hat{\theta}) = \Var(\hat{\theta}) + \left(\mathrm{Bias}(\hat{\theta})\right)^2 = \Var(\hat{\theta}) + \left(\theta - \E(\hat{\theta})\right)^2.
+    \end{align*}
+\end{problem}
+\begin{answer}
+我们有
+\begin{align*}
+    \MSE(\hat{\theta}) &= \E\left[(\hat{\theta} - \theta)^2\right] = \E\left[\hat{\theta}^2\right] - 2\theta\E[\hat{\theta}] + \theta^2 \\
+    &= \E\left[\hat{\theta}^2\right] - \E[\hat{\theta}]^2 + \E[\hat{\theta}]^2 - 2\theta\E[\hat{\theta}] + \theta^2 \\
+    &= \Var(\hat{\theta}) + \left(\E[\hat{\theta}] - \theta\right)^2 = \Var(\hat{\theta}) + \Bias(\hat{\theta})^2.
+\end{align*}
+证毕.
+\end{answer}
+
+\begin{problem}{2}
+    令总体 $X$ 服从概率密度函数如下的连续分布, 其中 $\theta >0$ 为未知参数,
+    \begin{align*}
+        f(x) = \begin{cases}
+            \theta/x^2, & x \geq \theta,\\
+            0, & x < \theta.
+        \end{cases} 
+    \end{align*}
+    给定简单随机样本 $X_1, X_2, \cdots, X_n$, 求 $\theta$ 的最大似然估计量.
+\end{problem}
+\begin{answer}
+    极大似然函数为
+    \begin{align*}
+        f(\theta) = \prod_{i=1}^{n} f(x_i) = \theta^n \left(\prod_{i=1}^{n} x_i^2\right)^{-1} \cdot \1_{x_1, x_2, \cdots, x_n \ge \theta}.
+    \end{align*}
+    注意到当 $x_1, x_2, \cdots, x_n \ge \theta$ 时, $f(\theta)$ 为关于 $\theta$ 的单调递增函数, 故最大似然估计量为 
+    \begin{align*}
+        \hat{\theta}_{\mathrm{MLE}} = \min\{x_1, x_2, \cdots, x_n\}.
+    \end{align*}
+    证毕.
+\end{answer}
+
+\begin{problem}{3}
+    令总体 $X\sim \pi(\lambda)$, 即 $X$ 服从参数为 $\lambda$ 的泊松分布, $\lambda$ 为未知参数. 给定简单随机样本 $X_1, X_2, \cdots, X_n$, 
+    本题中, 我们将考虑 $p = e^{-\lambda}$ 的两个不同的估计量:
+    \begin{enumerate}[label=(\arabic*)]
+        \item 考虑 $p$ 的矩法估计量 $\hat{p}_1 = e^{-\bar{X}}$. 这里, $\bar{X} = \frac{1}{n}\sum_{i=1}^n X_i$ 为样本均值. 判断 $\hat{p}_1$ 是否为 $p = e^{-\lambda}$ 的最大似然估计(简要说明原因, 无需严格证明),
+        判断 $\hat{p}_1$ 是否为无偏估计量, 渐进无偏估计量, 一致估计量, 并计算 $\hat{p}_1$ 的均方误差. {\kaishu 提示: 参考作业二第六题.}
+        \item 令 $\hat{p}_2 = \frac{1}{n}\sum_{i=1}^n \1_{\{X_i = 0\}}$. 这里
+        \begin{align*}
+            \1_{\{X_i = 0\}} = \begin{cases}
+                1, & X_i = 0,\\
+                0, & X_i > 0.
+            \end{cases}
+        \end{align*}
+        判断 $\hat{p}_2$ 是否为无偏估计量, 渐进无偏估计量, 一致估计量, 并计算 $\hat{p}_2$ 的均方误差.
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label=(\arabic*)]
+        \item 极大似然函数为
+        \begin{align*}
+            L(p) = \prod_{i=1}^{n} \frac{e^{-\lambda}\lambda^{x_i}}{x_i!} = p^n \frac{\lambda^{\sum_{i=1}^{n}x_i}}{\prod_{i=1}^{n}x_i!} = \frac{1}{\prod_{i=1}^{n}x_i !}\cdot p^n (-\ln p)^{\sum_{i=1}^{n}x_i}.
+        \end{align*}
+        对 $p$ 求导, 得到
+        \begin{align*}
+            L'(p) = n p^{n-1}(-\ln p)^{\sum_{i=1}^{n}x_i} - p^n \frac{\sum_{i=1}^{n}x_i}{p}(-\ln p)^{\sum_{i=1}^{n}x_i - 1} \implies p_{\mathrm{MLE}} = e^{-\bar{X}} = \hat{p}_1.
+        \end{align*}
+        说明 $\hat{p}_1$ 是 $p = e^{-\lambda}$ 的最大似然估计. 由作业二第六题, 对于$X\sim \pi(\lambda)$ 与 任意 $t\in \R$, 我们有
+        \begin{align*}
+            \E\left(e^{tX}\right) = e^{\lambda(e^t - 1)} \implies \E\left(\hat{p}_1\right) =  \left(\prod_{i=1}^{n}\E\left(e^{-X_i}\right)\right)^{1/n} = e^{\lambda(e^{-1} - 1)} \neq e^{-\lambda} = p.
+        \end{align*}
+        故 $\hat{p}_1$ 不是无偏估计量和渐进无偏估计量. 由大数定律知, $\bar{X} \arrp \lambda$, 故由\textbf{Lemma~\ref{lemma:1}} 有, 
+        \[
+        \hat{p}_1 = e^{-\bar{X}} \arrp e^{-\lambda} = p.
+        \] 
+        故 $\hat{p}_1$ 是一致估计量. 下面计算 $\hat{p}_1$ 的均方误差,
+        \begin{align*}
+            \E\left(\hat{p}_1^2\right) = \E\left(e^{-2\bar{X}}\right) =  \left(\prod_{i=1}^{n}\E\left(e^{-2X_i}\right)\right)^{1/n} = e^{2\lambda(e^{-2} - 1)} 
+        \end{align*}
+        那么 $\hat{p}_1$ 的均方误差为
+        \begin{align*}
+            \MSE(\hat{p}_1) = \E\left(\hat{p}_1^2\right) + p^2 - 2p\E(\hat{p}_1) = e^{2\lambda(e^{-2} - 1)} + e^{-2\lambda} - 2e^{-\lambda}e^{\lambda(e^{-1} - 1)}.
+        \end{align*}
+        \item 注意到
+        \begin{align*}
+            \E\left(\hat{p}_2\right) = \E\left[\frac{1}{n}\sum_{i=1}^{n} \1_{\{X_i = 0\}}\right] = \frac{1}{n} \sum_{i=1}^{n} \PP(X_i = 0) = e^{-\lambda} = p.
+        \end{align*}
+        故 $\hat{p}_2$ 是无偏估计量, 渐进无偏估计量. 那么 $\MSE(\hat{p}_2) = \Var(\hat{p}_2)$, 我们先来计算 $\E\left(\hat{p}_2^2\right)$,
+        \begin{align*}
+            \E\left(\hat{p}_2^2\right) &= \E\left[\frac{1}{n^2}\left(\sum_{i=1}^{n} \1_{\{X_i=1\}}\right)^2\right]  \\
+            &= \frac{1}{n^2} \E\left[\sum_{i=1}^{n}\1_{\{X_i=1\}}^2 + \sum_{i\neq j} \1_{\{X_i = 0 \land X_j = 0\}}\right] \\
+            &= \frac{1}{n^2} \left[\sum_{i=1}^{n}\PP(X_i = 0) + \sum_{i\neq j} \PP(X_i=0) \cdot \PP(X_j =0)\right] \\
+            &= \frac{1}{n^2} \left[n e^{-\lambda} + (n^2 - n) e^{-2\lambda}\right] = e^{-2\lambda} + \frac{e^{-\lambda}}{n}(1 - e^{-\lambda}).
+        \end{align*}
+        那么有
+        \begin{align*}
+            \MSE(\hat{p}_2) = \Var(\hat{p}_2) = \E\left(\hat{p}_2^2\right) - \E\left(\hat{p}_2\right)^2 = \frac{e^{-\lambda}}{n} (1 - e^{-\lambda}) \arri 0.
+        \end{align*}
+        故 $\hat{p}_2$ 是一致估计量. 证毕.
+    \end{enumerate}
+    \begin{lemma}
+        \label{lemma:1}
+        设 $X_n \arrp X$, $g$ 为$\R^1$上的连续函数, 则 $g(X_n) \arrp g(X)$.
+    \end{lemma}
+    \begin{proof}
+        对于任意的 $\delta > 0$, 存在 $M > 0$ 与 $N_1 \in \N^+$, 当 $n > N_1$ 时, 有 
+        \begin{align*}
+            \PP\left(|X| \ge \frac{M}{2}\right) \le \frac{\delta}{4}, \quad\PP\left(|X_n - X| \ge \frac{M}{2}\right) \le \frac{\delta}{4}.
+        \end{align*}
+        那么有
+        \begin{align*}
+            \PP(|X_n| \ge M) &= \PP\left(|X_n| \ge M, |X| < \frac{M}{2}\right) + \PP\left(|X_n| \ge M, |X| \ge \frac{M}{2}\right) \\
+            &\le \PP\left(|X_n - X| \ge \frac{M}{2}\right) + \PP\left(|X|\ge \frac{M}{2}\right) < \frac{\delta}{2}.
+        \end{align*}
+        由于 $g(x)$ 在 $\R^1$ 上连续, 故$g(x)$ 在$[-M, M]$ 上一致连续, 即对于任意 $\varepsilon > 0$, 存在 $\eta >0$, 对于 $x_1, x_2 \in [-M, M]$, 
+        若 $|x_1 - x_2| < \eta$, 则 $|g(x_1) - g(x_2)| < \varepsilon$. 由于 $X_n \arrp X$, 故存在 $N_2 \in \N^+$, 当 $n > N_2$ 时, 有
+        \begin{align*}
+            \PP(|X_n - X| \ge \eta) < \frac{\delta}{4}.
+        \end{align*}
+        于是当 $n > \max\{N_1, N_2\}$ 时, 有
+        \begin{align*}
+            &\PP(|g(X_n) - g(X)| \ge \varepsilon) \\
+            &\le \PP\left(|g(X_n) - g(X)| \ge \varepsilon, |X_n| < M, |X| < M\right) + \PP\left(\{|X_n| \ge M\} \cup \{|X| \ge M\}\right) \\
+            &\le \PP\left(|X_n - X| \ge \eta\right) + \PP\left(|X| \ge \frac{M}{2}\right) + \PP\left(|X_n| \ge M\right) \\
+            &\le \frac{\delta}{4} + \frac{\delta}{4} + \frac{\delta}{2} = \delta.
+        \end{align*}
+        由任意性可知 $g(X_n) \arrp g(X)$. 证毕.
+    \end{proof}
+\end{answer}
+
+\begin{problem}{4}
+    给定样本 $X_1, X_2, \cdots, X_n \sim \mathcal{N}(\mu_1, \sigma_1^2)$, $Y_1, Y_2, \cdots, Y_m \sim \mathcal{N}(\mu_2, \sigma_2^2)$, 满足 $\{X_i\}_{i=1}^n$, $\{Y_j\}_{j=1}^m$ 相互独立.
+    \begin{enumerate}[label = (\arabic*)]
+        \item 令 $\bar{X} = \frac{1}{n} \sum_{i=1}^{n}X_i, \bar{Y} = \frac{1}{m} \sum_{i=1}^{m}Y_i$. 给出 $X - Y$ 服从的分布.
+        \item 假定 $\sigma_1^2$ 和 $\sigma_2^2$ 均已知, 利用上一问中的结果构造枢轴量并给出 $\mu_1 - \mu_2$ 的置信水平为 $1-\alpha$ 的置信区间.
+        最终结果应该依赖于 $\Phi^{-1}(1-\alpha/2)$, 其中 $\Phi(x) = \int_{-\infty}^{x} \frac{1}{\sqrt{2\pi}}e^{-t^2/2}\dd t$ 为标准正态分布的分布函数.
+        \item 同样假定 $\sigma_1^2$ 和 $\sigma_2^2$ 均已知, 利用 Chernoff Bound, 给出 $\mu_1 - \mu_2$ 的置信水平为 $1-\alpha$ 的置信区间. 最终结果不应依赖于标准正态分布的分布函数.
+    \end{enumerate}
+\end{problem}
+
+\begin{answer}
+    \begin{enumerate}[label = (\arabic*)]
+        \item $\bar{X} \sim \mathcal{N}(\mu_1, \sigma_1^2/n)$, $\bar{Y} \sim \mathcal{N}(\mu_2, \sigma_2^2/m)$, 且 $\bar{X}$ 与 $\bar{Y}$ 相互独立. 故 
+        \[
+            X - Y \sim \mathcal{N}(\mu_1 - \mu_2, \sigma_1^2/n + \sigma_2^2/m)
+        \]
+        \item 构造枢轴量
+        \begin{align*}
+            Z = \frac{\bar{X} - \bar{Y} - (\mu_1 - \mu_2)}{\sqrt{\sigma_1^2/n + \sigma_2^2/m}} \sim \mathcal{N}(0, 1).
+        \end{align*}
+        记$\sigma' = \sqrt{\sigma_1^2/n + \sigma_2^2/m}$, 那么有
+        \begin{gather*}
+            \PP\left[-\Phi\left(1-\frac{\alpha}{2}\right) \le Z \le \Phi\left(1-\frac{\alpha}{2}\right)\right] = 1 - \alpha. \\
+            \PP\left[\bar{X} - \bar{Y} - \sigma'\cdot \Phi\left(1-\frac{\alpha}{2}\right) \le \mu_1 - \mu_2 \le \bar{X} - \bar{Y} + \sigma' \cdot \Phi\left(1-\frac{\alpha}{2}\right)\right] = 1 - \alpha.
+        \end{gather*}
+        故 $\mu_1 - \mu_2$ 的置信水平为 $1-\alpha$ 的置信区间为
+        \begin{align*}
+            \bigg[\bar{X} - \bar{Y} - \sigma' \cdot \Phi\left(1-\frac{\alpha}{2}\right), \bar{X} - \bar{Y} + \sigma' \cdot \Phi\left(1-\frac{\alpha}{2}\right)\bigg].
+        \end{align*}
+        \item 对于 $Z \sim \mathcal{N}(0,1)$, 有$M_Z(t) = \E(e^{tZ}) = e^{t^2/2}$. 由 Chernoff Bound, 对于任意 $t > 0$, 有
+        \begin{align*}
+            \PP(|Z| \ge \varepsilon) \le \inf_{t > 0} \left\{e^{-t\varepsilon}M_Z(t)\right\} = 2e^{-\varepsilon^2/2}.
+        \end{align*}
+        $2e^{-\varepsilon^2/2} = \alpha \implies \varepsilon = \sqrt{2\ln(2/\alpha)}$. 于是有
+        \begin{gather*}
+            \PP\left[-\varepsilon \le \frac{\bar{X}-\bar{Y}-(\mu_1-\mu_2)}{\sigma'} \le \varepsilon\right] \ge 1 - \alpha. \\
+            \PP\left[\bar{X} - \bar{Y} - \varepsilon \cdot \sigma' \le \mu_1 - \mu_2 \le \bar{X} - \bar{Y} + \varepsilon \cdot \sigma'\right] \ge 1 - \alpha.
+        \end{gather*}
+        故 $\mu_1 - \mu_2$ 的置信水平为 $1-\alpha$ 的置信区间为
+        \begin{align*}
+            \bigg[\bar{X} - \bar{Y} - \sqrt{2\ln(2/\alpha)} \cdot \sigma', \bar{X} - \bar{Y} + \sqrt{2\ln(2/\alpha)} \cdot \sigma'\bigg].
+        \end{align*}
+    \end{enumerate}
+    证毕.
+\end{answer}
+
+\begin{problem}{5}
+    在课上, 我们考虑了下述模型: 给定 $n$ 台游戏机, 第 $i$ 台游戏机的中奖概率为 $0\le p_i \le 1$, 且 $p_i$ 均为未知参数.
+    在第 $t$ 轮中, 选择一台游戏机 $1\le i\le n$, 并观测到结果 $X_{t} \sim B(1, p_i)$. 这里 $X_1, X_2, \cdots $ 相互独立.
+
+    在课上, 我们考虑了下述均匀采样策略: 对每台游戏机进行 $N$ 次观测, 并返回样本均值最大的游戏机. 
+    若取 $N = O(\ln n/\varepsilon^2)$, 则有 $\PP(p_o \ge \max p_i - \varepsilon) \ge 2/3$, 
+    这里 $1\le o\le n$ 为策略返回的选择.
+
+    本题中, 我们考虑 $n=2$ 的情况, 也即给定两台游戏机, 中奖概率分别为 $p_1$ 和 $p_2$, 且 $p_1, p_2$ 为未知参数. 令 $\Delta = |p_1 - p_2|$.
+    \begin{enumerate}[label=(\arabic*)]
+        \item 若 $\Delta$ 为已知参数且 $\Delta > 0$, 证明采用均匀采样策略并令 $N=O(1/\Delta^2)$, 则有 
+        \begin{align*}
+            \PP\left(p_o = \max\{p_1, p_2\}\right) \ge \frac{2}{3}
+        \end{align*}
+        这里 $o=1$ 或 $o=2$ 为策略返回的选择.
+        \item \textbf{(Bonus 15\%)} 若 $\Delta$ 为未知参数且 $\Delta > 0$, 设计策略, 使得以至少 $2/3$ 的概率, 下述事件同时成立:
+        \begin{itemize}
+            \item $p_o = \max\{p_1, p_2\}$, 这里 $o=1$ 或 $o=2$ 为策略返回的选择.
+            \item 策略的总观测次数于 $1/\Delta$ 为多项式关系.
+        \end{itemize}
+    \end{enumerate}
+\end{problem}
+
+\begin{answer}
+    \begin{enumerate}[label=(\arabic*)]
+        \item 令$\varepsilon = \Delta/2$, 由已证的结论, 对于均匀采样策略, 取$N = O(\ln 2/\varepsilon^2) = O(1/\Delta^2)$, 有
+        \begin{align*}
+            \PP(p_o \ge \max_{i=1,2} p_i - \varepsilon) = \PP(p_o \ge \max_{i=1,2} p_i - \Delta/2) = \PP(p_o = \max \{p_1,p_2\}) \ge \frac{2}{3}
+        \end{align*}
+        证毕.
+        \item 
+    \end{enumerate}
+\end{answer}
+\end{document}

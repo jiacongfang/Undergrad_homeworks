@@ -1,0 +1,244 @@
+\documentclass[11pt]{article}           
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{diagbox}
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+%\usepackage{algorithm,algorithmicx}
+\usepackage[ruled]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage{hyperref}
+\usepackage{extarrows}
+% \usepackage{lastpage}
+\usepackage{totcount}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+\usepackage{helvet}
+\usepackage{dsfont}
+% \usepackage{newtxmath}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]\songti}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Solution]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\1{\mathds{1}}
+% \newcommand\1{\mathbf{1}}
+\newcommand\R{\mathbb{R}}
+\newcommand\E{\mathbb{E}}
+\newcommand\N{\mathbb{N}}
+\newcommand\NN{\mathcal{N}}
+\newcommand\per{\mathrm{per}}
+\newcommand\PP{\mathbb{P}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\Var{\mathrm{Var}}
+\newcommand\Cov{\mathrm{Cov}}
+\newcommand{\Exp}{\mathrm{Exp}}
+\newcommand{\arrp}{\xrightarrow{P}}
+\newcommand{\arrd}{\xrightarrow{d}}
+\newcommand{\arras}{\xrightarrow{a.s.}}
+\newcommand{\arri}{\xrightarrow{n\rightarrow\infty}}
+
+\title{Homework \#3}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} 北京大学}
+\chead{}
+\rhead{\CJKfamily{zhkai} 2024年秋\ 信息学中的概率统计(王若松)}
+
+
+
+\begin{center}
+    {\LARGE \bf Homework 1}
+
+    {姓名:方嘉聪\ \  学号: 2200017849}            % Write down your name and ID here.
+\end{center}
+
+\begin{problem}{1}
+    \songti
+    对于$n$ 个事件 $A_1, A_2, \cdots, A_n$, 从概率的公理化定义和条件概率的定义出发证明下述结论: 
+    \begin{enumerate}[label=(\arabic*)]
+        \item 一般加法公式:\[\PP\left(\bigcup_{i=1}^n A_i\right) = \sum_{i=1}^{n}\PP(A_i) - \sum_{1\le i < j \le n}\PP(A_i A_j) + \sum_{1\le i < j < k \le n}\PP(A_i A_j A_k) + \cdots + (-1)^{n-1} \PP(A_1A_2\cdots A_n).\] 
+        \item 一般 Union Bound: \[\PP\left(\bigcup_{i=1}^n A_i\right) \le \sum_{i=1}^{n} \PP(A_i).\]
+        \item 一般乘法公式: 若$\PP(A_1, A_2, \cdots, A_n) > 0$, 有: \[\PP(A_1 A_2 \cdots A_n ) = \PP(A_1)\cdot\PP(A_2|A_1)\cdot \PP(A_3|A_1 A_2) \cdots \PP(A_n|A_1\cdots A_{n-1})\]
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+\begin{enumerate}[label = (\arabic*)]
+    \item 首先从概率的公理化定义出发证明 $\PP(A - B) = \PP(A) - \PP(AB)$. 注意到我们有 $A = AB + A\bar{B}$, 且$AB \cap A\bar{B} = \emptyset$, 那么 $\PP(A) = \PP(AB) + \PP(A\bar{B})$, 进而有\[\PP(A- B) = \PP(A\bar{B}) = \PP(A) - \PP(AB)\]
+    下面证明 $\PP(A\cup B) = \PP(A) + \PP(B) - \PP(AB)$. 注意到 $A\cup B = A\cup (B - AB)$且$A \cap (B - AB) = \emptyset$, 故\[\PP(A\cup B) = \PP(A) + \PP(B - AB) = \PP(A) + \PP(B) - \PP(AB) \] 下面用数学归纳法来证明一般的加法公式. 假设当 $n = k$ 时, 原命题成立, 即\[\PP\left(\bigcup_{i=1}^{k} A_i\right) = \sum_{j=1}^{k}\sum_{1\le i_1 < \cdots < i_j \le k}(-1)^{j-1}\PP(A_{i_1} A_{i_2} \cdots A_{i_j})\]
+    当$ n = k+1$ 时, 我们有\begin{align*}
+        \PP\left(\bigcup_{i=1}^{k+1} A_i \right) &= \PP\left[\left(\bigcup_{i=1}^n A_i\right) \cup A_{k+1}\right] = \PP\left(\bigcup_{i=1}^n A_i\right) + \PP(A_{k+1}) - \PP\left(\bigcup_{i=1}^n (A_iA_{k+1})\right) \\
+        &= \sum_{j=1}^{k}\sum_{1\le i_1 < \cdots < i_j \le k}(-1)^{j-1}\PP(A_{i_1} A_{i_2} \cdots A_{i_j})  + \PP(A_{k+1}) \\ 
+        &~~- \sum_{j=1}^{k}\sum_{1\le i_1 < \cdots < i_j \le k}(-1)^{j-1}\PP(A_{i_1} A_{i_2} \cdots A_{i_j} A_{k+1})\\
+        &= \sum_{i=1}^{k+1} \PP(A_i) + (-1)^{k} \PP(A_1A_2 \cdots A_{k+1}) \\
+        &~~+ \sum_{j=2}^{k}\left(\sum_{1\le i_1 < \cdots < i_j \le k}(-1)^{j-1}\PP(A_{i_1}\cdots A_{i_j}) + \sum_{1\le i_1 < \cdots < i_{j-1} \le k}(-1)^{j-1}\PP(A_{i_1}\cdots A_{i_{j-1}} A_{k+1})\right)
+    \end{align*}
+    注意到,\begin{align*}
+        &\sum_{1\le i_1 < \cdots < i_j \le k}(-1)^{j-1}\PP(A_{i_1}\cdots A_{i_j}) + \sum_{1\le i_1 < \cdots < i_{j-1} \le k}(-1)^{j-1}\PP(A_{i_1}\cdots A_{i_{j-1}} A_{k+1}) \\
+        &= \sum_{1\le i_1 < \cdots < i_j \le k+1}(-1)^{j-1}\PP(A_{i_1}\cdots A_{i_j})
+    \end{align*} 
+    那么\[\PP\left(\bigcup_{i=1}^{k+1} A_i\right) = \sum_{j=1}^{k+1}\sum_{1\le i_1 < \cdots < i_j \le k+1}(-1)^{j-1}\PP(A_{i_1} A_{i_2} \cdots A_{i_j})\]
+    故由数学归纳法知一般加法公式成立.
+    \item 在(1)中我们已经证明了\[\PP(A\cup B) = \PP(A) + \PP(B) - \PP(AB) \le \PP(A) + \PP(B)\]当$AB = \emptyset$ 时等号成立. 下面我们用数学归纳法证明一般的Union Bound. 假设当 $n = k$ 时, 原命题成立, 即\[\PP\left(\bigcup_{i=1}^{k} A_i\right) \le \sum_{i=1}^{k}\PP(A_i)\]
+    当$\forall i \neq j, A_i A_j = \emptyset$时, 等号成立. 
+    
+    考虑$n = k+1$时, 我们有\begin{align*}
+        \PP\left(\bigcup_{i=1}^{k+1} A_i\right) &= \PP\left[\left(\bigcup_{i=1}^n A_i\right) \cup A_{k+1}\right] = \PP\left(\bigcup_{i=1}^n A_i\right) + \PP(A_{k+1}) - \PP\left(\bigcup_{i=1}^n (A_iA_{k+1})\right) \\
+        &\le \sum_{i=1}^{k}\PP(A_i) + \PP(A_{k+1}) = \sum_{i=1}^{k+1}\PP(A_i)
+    \end{align*}
+    当$\forall i \neq j, A_i A_j = \emptyset$时, 等号成立. 故由数学归纳法知一般Union Bound成立.
+    \item 由条件概率的定义可知\[\PP(AB) = \PP(B) \cdot \PP(A|B)\]假设当$n = k$时一般乘法公式成立, 即\[\PP(A_1 A_2 \cdots A_k) = \PP(A_1)\cdot\PP(A_2|A_1)\cdot \PP(A_3|A_1 A_2) \cdots \PP(A_k|A_1\cdots A_{k-1})\]
+    考虑$n=k+1$的情况有\begin{align*}
+        \PP(A_1A_2\cdots A_k A_{k+1}) &= \PP(A_1A_2\cdots A_k) \cdot \PP(A_{k+1}|A_1A_2\cdots A_k) \\
+        &= \PP(A_1)\cdot\PP(A_2|A_1)\cdots \PP(A_k|A_1\cdots A_{k-1}) \PP(A_{k+1}|A_1\cdots A_k)
+    \end{align*}
+    由数学归纳法知一般乘法公式成立.
+\end{enumerate}
+\end{answer}
+
+\begin{problem}{2}
+    \songti
+    对于三个事件 $A, B, C$, 若$\PP(C) > 0$, 我们称事件 $A, B$ 在事件 $C$ 发生时是条件独立的, 当且仅当\[\PP(AB|C) = \PP(A|C)\PP(B|C).\]
+    对于下述命题, 从概率公理化定义和条件概率的定义出发给出证明, 或给出反例.
+    \begin{enumerate}[label=(\arabic*)]
+        \item 事件$A$ 和$B$ 在事件$C$ 发生时是条件独立的, 且有$0 < \PP (C) < 1$, 则事件$A$ 和$B$ 在事件$\bar{C}$ 发生时条件独立. 这里,事件$\bar{C}$ 是事件$C$ 的对立事件. 
+        \item 事件$A$ 和$B$ 相互独立, 则对于任意事件$C$, 若$\PP (C) > 0$, 事件$A$ 和$B$ 在事件$C$ 发生时是条件独立的. 
+        \item 事件$A$ 和$B$ 相互独立, 则事件$A$ 和事件$\bar{B}$ 相互独立. 这里, 事件$\bar{B}$ 是事件$B$ 的对立事件. 
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label = (\arabic*)]
+        \item 该命题错误. 考虑如下反例, 有一个袋子里中质地大小相同的4个黑球与1个白球, 不放回的抽取3次. 考虑如下事件
+        \begin{align*}
+            C = \{\text{第1次摸出白球}\}, \quad A = \{\text{第2次摸出黑球}\}, \quad B = \{\text{第3次摸出黑球}\}
+        \end{align*}
+        那么有\begin{align*}
+            \PP(C) = \frac{1}{5}, \quad \PP(AB|C) = \PP(A|C) = \PP(B|C) = 1 \implies \PP(AB|C) = \PP(A|C)\PP(B|C)
+        \end{align*}
+        即事件$A,B$在事件$C$发生时是条件独立, 且有$0< \PP(C) < 1$. 但是我们有\begin{align*}
+            \PP(A|\bar{C}) = \frac{3}{4},&\quad \PP(B|\bar{C}) = \PP(A|\bar{C})\PP(B|A\bar{C}) + \PP(\bar{A})\PP(B|\bar{A}\bar{C}) = \frac{3}{4} \\
+            \PP(AB|\bar{C}) &= \frac{\PP(AB\bar{C})}{\PP(\bar{C})} = \frac{\frac{4\times 3\times 2}{5\times 4 \times 3}}{4/5} = \frac{1}{2} \neq  \PP(A|\bar{C})\PP(B|\bar{C})
+        \end{align*}
+        即事件$A, B$ 在 事件$\bar{C}$ 发生时不是条件独立的.
+        \item 该命题错误. 有如下简单反例, 投掷一个质地均匀的骰子, 考虑事件\begin{align*}
+            A = \{\text{1,2 正面朝上}\}, \quad B = \{\text{2,3,6 正面朝上}\}, \quad C = \{\text{1,6 正面朝上}\}
+        \end{align*}
+        那么有$\PP(A) = 1/3, \PP(B) = 1/2, \PP(AB) = 1/6 = \PP(A)\PP(B)$. 但是\begin{align*}
+            \PP(A|C) = \frac{1}{2}, \quad \PP(B|C) = \frac{1}{2}, \quad \PP(AB|C) = \PP(\{2\}|C) = 0 \neq \PP(A|C)\PP(B|C)
+        \end{align*}
+        故事件$A,B$在事件$C$发生时不是条件独立的.
+        \item 命题成立. 证明如下, 由于事件$A,B$相互独立, 我们有\begin{align*}
+            \PP(AB) = \PP(A)\PP(B) \implies \PP(A\bar{B}) = \PP(A) - \PP(AB) = \PP(A) - \PP(A)\PP(B) = \PP(A)\PP(\bar{B}) 
+        \end{align*}
+        故 $A$ 和$\bar{B}$ 相互独立.
+    \end{enumerate}
+\end{answer}
+
+\begin{problem}{3}
+    \songti
+    在课上, 我们考虑了如下球与桶模型: 有$n \ge 1$ 个球, 每个球都等可能被放到 $m\ge 1$ 个桶中的任一个. 用$P_{n,m}$ 表示每个桶中至多有一个球的概率. 在课上, 我们已经证明了, \[P_{n,m} \le \exp\left(-\frac{n(n-1)}{2m}\right).\]
+    现在, 请证明\[P_{n,m} \ge \exp\left(-\frac{n(n-1)}{2m}\right)\cdot \left(1 - \frac{8n^3}{m^2}\right).\]
+    
+    {\kaishu 提示: 证明对于任意 $0\le x \le 1/2$, $\ln(1-x) \ge -x - x^2$.}
+\end{problem}
+\begin{answer}
+    我们先来证明$\forall 0\le x \le 1/2, \ln(1-x) \ge -x - x^2$. 设$f(x) = \ln(1-x) + x + x^2$, 那么\[f'(x) = -\frac{1}{1-x} + 1 + 2x = \frac{x(1-2x)}{1-x}\]
+    故当$x \in [0,1/2]$时, $f(x)$ 单调递增, 那么$f(x) \ge f(0) = 0$, 即$\ln(1-x) \ge -x - x^2$. 
+    下面来估计$P_{n,m}$的下界, 当$0< m \le 2n$时, $1 - 8n^3/m^2 \le 1 - 2n < 0$, 原式显然成立. 下面考虑$m > 2n$的情况, 有
+    \begin{align*}
+        P_{n,m} &= \prod_{i=1}^{n-1}\left(1 - \frac{i}{m}\right) \\
+        \implies \ln P_{n,m} &= \sum_{i=1}^{n-1} \ln\left(1 - \frac{i}{m}\right) \ge \sum_{i=1}^{n-1} \left(-\frac{i}{m} - \frac{i^2}{m^2}\right)  \\
+        &= -\frac{n(n-1)}{2m} - \frac{n(n-1)(2n-1)}{6m^2}. \\
+        \implies P_{n,m} &\ge \exp\left(-\frac{n(n-1)}{2m}\right)\cdot \exp\left(-\frac{n(n-1)(2n-1)}{6m^2}\right) \\
+        (e^x \ge 1 + x, \forall x\ge 0)\quad &\ge \exp\left(-\frac{n(n-1)}{2m}\right)\cdot \left(1 - \frac{n(n-1)(2n-1)}{6m^2}\right) \\
+        &\ge \exp\left(-\frac{n(n-1)}{2m}\right)\cdot \left(1 - \frac{8n^3}{m^2}\right). 
+    \end{align*}
+    综上证毕.
+\end{answer}
+
+\begin{problem}{4}
+    \songti
+    将一枚骰子投掷$n \ge 1$ 次, 求在$n$次投掷中,六个数字均出现过至少一次的概率.
+\end{problem}
+\begin{answer}
+    记事件$B = \{\text{六个数字均出现过至少一次}\}$, $A_i = \{\text{数字 $i$ 未出现}\}, \forall i \in \{1,2,3,4,5,6\}$.那么$\bar{B} = \bigcup_i A_i$.又我们有($i\neq j \neq k ... $)
+    \begin{align*}
+        \PP(A_i) &= \left(\frac{5}{6}\right)^n, \quad \PP(A_i A_j) = \left(\frac{4}{6}\right)^n, \quad \PP(A_i A_j A_k) = \left(\frac{3}{6}\right)^n, \cdots \PP(A_1A_2\cdots A_6) = \left(\frac{0}{6}\right)^n = 0 
+    \end{align*}
+    那么由一般加法公式
+    \begin{align*}
+        \PP\left(\bigcup_{i=1}^6 A_i\right) &= \sum_{j=1}^6 \PP(A_j) - \sum_{1\le i < j \le 6}\PP(A_i A_j) + \sum_{1\le i < j < k \le 6}\PP(A_i A_j A_k) + \cdots + (-1)^5 \PP(A_1A_2\cdots A_6) \\
+        &= \binom{6}{1}\left(\frac{5}{6}\right)^n - \binom{6}{2}\left(\frac{4}{6}\right)^n + \binom{6}{3}\left(\frac{3}{6}\right)^n - \binom{6}{4}\left(\frac{2}{6}\right)^n + \binom{6}{5}\left(\frac{1}{6}\right)^n := p
+    \end{align*}
+    则$\PP(B) = 1 - p$.
+\end{answer}
+
+\begin{problem}{5}
+    某路由器有$A$ 和$B$ 两种运行模式. 路由器每天有等概率以$A$ 模式或者$B$ 模式运行, 且每天的运行模式均
+独立. 当以$A$ 模式运行时, 有90\% 的概率网络堵塞, 有10\% 的概率网络正常. 当以B 模式运行时, 有10\%
+的概率网络堵塞, 有90\% 的概率网络正常. 若某两天观测到网络堵塞, 求这两天路由器均以$A$ 模式运行的
+概率. 
+\end{problem}
+\begin{answer}
+    记事件$A = \{\text{第一天网络堵塞}\}, B = \{\text{第二天网络堵塞}\}, C = \{\text{第一天以$A$模式运行}\}, D = \{\text{第二天以$A$模式运行}\}$. 那么我们有
+    \begin{align*}
+        \PP(CD|AB) = \frac{\PP(AB|CD)\PP(CD)}{\PP(AB)} 
+    \end{align*}
+    由于每一天的运行模式均独立, 那么有$\PP(A) = \PP(B) = \PP(C)\PP(A|C) + \PP(\bar{C})\PP(A|\bar{C}) = 1/2$. 进而有\[\PP(AB) = \PP(A)\PP(B) = 1/4\]
+    又$\PP(CD) = 1/4$, $\PP(AB|CD) = (9/10)^2 = 0.81$. 故\[\PP(CD|AB) = \frac{0.81 \times 1/4}{1/4} = 0.81\]
+    即这两天路由器均以$A$模式运行的概率为$0.81$.
+\end{answer}
+
+\begin{problem}{6}
+    对于自然数 $n,m,k$, 满足 $m\ge 2k$. 有 $2n$ 个$\{1,2, \cdots, m\}$ 的子集 $A_1, B_1, \cdots, A_n, B_n\subseteq \{1,2,\cdots, m\}$, 满足
+    \begin{itemize}
+        \item $\forall 1\le i \le n$, 有$|A_i| = |B_i| = k$;
+        \item $\forall 1\le i \le n$, 有$A_i\cap B_i = \emptyset$;
+        \item $\forall 1\le i,j\le n$, 若$i\neq j$, 有$A_i\cap B_j \neq \emptyset$.
+    \end{itemize}
+    \begin{enumerate}[label = (\arabic*)]
+        \item 考虑一个$\{1,2,\cdots, m\}$的随机排列, 每一种排列均等概率出现. 对于任意$1\le i \le n$, 事件 $U_i$ 表示在随机排列中, 集合$A_i$中的元素均排在$B_i$前面. 证明\[\PP(U_i) = \frac{1}{\binom{2k}{k}}.\]
+        \item 证明: $n \le \binom{2k}{k}$. {\kaishu 提示: 考虑事件 $\bigcup_{i=1}^n U_i$ 的概率. }
+        \item 对于 $n = \binom{2k}{k}$, 构造满足条件的 $A_1, B_1, A_2, B_2, \cdots, A_n, B_n \subseteq \{1,2, \cdots, m\}$. 这里 $m$ 可取任意自然数.  
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label=(\arabic*)]
+        \item 所有的排列总数为$m!$. 满足$A_i$中的元素均排在$B_i$前面的排列数为\[\binom{m}{2k} k!\cdot k!\cdot(2m-k)!\] 这是由于我们先从$m$个位置中选择$2k$个位置放置$A_i$与$B_i$中的元素, 前$k$个位置放置$A_i$中的元素, 后$k$个位置放置$B_i$中的元素, 剩下的$2m-k$个位置放置剩下的元素. 那么\[\PP(U_i) = \frac{\binom{m}{2k} k!\cdot k!\cdot(2m-k)!}{m!} = \frac{1}{\binom{2k}{k}}.\]
+        \item 考虑事件$U_iU_j(i\neq j)$, 我们来证明$U_iU_j = \emptyset$. 由于$\forall 1\le i,j\le n$, 若$i\neq j$, 有$A_i\cap B_j \neq \emptyset$, 设\[a \in A_i\cap B_j, \quad b \in A_j \cap B_i \implies a \neq b\]假设存在某个排列满足$U_iU_j$, 那么$a$必然在$b$前面, 且$b$在$a$前面, 矛盾. 故$U_iU_j = \emptyset$. 类似的, 对$\forall t\in\{1,2,\cdots, n\}, i_1\neq i_2\neq \cdots \neq i_t$, 有$U_{i_1}U_{i_2}\cdots U_{i_t} = \emptyset$. 那么由一般加法公式有
+        \begin{align*}
+            \PP\left(\bigcup_{i=1}^n U_i\right) &= \sum_{i=1}^{n}\PP(U_i) - \sum_{1\le i < j \le n}\PP(U_i U_j) + \cdots + (-1)^{n-1} \PP(U_1U_2\cdots U_n) = \frac{n}{\binom{2k}{k}} \le 1
+        \end{align*}
+        故$n \le \binom{2k}{k}$. 证毕.
+        \item 令$S = \{1,2,\cdots, 2k\} \subseteq \{1,2,\cdots, m\}$. 那么$S$的所有$k$元子集有$\binom{2k}{k}$个. 对于每一个$k$元子集$T$, 令$A_i = T, B_i = S - T$, 那么满足题设条件. 证毕.
+    \end{enumerate}
+\end{answer}
+\end{document}

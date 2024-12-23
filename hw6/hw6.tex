@@ -1,0 +1,607 @@
+\documentclass[11pt]{article}           
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.25cm}
+
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=1pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{sgame} % For Game Theory Matrices 
+% \usepackage{diagbox} % Conflict with sgame
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+%\usepackage{algorithm,algorithmicx}
+\usepackage{algorithm,algorithmicx}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage[hidelinks]{hyperref}
+\usepackage{extarrows}
+\usepackage{totcount}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+\usepackage{helvet}
+\usepackage{dsfont}
+% \usepackage{newtxmath}
+\usepackage[labelfont=bf]{caption}
+\renewcommand{\figurename}{Figure}
+\usepackage{lastpage}
+\usepackage{istgame}
+\usepackage{tcolorbox}
+% \newdateformat{mydate}{\shortmonthname[\THEMONTH]. \THEDAY \THEYEAR}
+
+\RequirePackage{algorithm}
+
+\makeatletter
+\newenvironment{algo}
+  {% \begin{breakablealgorithm}
+    \begin{center}
+      \refstepcounter{algorithm}% New algorithm
+      \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+      \parskip 0pt
+      \renewcommand{\caption}[2][\relax]{% Make a new \caption
+        {\raggedright\textbf{\fname@algorithm~\thealgorithm} ##2\par}%
+        \ifx\relax##1\relax % #1 is \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+        \else % #1 is not \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+        \fi
+        \kern2pt\hrule\kern2pt
+     }
+  }
+  {% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+   \end{center}
+  }
+\makeatother
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]\songti}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Solution]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\1{\mathds{1}}
+% \newcommand\1{\mathbf{1}}
+\newcommand\R{\mathbb{R}}
+\newcommand\E{\mathbb{E}}
+\newcommand\N{\mathbb{N}}
+\newcommand\NN{\mathcal{N}}
+\newcommand\per{\mathrm{per}}
+\newcommand\PP{\mathbb{P}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\ReLU{\mathrm{ReLU}}
+\newcommand{\Exp}{\mathrm{Exp}}
+\newcommand{\arrp}{\xrightarrow{P}}
+\newcommand{\arrd}{\xrightarrow{d}}
+\newcommand{\arras}{\xrightarrow{a.s.}}
+\newcommand{\arri}{\xrightarrow{n\rightarrow\infty}}
+\newcommand{\iid}{\overset{\text{i.i.d}}{\sim}}
+
+% New math operators
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Corr}{Corr}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+
+\definecolor{lightgray}{gray}{0.75}
+
+
+\begin{document}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} 北京大学}
+\chead{}
+\rhead{\CJKfamily{zhkai} 2024年秋\ 信息学中的概率统计(王若松)}
+\fancyfoot[R]{} 
+\fancyfoot[C]{\thepage\ /\ \pageref{LastPage} \\ \textcolor{lightgray}{最后编译时间: \today}}
+
+
+\begin{center}
+    {\LARGE \bf Homework 6}
+
+    {姓名:方嘉聪\ \  学号: 2200017849}            % Write down your name and ID here.
+\end{center}
+
+
+\begin{problem}{1}
+    令 $X\sim \Exp(\lambda), \lambda > 0$. 本题中, 我们将对 $a>1$ 给出 $\PP(X\ge a/\lambda)$ 的上界.
+    \begin{enumerate}[label=(\arabic*)]
+        \item 使用 Markov 不等式, 给出 $\PP(X\ge a/\lambda)$ 的上界.
+        \item 使用 Chebyshev 不等式, 证明
+        \begin{align*}
+            \PP(X\ge a/\lambda) \le \frac{1}{(a-1)^2}
+        \end{align*}
+        \item 使用 Chernoff 不等式, 证明
+        \begin{align*}
+            \PP(X\ge a/\lambda) \le a \cdot e^{-a+1}
+        \end{align*}
+        \item 计算 $\PP(X\ge a/\lambda)$ 的准确值.
+    \end{enumerate}
+\end{problem}
+
+\begin{answer}
+    由于 $X\sim \Exp(\lambda)$, 故 $\E(X) = \lambda^{-1}, \E(X^2) = 2\lambda^{-2}, \sigma^2 = \lambda^{-2}$.
+    \begin{enumerate}[label=(\arabic*)]
+        \item 由 Markov 不等式, 有
+        \begin{align*}
+            \PP\left(X \ge \frac{a}{\lambda}\right) \le \frac{1}{a}.
+        \end{align*}
+        \item 由 Chebyshev 不等式, 有
+        \begin{align*}
+            \PP\left(X \ge \frac{a}{\lambda}\right) = \PP\left(X - \E(X) \ge (a-1)\cdot \sigma\right) \le  \frac{1}{(a-1)^2}.
+        \end{align*}
+        \item 我们先来计算矩生成函数 $M_X(t)$:
+        \begin{align*}
+            M_X(t) = \E(e^{tX}) = \int_{0}^\infty \lambda e^{(t-\lambda) x} \dd x =  \frac{\lambda}{\lambda-t}, \quad t < \lambda.
+        \end{align*}
+        那么由 Chernoff Bound 有
+        \begin{align*}
+            \PP\left(X\ge \frac{a}{\lambda}\right)  &= \PP\left(e^{tX} \ge e^{ta/\lambda}\right) \le \min_{t<\lambda} \left\{e^{-ta/\lambda} \cdot \frac{\lambda}{\lambda-t} \right\} 
+        \end{align*}
+        而
+        \begin{align*}
+            g(t) := e^{-ta/\lambda} \cdot \frac{\lambda}{\lambda-t}, \quad g'(t) = 0 \implies t^* = \lambda - \frac{\lambda}{a}
+        \end{align*}
+        故有
+        \begin{align*}
+            \PP\left(X\ge \frac{a}{\lambda}\right) \le g(t^*) = a \cdot e^{-a+1}.
+        \end{align*}
+        \item 直接求积分
+        \begin{align*}
+            \PP\left(X\ge \frac{a}{\lambda}\right) = \int_{a/\lambda}^\infty \lambda e^{-\lambda x} \dd x = e^{-a}.
+        \end{align*}
+    \end{enumerate}
+\end{answer}
+
+\begin{problem}{2}
+    在课上, 我们介绍了随机变量的收敛性. 设 $\{X_n\}$ 为一列随机变量, $X$ 为另一随机变量. 若对于任意 $\varepsilon > 0$, 有
+    \begin{align*}
+        \lim_{n\rightarrow\infty} \PP(|X_n-X|<\varepsilon) = 1,
+    \end{align*}
+    则称 $\{X_n\}$ {\kaishu 依概率收敛} 于 $X$, 记作 $X_n \arrp X$. 在本题, 我们将介绍随机变量的另一种收敛性.
+
+    设 $\{X_n\}$ 为一列随机变量, $X$ 为另一随机变量. 若 $\PP(\lim_{n\rightarrow \infty}X_n \to X) = 1$, 也即对于任意 $\varepsilon > 0$, 有
+    \begin{align*}
+        \lim_{n\rightarrow\infty} \PP\left(\bigcup_{m=n}^\infty \left\{ |X_m - X| \ge \varepsilon \right\}\right) = 0,
+    \end{align*}
+    则称 $\{X_n\}$ {\kaishu 几乎必然收敛} 于 $X$, 记作 $X_n \arras X$.
+    \begin{enumerate}[label=(\arabic*)]
+        \item 令 $\{X_n\}$ 为一列相互独立的随机变量, 且 $X_n \sim B(1,1/n)$. 证明 $\{X_n\}$ 依概率收敛于 $0$, 但$\{X_n\}$不几乎必然收敛于 $0$.
+        \item 令 $\{X_n\}$ 为一列独立同分布的随机变量, 且 $X_n \sim B(1, p)$. 令 $Y_n = \frac{1}{n} \sum_{i=1}^n X_i$. 证明 $Y_n \arras p$.
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label=(\arabic*)]
+        \item 若 $\varepsilon > 1$, 那么 $\PP(|X_n| < \varepsilon) = 1$, 符合依概率收敛的定义. 考虑 $\varepsilon \in \left(0,1\right]$, 那么
+        \begin{align*}
+            \PP(|X_n| < \varepsilon) = 1 - \frac{1}{n} \arri 1.
+        \end{align*}
+        故 $X_n \arrp 0$. 任意 $\varepsilon > 0$, 记事件 $A_n(\varepsilon) := \{|X_n - X| \ge \varepsilon\}$. 那么
+        \begin{align*}
+            \PP(A_n(\varepsilon)) = \PP(X_n = 1) = \frac{1}{n} \implies \PP\left(\bigcup_{m=n}^\infty A_m(\varepsilon)\right) = 1 - \prod_{m=n}^{\infty} \left(1 - \frac{1}{m}\right) \arri 1
+        \end{align*}
+        故 $X_n$ 不几乎必然收敛于 $0$.
+        \item 类似的, 记 $B_n(\varepsilon) := \{|Y_n - p| \ge \varepsilon\}$. 那么只需验证
+        \begin{align*}
+            \PP\left( \bigcup_{m=n}^\infty B_m(\varepsilon) \right) \arri 0.
+        \end{align*}
+        我们先估计($\forall m \ge n$), 由 Markov 不等式, 记 $S_m = \sum_{i=1}^{m}(X_i - p)$, 考虑四阶矩有: 
+        \begin{align*}
+            \PP(B_m(\varepsilon)) = \PP\left(\left|\frac{1}{m} \sum_{i=1}^m (X_i - p)\right|  \ge \varepsilon\right) = \PP\left(\left|\frac{S_m}{m}\right| \ge \varepsilon \right) \le \frac{\E(S_m^4)} {m^4\varepsilon^4} 
+        \end{align*}
+        在课上我们已经计算了, 若 $X\sim B(n, p)$, 那么
+        \begin{align*}
+            \E[(X - \E(X))^4] &= np(1-p)^4+n(1-p) p^4+3n(n-1) p^2 (1-p)^2 \\
+            &\le n^2 \left(p(1-p)^4 + (1-p)p^4 + 3p^2(1-p)^2\right) 
+        \end{align*}
+        记 $C(p) = p(1-p)^4 (1-p)p^4 + 3p^2(1-p)^2$ 为与 $n$ 无关的常数.
+
+        而 $X_i \iid B(1,p) \implies \sum_{i=1}^{m}X_i \sim B(m, p)$, 故
+        \begin{align*}
+            \PP(B_m(\varepsilon)) \le \frac{\E(S_m^4)}{m^4\varepsilon^4} \le \frac{m^2 \cdot C(p)}{m^4 \varepsilon^4} = \frac{C(p)}{m^2 \varepsilon^4} 
+        \end{align*}
+        故
+        \begin{align*}
+            \PP\left( \bigcup_{m=n}^\infty B_m(\varepsilon) \right) \le \sum_{m=n}^\infty\PP(B_m(\varepsilon)) \le \sum_{m=n}^\infty \frac{C(p)}{m^2 \varepsilon^4}  = \frac{C(p)}{\varepsilon^4} \sum_{m=n}^\infty \frac{1}{m^2} \arri 0
+        \end{align*}
+        即 $Y_n \arras p$. 证毕.
+
+        注: 这题也可以用 Union Bound + Chernoff Bound 来证明. 
+    \end{enumerate}
+\end{answer}
+
+\begin{problem}{3}
+    某个不使用随机性的计算机程序 $A$, 为了输出正确的结果, 该程序需要对另一计算机程序 $B$ 进行 $T$ 次调用,
+    每次调用使用可能不同的输入, 且每次调用使用的输入依赖于之前对程序 $B$ 的调用返回的结果. 
+    程序 $A$ 使用对程序 $B$ 的 $T$ 次调用返回的结果以输出最终结果 $\theta$. 
+    具体来说, 假设对程序 $B$ 进行 $T$ 次调用返回的结果为 $\omega_1, \omega_2,\cdots, \omega_T$, 在正确得到 $\omega_1, \omega_2,\cdots, \omega_T$ 的前提下, 
+    程序 $A$ 总是能输出正确的结果 $\theta$.
+    
+    现有计算机程序 $B'$. 在同样的输入下, 程序 $B'$ 以 $2/3$ 的概率返回与程序 $B$ 相同的结果, 以 $1/3$ 的概率返回不同的结果.
+    现在, 没有程序 $B$, 仅有程序$A, B'$ 的情况下, 设计一个方案, 以 $1-\delta$ 的概率输出正确的结果 $\theta$.
+    该方案对程序 $A, B'$ 的调用次数应与 $T$ 和 $\log(1/\delta)$ 为多项式关系.
+\end{problem}
+
+\begin{answer}
+    我们先证明一个引理:
+    \begin{lemma}{（伯努利不等式）}
+        若 $x > -1, n\in \N^+$, 则有$(1+x)^n \ge 1 + nx.$
+    \end{lemma}
+    \begin{proof}
+        用数学归纳法. 容易验证 $n=1, n=2$ 时均成立. 假设对于 $n=k$ 成立, 考虑$n = k + 2$时:
+        \begin{align*}
+            (1+x)^{k+2} &= (1+x)^k(1+x)^2 \ge (1+kx)(1+2x+x^2) \\
+            &= 1 + (k+2)x + kx^2(k+2) + x^2 \ge 1 + (k+2)x.
+        \end{align*} 
+        引理证毕.
+    \end{proof}
+    回到本题, 考虑一个如下的算法(即重复运行$T$轮, 每轮调用$B'$共$t_0$次, 选择出现次数最多的结果):
+    \begin{algo}
+        \caption{\textbf{$1-\delta$ Algorithm}}
+        \begin{algorithmic}[1]
+            \Require 输入 $x$, 程序 $A$, 程序 $B'$, 参数 $T, \delta$. 待定参数 $t_0 > 0$.
+            \Ensure 输出 $\theta$
+            \State 已经得到的返回结果为 $s = \emptyset$ 
+            \For{$i = 1$ to $T$}
+                \State 根据$s$和$x$, 重复调用程序 $B'$ 共 $t_0$ 次.
+                \State 记返回结果为 $y_1, y_2, \cdots, y_{t_0}$.
+                \State $y = \argmax_{y_i} \sum_{j=1}^{t_0} \1(y_i = y_j)$  
+                \State $s$\texttt{.append}($y$)  
+            \EndFor
+            \State 将$s$作为输入, 调用程序 $A$.
+            \State \Return $A(s)$    
+        \end{algorithmic}
+    \end{algo}
+    对于 $i\in [T]$, 记事件 $E_i$ 为 前$i-1$轮调用结果与$B$相同的条件下, 第$i$轮调用$B'$输出正确结果. 
+    记 $X_{i, j}(\forall j\in[t_0])$ 为 前$i-1$轮调用结果与$B$相同的条件下, 第$i$轮调用$B'$ 输出错误结果. 
+    那么 
+    \begin{align*}
+        Y_i := \sum_{j=1}^{t_0} \1_{X_{i,j}} \sim B(t_0, 1/3).
+    \end{align*}
+    在课上已经证明了, 在一轮调用中出现频率最高的结果为错误结果的上界为:
+    \begin{align*}
+        \PP\left(Y_i \ge \frac{t_0}{2}\right) \le e^{-t_0/18}
+    \end{align*}
+    即$\PP(E_i) \ge 1 - e^{-t_0/18}$.
+    那么上述算法输出正确结果的概率为
+    \begin{align*}
+        \PP\left(A\text{ 输出正确结果}\right) &= \prod_{i=1}^{T} \left(1-e^{-t_0/18}\right) = (1-e^{-t_0/18})^T \\
+        &\ge 1 - T\cdot e^{-t_0/18} \quad \text{（伯努利不等式）} \\
+        &\ge 1 - \delta. \quad \text{取$t_0 = 18\log(T/\delta)$}
+    \end{align*}
+    $B'$总调用次数为 $T\cdot t_0 = O(T\log(T/\delta)) = \text{poly}(T, \log(1/\delta))$. 且算法正确性概率为 $1-\delta$. 证毕.
+\end{answer}
+
+\begin{problem}{4}
+    在课上, 我们用 Chernoff Bound 证明了下属不等式: 若 $X\sim B(n,p)$, 则
+    \begin{align*}
+        \PP(X\ge \E(X) + n\varepsilon) \le e^{-2n\varepsilon^2}. \\
+        \PP(X\le \E(X) - n\varepsilon) \le e^{-2n\varepsilon^2}.
+    \end{align*}
+    在本题中, 我们将对二项分布证明另一版本的 Chernoff Bound.
+    \begin{enumerate}[label=(\arabic*)]
+        \item 证明 $M_X(t) \le e^{(e^t - 1)\cdot \E(X)}$. {\kaishu 提示: 利用不等式 $1+x\le e^x$}.
+        \item 证明对于任意 $\varepsilon >0$, 有
+        \begin{align*}
+            \PP(X\ge (1+ \varepsilon)\E(X)) \le \left(\frac{e^{\varepsilon}}{(1+\varepsilon)^{1+\varepsilon}}\right)^{\E(X)}.
+        \end{align*}
+        对于任意 $0 < \varepsilon < 1$, 证明
+        \begin{align*}
+            \PP(X\le (1- \varepsilon)\E(X)) \le \left(\frac{e^{-\varepsilon}}{(1-\varepsilon)^{1-\varepsilon}}\right)^{\E(X)}.
+        \end{align*}
+        {\kaishu 提示: 参考作业二第六题.}
+        \item 利用(2)中的结论, 重新证明作业二第二题(3). 即, 有 $n$ 个球, 每个球都等可能被放到 $m=n$ 个桶中的任一个. 
+        令 $X_i$ 表示第 $i$ 个桶中球的数量, $Y = \max\{X_1, X_2,\cdots, X_n\}$. 证明
+        \[
+            \PP(Y\ge 4\log_2 n) \le \frac{1}{n}
+        \]
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label=(\arabic*)]
+        \item 对于二项分布 $X\sim B(n,p)$, 有
+        \begin{align*}
+            M_X(t) = \left(1-p+pe^t\right)^n \le e^{n(-p+pe^t)} = e^{(e^t-1)\E(X)}.
+        \end{align*}
+        \item 对于任意 $\varepsilon > 0$, 有(对于任意 $t > 0$, 类似Chernoff Bound 的证明)
+        \begin{align*}
+            \PP(X\ge (1+\varepsilon)\E(X)) &= \PP(e^{tX} \ge e^{t(1+\varepsilon)\E(X)}) \\
+            &\le \min_{t>0} \left\{e^{-t(1+\varepsilon)\E(X)} M_X(t)\right\} \quad \text{(Markov inequality)}\\
+            &\le \min_{t>0} \left\{\exp\bigg(\E(X)[e^t - 1 - (1+\varepsilon)t]\bigg)\right\} 
+        \end{align*}
+        记 $g(t) = e^t - 1 - (1+\varepsilon)t$, 那么 $g'(t) = e^t - \varepsilon - 1 = 0 \implies t^* = \log(1+\varepsilon) > 0$. 故
+        \begin{align*}
+            \PP(X\ge (1+\varepsilon)\E(X)) \le e^{\E(X)\cdot g(t^*)} =  \left(\frac{e^{\varepsilon}}{(1+\varepsilon)^{1+\varepsilon}}\right)^{\E(X)}.
+        \end{align*}
+        类似的, 对于 $0 < \varepsilon < 1$, 考虑 $t < 0$, 有
+        \begin{align*}
+            \PP(X\le (1-\varepsilon)\E(X)) &= \PP(e^{tX} \ge e^{t(1-\varepsilon)\E(X)}) \\
+            &\le \min_{t<0} \left\{e^{-t(1-\varepsilon)\E(X)} M_X(t)\right\} \quad \text{(Markov inequality)}\\
+            &\le \min_{t<0} \left\{\exp\bigg(\E(X)[e^t - 1 - (1-\varepsilon)t]\bigg)\right\}
+        \end{align*}
+        记 $h(t) = e^t - 1 - (1-\varepsilon)t$, 那么 $h'(t) = e^t + \varepsilon - 1 = 0 \implies t^* = \log(1-\varepsilon) < 0$. 故
+        \begin{align*}
+            \PP(X\le (1-\varepsilon)\E(X)) \le e^{\E(X)\cdot h(t^*)} =  \left(\frac{e^{-\varepsilon}}{(1-\varepsilon)^{1-\varepsilon}}\right)^{\E(X)}.
+        \end{align*}
+        综上, 证毕.
+        \item 我们来证明 $\PP(X_i \ge 4\log_2 n) \le 1/n^2$. 
+        
+        注意到 $X_i \sim B(n, 1/n),\E(X_i) = 1$. $n=1$ 时显然成立. 考虑$n\ge 2$, 取 $\varepsilon  = 4\log_2 n - 1 > 0$. 那么
+        \begin{align*}
+            \PP(X_i \ge 4\log_2 n) &= \PP(X_i \ge (1+\varepsilon)\E(X_i)) \le \left(\frac{e^{\varepsilon}}{(1+\varepsilon)^{1+\varepsilon}}\right)^{\E(X_i)} \\
+            &= \frac{e^{4\log_2 n - 1}}{(4\log_2 n)^{4\log_2 n}} = \frac{1}{e}\cdot \frac{1}{n^{8-4/\ln 2}} \cdot \frac{1}{(\log_2 n)^{4\log_2 n}} \\
+            &\le \frac{1}{n^2}. \quad \text{(注意到 $8-4/\ln 2 > 2$)}
+        \end{align*}
+        那么由 Union Bound, 有
+        \begin{align*}
+            \PP(Y\ge 4\log_2 n) = \PP\left(\bigcup_{i=1}^n \{X_i \ge 4\log_2 n\}\right) \le \sum_{i=1}^n \PP(X_i \ge 4\log_2 n) \le \frac{1}{n}.
+        \end{align*}
+        证毕.
+    \end{enumerate}
+\end{answer}
+
+\begin{problem}{5}
+    在课上, 我们证明了下述结论: 对于任意向量 $x_1, x_2, \cdots, x_n \in \R^d$, 令 $A \in \R^{k\times d}$ 为随机矩阵, 
+    $A$ 的不同元素独立同分布于 $\mathcal{N}(0,1)$, $k=O(\log n/\varepsilon^2)$, 则以至少 $1/2$ 的概率, 
+    对于任意 $1\le i,j \le n$, 有
+    \begin{align*}
+        (1-\varepsilon) \| x_i - x_j \|^2 \le \left\| \frac{1}{\sqrt{k}} A(x_i - x_j) \right\|^2 \le (1+\varepsilon) \| x_i - x_j \|^2.
+    \end{align*}
+    也即令 $F(x) = \frac{1}{\sqrt{k}} Ax$ 为一随机线性变换, 则至少以 $1/2$ 的概率, $F(x)$ 保持了每一对 $x_i, x_j$ 之间的距离.
+    证明该结论的核心工具使下述引理: 对于任意 $x\in \R^d$, 有    
+    \begin{align}
+        \PP\left((1-\varepsilon)\| x\|^2 \le \left\| \frac{1}{\sqrt{k}} Ax \right\|^2 \le (1+\varepsilon)\| x\|^2\right) \ge 1 - 2e^{-k\varepsilon^2/8}.
+        \label{lemma:5.1}
+    \end{align}  
+    为证明原结论, 对所有可能的 $x = x_i - x_j$ 使用上述引理, 并使用 Union Bound.
+
+    在本题中, 我们将证明随机线性变换 $F(x) = \frac{1}{\sqrt{k}} Ax$ 不仅可以保持每一对 $x_i, x_j$ 之间的距离, 
+    还可以保持每一对 $x_i, x_j$ 之间的点积. 在本题中, 对于向量 $a,b\in \R^d$, $\left\langle a,b\right\rangle = a^\top b$ 为 $a$ 和 $b$ 的点积. 
+    \begin{enumerate}[label=(\arabic*)]
+        \item 考虑向量 $y_1, y_2, \cdots, y_n \in \R^d$, 对于任意 $1\le i\le n$ 满足 $\|y_i\| = 1$. 令 $A \in \R^{k\times d}$ 为随机矩阵, 且不同元素独立同分布于 $\mathcal{N}(0,1)$, 
+        $k = O(\log n/\varepsilon^2)$. 证明以至少 $1/2$ 的概率, 下述事件同时成立:
+        \begin{itemize}
+            \item 对于任意 $1\le i \le n$, 有
+            \begin{align}
+                \left(1-\frac{\varepsilon}{4}\right) \left\| y_i \right\|^2 \le  \left\| \frac{1}{\sqrt{k}} A y_i \right\|^2 \le \left(1+\frac{\varepsilon}{4}\right) \left\| y_i \right\|^2.
+                \label{eq:5.1}
+            \end{align}
+            \item 对于任意 $1\le i,j \le n$ 且 $i\neq j$, 有
+            \begin{align}
+                \left(1 - \frac{\varepsilon}{4}\right) \left\| y_i + y_j \right\|^2 \le \left\| \frac{1}{\sqrt{k}} A(y_i + y_j) \right\|^2 \le \left(1 + \frac{\varepsilon}{4}\right) \left\| y_i + y_j \right\|^2.
+                \label{eq:5.2}
+            \end{align}
+        \end{itemize}
+        \item 在(1)中结论的基础上, 证明以至少 $1/2$ 的概率, 对于任意 $1\le i,j \le n$, 有
+        \begin{align*}
+            \left|\left\langle \frac{1}{\sqrt{k}}Ay_i, \frac{1}{\sqrt{k}}Ay_j \right\rangle - \left\langle y_i, y_j \right\rangle\right| \le \varepsilon.
+        \end{align*}
+        \item 考虑向量 $x_1, x_2, \cdots, x_n \in \R^d$. 注意 $x_i$ 不一定满足 $\left\| x_i \right\| = 1$. 证明以至少 $1/2$ 的概率, 对于任意 $1\le i,j \le n$, 有
+        \begin{align*}
+            \left|\left\langle \frac{1}{\sqrt{k}}Ax_i, \frac{1}{\sqrt{k}}Ax_j\right\rangle - \left\langle x_i, x_j \right\rangle\right| \le \varepsilon \left\| x_i \right\| \cdot \left\|x_j\right\|.
+        \end{align*}
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label=(\arabic*)]
+        \item 令$k =512 \log n/\varepsilon^2 =  O(\log n/\varepsilon^2)$. 对于任意给定的 $y_i, y_j, (i\neq j)$ 由引理\eqref{lemma:5.1}有
+        \begin{align*}
+            \PP\left(\left\| \frac{1}{\sqrt{k}} Ay_i \right\|^2 \notin (1\pm\varepsilon/4)\| y_i\|^2\right) \le 2e^{-k\varepsilon^2/128}. \\
+            \PP\left(\left\| \frac{1}{\sqrt{k}} A(y_i + y_j) \right\|^2 \notin (1\pm\varepsilon/4)\| y_i + y_j\|^2\right) \le 2e^{-k\varepsilon^2/128}.
+        \end{align*}
+        记事件 $A$ 表示对于任意 $1\le i\le n$, 都有\eqref{eq:5.1}成立. 由 Union Bound, 有
+        \begin{align*}
+            \PP(\Bar{A}) \le \sum_{i=1}^{n} \PP\left(\left\| \frac{1}{\sqrt{k}} Ay_i \right\|^2 \notin (1\pm\varepsilon/4)\| y_i\|^2\right) \le 2ne^{-k\varepsilon^2/128} 
+        \end{align*}
+        那么
+        \begin{align*}
+            \PP(\Bar{A}) \le 2n \cdot \frac{1}{n^4} \le \frac{1}{4}.
+        \end{align*}
+        记事件 $B$ 表示对于任意 $1\le i,j\le n$ 且 $i\neq j$, 都有\eqref{eq:5.2}成立. 由 Union Bound, 有
+        \begin{align*}
+            \PP(\Bar{B}) &\le \sum_{i\neq j} \PP\left(\left\| \frac{1}{\sqrt{k}} A(y_i + y_j) \right\|^2 \notin (1\pm\varepsilon/4)\| y_i + y_j\|^2\right) \\
+            &\le 2e^{-k\varepsilon^2/128}\cdot \frac{n(n-1)}{2} \le n^2 e^{-k\varepsilon^2/128}.
+        \end{align*}
+        那么
+        \begin{align*}
+            \PP(\Bar{B}) \le n^2 \cdot \frac{1}{n^4} \le \frac{1}{4}.
+        \end{align*}
+        由Union Bound, 有
+        \begin{align*}
+            \PP(\Bar{A}\cup \Bar{B}) \le \PP(\Bar{A}) + \PP(\Bar{B}) \le \frac{1}{2}.
+        \end{align*}
+        故以至少$1/2$的概率, 事件$A$和$B$同时成立. 证毕.
+
+        \item 类似(1)中结论的证明, 可得在相同的条件下(即$k=O(\log n/\varepsilon^2)$), 以至少 $1/2$ 的概率下述事件同时成立:
+        \begin{itemize}
+            \item 对于任意 $1\le i,j \le n$且 $i\neq j$, 有
+            \begin{align}
+                \label{eq:5.3}
+                \left(1 - \varepsilon\right) \left\| y_i + y_j \right\|^2 \le \left\| \frac{1}{\sqrt{k}} A(y_i + y_j) \right\|^2 \le \left(1 + \varepsilon\right) \left\| y_i + y_j \right\|^2. 
+            \end{align}
+            \item 对于任意 $1\le i,j \le n$且 $i\neq j$, 有
+            \begin{align}
+                \label{eq:5.4}
+                \left(1 - \varepsilon\right) \left\| y_i - y_j \right\|^2 \le \left\| \frac{1}{\sqrt{k}} A(y_i - y_j) \right\|^2 \le \left(1 + \varepsilon\right) \left\| y_i - y_j \right\|^2.
+            \end{align}
+        \end{itemize}
+        那么以至少$1/2$的概率, 对于 $1\le i,j \le n$且 $i\neq j$, 有
+        \begin{align*}
+            \left(1-\varepsilon\right) \left\| y_i + y_j \right\|^2 - \left(1+\varepsilon\right) \left\| y_i - y_j \right\|^2 &\le \left\| \frac{1}{\sqrt{k}} A(y_i + y_j) \right\|^2 - \left\| \frac{1}{\sqrt{k}} A(y_i - y_j) \right\|^2 \\
+            &\le \left(1+\varepsilon\right) \left\| y_i + y_j \right\|^2 - \left(1-\varepsilon\right) \left\| y_i - y_j \right\|^2. \\
+            \iff 4\left\langle y_i, y_j \right\rangle - \varepsilon \cdot(2\left\|y_i\right\|^2 + 2\left\|y_j\right\|^2) &\le 4\cdot\left\langle \frac{1}{\sqrt{k}} A(y_i + y_j), \frac{1}{\sqrt{k}} A(y_i - y_j) \right\rangle \\ 
+            &\le 4\left\langle y_i, y_j \right\rangle + \varepsilon \cdot(2\left\|y_i\right\|^2 + 2\left\|y_j\right\|^2).
+        \end{align*}
+        注意到$\left\|y_i\right\|=1$, 那么等价于
+        \begin{align*}
+            -\varepsilon \le \left\langle \frac{1}{\sqrt{k}} A(y_i + y_j), \frac{1}{\sqrt{k}} A(y_i - y_j) \right\rangle - \left\langle y_i, y_j \right\rangle &\le \varepsilon. \\
+            \iff \left|\left\langle \frac{1}{\sqrt{k}}Ay_i, \frac{1}{\sqrt{k}}Ay_j \right\rangle - \left\langle y_i, y_j \right\rangle\right| &\le \varepsilon.
+        \end{align*}        
+        证毕.
+        \item 对于任意 $x_i$, 若 $\| x_i \| = 0$, 那么有 $x_i = 0$, 此时注意到 对于 任意的 $x_j, j\neq i$, 有
+        \begin{align*}
+            \left|\left\langle \frac{1}{\sqrt{k}}Ax_i, \frac{1}{\sqrt{k}}Ax_j\right\rangle - \left\langle x_i, x_j \right\rangle\right| = 0 \le \varepsilon \left\| x_i \right\| \cdot \left\|x_j\right\|.
+        \end{align*}
+        故不妨设 $\|x_i\| \neq 0, \forall i$. 那么对于任意 $i$, 令 $y_i = x_i/\|x_i\|$, 那么由(2)的结论, 以至少$1/2$的概率, 对于任意 $1\le i,j \le n$, 有
+        \begin{align*}
+            \left|\left\langle \frac{1}{\sqrt{k}}Ay_i, \frac{1}{\sqrt{k}}Ay_j \right\rangle - \left\langle y_i, y_j \right\rangle\right| \le \varepsilon. &\iff  \left|\left\langle \frac{1}{\sqrt{k}}A\frac{x_i}{\|x_i\|}, \frac{1}{\sqrt{k}}A\frac{x_j}{\|x_j\|} \right\rangle - \left\langle \frac{x_i}{\|x_i\|}, \frac{x_j}{\|x_j\|} \right\rangle\right| \le \varepsilon.\\
+            &\iff  \left|\left\langle \frac{1}{\sqrt{k}}Ax_i, \frac{1}{\sqrt{k}}Ax_j\right\rangle - \left\langle x_i, x_j \right\rangle\right| \le \varepsilon \left\| x_i \right\| \cdot \left\|x_j\right\|.
+        \end{align*}
+        这里用到了点积的线性性质, 即 $\left\langle \alpha \vec{a}, \beta \vec{b} \right\rangle = \alpha\beta \left\langle \vec{a}, \vec{b} \right\rangle$. 证毕.
+    \end{enumerate}
+\end{answer}
+
+\begin{problem}{6(Bonus 30\%)}
+    在课上, 我们证明了对于任意 $S_1, S_2, \cdots, S_m \subseteq \{1,2,\cdots, n\}$, 存在 $\chi: \{1,2,\cdots, n\}\to \{-1, +1\}$, 
+    使得对于任意 $1\le i\le m$, 有
+    \begin{align*}
+        \text{disc}_{\chi}(S_i) = \left|\sum_{j\in S_i}\chi(j)\right| \le O(\sqrt{n\log m}).
+    \end{align*}
+    在本题中, 我们将证明存在 $S_1, S_2, \cdots, S_m \subseteq \{1,2,\cdots, n\}$, 对于任意 $\chi: \{1,2,\cdots, n\}\to \{-1, +1\}$, 
+    存在 $1\le i\le m$, 使得
+    \begin{align*}
+        \text{disc}_{\chi}(S_i) = \left|\sum_{j\in S_i}\chi(j)\right| \ge \Omega(\sqrt{n}).
+    \end{align*}
+    也即可上给出的上界 $O(\sqrt{n\log m})$ 几乎是最优的.
+    \begin{enumerate}[label=(\arabic*)]
+        \item 证明下述反集中不等式: $X\sim B(n, 1/2)$, 存在常数 $c_1, c_2 > 0$, 使得
+        \begin{align*}
+            \PP(X\ge n/2 + c_1\cdot \sqrt{n}) \ge c_2.
+        \end{align*}
+        {\kaishu 提示: 该不等式有多种证明方法. 一种可能的思路是首先使用定量化的中心极限定理 (课上提到的Berry-Esseen 定理) 建立二项分布与标准正态分布的联系，之后对标准正态分布证明反集中不等式。}
+        \item 令 $S$ 为 $\{1,2,\cdots, n\}$ 的子集, 对于每个 $j\in\{1,2,\cdots, n\}$, $\PP(j\in S) = 1/2$, 且不同 $j$ 是否被包含在 $S$ 中相互独立. 
+        利用 (1) 中的结论, 证明存在 常数 $c_3, c_4>0$, 对于任意 $\chi: \{1,2,\cdots, n\}\to \{-1, +1\}$, 使得
+        \begin{align*}
+            \PP\left(\left|\sum_{j\in S}\chi(j)\right| \ge c_3 \sqrt{n}\right) \ge c_4.
+        \end{align*}
+        \item 证明存在 $m=O(n)$(也即对于某个常数 $C$, $m\le Cn$) 个 集合$S_1, S_2, \cdots, S_m \subseteq \{1,2,\cdots, n\}$和常数 $c>0$, 使得对于任意 $\chi: \{1,2,\cdots, n\}\to \{-1, +1\}$, 存在 $1\le i\le m$, 使得
+        \begin{align}
+            \label{eq:6.3}
+            \left|\sum_{j\in S_i}\chi(j)\right| \ge c\sqrt{n}..
+        \end{align}
+        {\kaishu 提示: 考虑使用概率证法, 将$S_1, S_2, \cdots, S_m$ 取为 $\{1,2,\cdots,n\}$ 独立同分布的随机子集, 并扩展(2)中的分析.}
+        \item 证明当 $m=n$ 时, (3)中的结论同样成立.
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label=(\arabic*)]
+        \item 由于 $X\sim B(n, 1/2)$, 记标准化后为 $\widetilde{X}$ 为
+        \begin{align*}
+            \widetilde{X} = \frac{X - n/2}{\sqrt{n}/2} 
+        \end{align*}
+        那么由 Berry-Esseen 定理, 存在常数 $t_0 < 0.4748$\footnote{\href{https://en.wikipedia.org/wiki/Berry–Esseen_theorem}{来自wiki中提到的上界https://en.wikipedia.org/wiki/Berry–Esseen\_theorem}} 
+        \begin{align*}
+            \left|\PP(\widetilde{X} \ge x) - \PP(Z\ge x) \right| \le \frac{t_0}{\sqrt{n}}.
+        \end{align*}
+        令 $x = 2c_1$, 则
+        \begin{align*}
+            \PP(X\ge n/2 + c_1 \cdot \sqrt{n}) &= \PP(\widetilde{X} \ge 2c_1) \ge \PP(Z\ge 2c_1) - \frac{t_0}{\sqrt{n}} \\
+            &= \frac{1}{\sqrt{2\pi}} \int_{2c_1}^{+\infty} e^{-x^2/2} \dd x  - \frac{t_0}{\sqrt{n}} \\
+            &= \frac{1}{2}  - \int_{0}^{2c_1} \frac{1}{\sqrt{2\pi}} e^{-x^2/2} \dd x - \frac{t_0}{\sqrt{n}} \\
+            &\ge \frac{1}{2} - \frac{2c_1}{\sqrt{2\pi}} - \frac{t_0}{\sqrt{n}}, \quad (t_0 \text{ has a upper bound}) \\
+            &> \frac{1}{2} - \frac{2c_1}{\sqrt{2\pi}} - \frac{0.4748}{\sqrt{n}} := \hat{c}.
+        \end{align*}
+        取 $c_1 = 10^{-5}$, 那么 $n \ge 4$ 时, 有  
+        \begin{align*}
+            \hat{c} = \frac{1}{2} - \frac{2\cdot 10^{-5}}{\sqrt{2\pi}} - \frac{0.4748}{\sqrt{n}} \ge \frac{1}{2} - \frac{2\cdot 10^{-5}}{\sqrt{2\pi}} - \frac{0.4748}{2} \ge \frac{1}{4}.
+        \end{align*}
+        而对于 $n< 4$ 的情况, 可以直接验证 $\PP(X\ge n/2 + c_1 \cdot \sqrt{n}) \ge 1/4$. 故取 $c_2 = 1/4$, 证毕.
+        \item 对于任意的 $\chi$, 记
+        \begin{align*}
+            T_+ &= \left\{j\in \{1,2,\cdots, n\}: \chi(j) = 1\right\}, \\
+            T_- &= \left\{j\in \{1,2,\cdots, n\}: \chi(j) = -1\right\}.
+        \end{align*}
+        不妨 $|T_+| \ge |T_-|$, 那么有
+        \begin{align*}
+            \sum_{j\in S}\chi(j) = \sum_{j\in T_+} \1_{j\in S} - \sum_{j\in T_-} (1-\1_{j\notin S}) = \sum_{j\in T_+} \1_{j\in S} + \sum_{j\in T_-} \1_{j\notin S} - \#\{T_-\cap S\}.
+        \end{align*}
+        由于对任意的 $j$, $\PP(j\in S) = 1/2$, 且不同的 $j$ 是否在 $S$ 中相互独立, 那么有
+        \begin{align*}
+            X := \sum_{j\in T_+} \1_{j\in S} + \sum_{j\in T_-} \1_{j\notin S} \sim B(n, 1/2).
+        \end{align*}
+        记 $k := \#\{T_-\cap S\} \le n/2$, 那么有
+        \begin{align*}
+            \PP\left(\left|\sum_{j\in S}\chi(j)\right| \ge c_3 \sqrt{n}\right)  &= \PP(|X-k| \ge c_3 \sqrt{n}) = \PP( X\ge c_3 \sqrt{n} + k \cup X \le k-c_3 \sqrt{n}) \\
+            &\ge \PP( X\ge n/2 + c_3 \sqrt{n} \cup  X\ge n/2 - c_3 \sqrt{n}) = \PP\left(|X-n/2|\ge c_3\sqrt{n}\right)
+        \end{align*}
+        令 $c_3 = c_1$, 由(1)的结论, 对称的有
+        \begin{align*}
+            \PP(X\ge n/2 + c_1\cdot \sqrt{n}) \ge c_2. &\quad \PP(X\le n/2 - c_1\cdot \sqrt{n}) \ge c_2 \implies \PP\left(|X-n/2|\ge c_1\sqrt{n}\right) \ge 2c_2.
+        \end{align*}
+        那么 令$c_4 = 2c_2$, 有
+        \begin{align*}
+            \PP\left(\left|\sum_{j\in S}\chi(j)\right| \ge c_3 \sqrt{n}\right) \ge 2c_2 = c_4 = \frac{1}{2}
+        \end{align*}
+        证毕.
+        \item  我们希望证明 存在一组集合 $S_1, S_2, \cdots, S_m \subseteq \{1,2,\cdots, n\}$ 和常数 $c$, 使得对于任意的 $\chi$, 至少存在一个 $S_i$, 使得 \eqref{eq:6.3}成立. 
+        
+        我们考虑 对于一组 $S_1, S_2, \cdots, S_m \subseteq \{1,2,\cdots, n\}$ 和常数 $c$, 存在一个 $\chi$, 使得对于任意的 $S_i$, 有
+        \begin{align}
+            \label{eq:6.4}
+            \left|\sum_{j\in S_i}\chi(j)\right| < c\sqrt{n}.
+        \end{align}
+        成立的概率.
+
+        对于$\{1,2,\cdots, n\}$的任意一个随机子集 $S_i$, 由(2)的结论, 对于任意的 $\chi$, 有
+        \begin{align*}
+            \PP\left(\left|\sum_{j\in S_i}\chi(j)\right| \ge c_3 \sqrt{n}\right) \ge c_4 = \frac{1}{2}. \implies \PP\left(\left|\sum_{j\in S_i}\chi(j)\right| < c_3 \sqrt{n}\right) < \frac{1}{2}.
+        \end{align*}
+        取独立同分布的 $m$ 个随机子集 $S_1, S_2, \cdots, S_m$, 其中设 $m = Cn$, $C$ 为某个常数. 同时令$c = c_3$. 对于任意的映射$\chi$, 记事件 $A_{i,\chi}$ 为
+        \begin{align*}
+            A_{i,\chi} = \left\{\left|\sum_{j\in S_i}\chi(j)\right| < c_3 \sqrt{n}\right\}.
+        \end{align*}
+        由于 $S_1, S_2, \cdots, S_m$ 独立同分布, 那么 $A_{1, \chi}, A_{2,\chi}, \cdots, A_{m,\chi}$ 相互独立. 故有 
+        \begin{align*}
+            \PP\left(\bigcap_{i=1}^m A_{i,\chi}\right)  = \prod_{i=1}^m \PP(A_{i,\chi}) < \left(\frac{1}{2}\right)^{Cn}.
+        \end{align*}
+        对于 任意的 $\chi$, 注意到有 $\#\{\chi | \chi:\{1,2,\cdots, n\}\to \{\pm 1\}\} = 2^n$, 那么有
+        \begin{align*}
+            \PP\left( \bigcup_\chi \left\{\bigcap_{i=1}^m A_{i,\chi}\right\}\right) < 2^n \left(\frac{1}{2}\right)^{Cn} = \left(\frac{1}{2}\right)^{Cn - n}.
+        \end{align*}
+        取 $C = 1$, 那么有 
+        \begin{align*}
+            \PP\left( \bigcup_\chi \left\{\bigcap_{i=1}^m\left|\sum_{j\in S_i} \chi(j)\right| \le c_3 \sqrt{n}\right\}\right) < 2^n \cdot \left(\frac{1}{2}\right)^{n} = 1.
+        \end{align*}
+        即考虑取 $S_1, S_2, \cdots, S_m$和常数 $c=c_3$, 存在一个 $\chi$, 使得对于任意的 $S_i$, 有\eqref{eq:6.4}成立的概率小于 $1$. 那么我们有
+        \begin{align*}
+            \PP\left( \bigcap_\chi \left\{\bigcup_{i=1}^m\left|\sum_{j\in S_i} \chi(j)\right| \ge c_3 \sqrt{n}\right\}\right) > 0.
+        \end{align*}
+        即取集合 $S_1, S_2, \cdots, S_m$和 常数 $c=c_3$, 对于任意的 $\chi$, 存在 $1\le i\le m$, 使得
+        \begin{align*}
+            \left|\sum_{j\in S_i}\chi(j)\right| \ge c\sqrt{n}.
+        \end{align*}
+        成立. 
+        且 $m = n = O(n)$, 证毕.
+
+        注: 这样我们就顺便证明了当 $m=n$ 时, (3)中的结论同样成立.
+    \end{enumerate}
+\end{answer}
+
+
+\end{document}

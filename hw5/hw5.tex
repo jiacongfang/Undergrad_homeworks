@@ -1,0 +1,346 @@
+\documentclass[11pt]{article}           
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.25cm}
+
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=1pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{sgame} % For Game Theory Matrices 
+% \usepackage{diagbox} % Conflict with sgame
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+%\usepackage{algorithm,algorithmicx}
+\usepackage[ruled]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage[hidelinks]{hyperref}
+\usepackage{extarrows}
+\usepackage{totcount}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+\usepackage{helvet}
+\usepackage{dsfont}
+% \usepackage{newtxmath}
+\usepackage[labelfont=bf]{caption}
+\renewcommand{\figurename}{Figure}
+\usepackage{lastpage}
+\usepackage{istgame}
+\usepackage{tcolorbox}
+% \newdateformat{mydate}{\shortmonthname[\THEMONTH]. \THEDAY \THEYEAR}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]\songti}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Solution]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\1{\mathds{1}}
+% \newcommand\1{\mathbf{1}}
+\newcommand\R{\mathbb{R}}
+\newcommand\E{\mathbb{E}}
+\newcommand\N{\mathbb{N}}
+\newcommand\NN{\mathcal{N}}
+\newcommand\per{\mathrm{per}}
+\newcommand\PP{\mathbb{P}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\ReLU{\mathrm{ReLU}}
+\newcommand{\Exp}{\mathrm{Exp}}
+\newcommand{\arrp}{\xrightarrow{P}}
+\newcommand{\arrd}{\xrightarrow{d}}
+\newcommand{\arras}{\xrightarrow{a.s.}}
+\newcommand{\arri}{\xrightarrow{n\rightarrow\infty}}
+\newcommand{\iid}{\overset{\text{i.i.d}}{\sim}}
+
+% New math operators
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Corr}{Corr}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+
+\definecolor{lightgray}{gray}{0.75}
+
+\title{Homework \#3}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} 北京大学}
+\chead{}
+\rhead{\CJKfamily{zhkai} 2024年秋\ 信息学中的概率统计(王若松)}
+\fancyfoot[R]{} 
+\fancyfoot[C]{\thepage\ /\ \pageref{LastPage} \\ \textcolor{lightgray}{最后编译时间: \today}}
+
+
+\begin{center}
+    {\LARGE \bf Homework 5}
+
+    {姓名:方嘉聪\ \  学号: 2200017849}            % Write down your name and ID here.
+\end{center}
+\begin{problem}{1}
+    定义二维随机变量 $X,Y$. 证明: $\Corr(X,Y) = \pm 1$ 当且仅当存在实数 $a\neq 0,b$, 使得 $\PP(Y=aX+b) = 1$.
+    
+    {\kaishu 提示: 利用结论(无需证明), 若随机变量 $Z$ 满足 $\Var(Z) = 0$, 则 $\PP(Z = \E(Z))$ = 1.}
+\end{problem}
+\begin{answer}
+    % 我们先来证明下面这个更强的引理:
+    % \begin{lemma}{(Cauchy-Schwarz不等式)}
+    %     对于任意两个随机变量 $X,Y$, 都有
+    %     \begin{align*}
+    %         \left(\E(XY)\right)^2 \le \E(X^2) \E(Y^2)  
+    %     \end{align*}
+    %     等号成立当且仅当存在某一常数 $t_0$, 使得 $\PP(Y = t_0X) = 1$.
+    % \end{lemma}
+    % \begin{proof}
+    %     对于 $\forall t\in \R$, 定义 $f(t) = \E[(tX-Y)^2] = t^2\E(X^2) - 2t\E(XY) + \E(Y^2)$. 注意到 $f(t) \ge 0$ 对于任意 $t\in \R$ 成立. 
+    %     因此二次方程 $f(t) = 0$ 或者没有实数解, 或者有唯一实数解. 那么等价于
+    %     \begin{align*}
+    %         \Delta = 4\E(XY)^2 - 4\E(X^2)\E(Y^2) \le 0 \implies \E(XY)^2 \le \E(X^2)\E(Y^2).
+    %     \end{align*}
+    %     而存在重根 $t_0$ 等价于 $\Delta = 0$, 即 $\E(XY)^2 = \E(X^2)\E(Y^2)$. 
+    %     此时有
+    %     \begin{align*}
+    %         f(t_0) = \E[(t_0X - Y)^2] = 0 \iff \Var(t_0X - Y) = 0, \E(t_0X - Y) = 0 
+    %     \end{align*}
+    %     由提示中
+    % \end{proof}
+    分别证明两个方向. 记 $X,Y$ 的均值分别为 $\mu_X, \mu_Y$, 标准差分别为 $\sigma_X, \sigma_Y$.
+    \begin{enumerate}[label=(\arabic*)]
+        \item 若 $\Corr(X,Y) = \pm 1$. 这里我们证明 $\Corr(X,Y) = 1$ 的情况, $\Corr(X,Y) = -1$ 的情况同理. 由定义知
+        \begin{align*}
+            \Corr(X,Y) = \frac{\Cov(X,Y)}{ \sigma_X \sigma_Y} = 1. \implies \Cov(X,Y) = \sigma_X \sigma_Y.
+        \end{align*}
+        考虑 $a = \sigma_Y / \sigma_X \neq 0$, 我们来计算 $\Var(Y-aX)$.
+        \begin{align*}
+            \Var(Y-aX) &= \sigma_Y^2 + a^2 \sigma_X^2 - 2a\Cov(X,Y) = a^2 \sigma_X^2 - 2a\sigma_X\sigma_Y + \sigma_Y^2 = 0.
+        \end{align*}
+        由结论知 $\PP(Y-aX = \E(Y-aX)) = 1$. 令 $b = \E(Y-aX)$, 则 $\PP(Y = aX + b) = 1$. 证毕.
+
+        注: 对于 $\Corr(X,Y) = -1$ 的情况, 可以取 $a = -\sigma_Y/\sigma_X, b=\E(Y-aX)$.
+        \item 若存在实数 $a\neq 0,b$, 使得 $\PP(Y=aX+b) = 1$. 我们先来证明, 对于任意随机变量 $Z$ 有
+        \begin{align*}
+            \PP(Z=\E(Z)) = 1 \implies \Var(Z) = 0.
+        \end{align*}
+        证明: 注意到 
+        \begin{align*}
+            \PP(Z=\E(Z)) = 1 \implies \PP((Z-\E(Z))^2 = 0) = 1 \implies \Var(Z) = \E((Z-\E(Z))^2) = 0.
+        \end{align*}
+        回到本题, 由于 $\PP(Y=aX+b) = 1$, 那么 $\Var(Y-aX) = 0$. 故
+        \begin{align*}
+            0 = \Var(Y-aX) = \sigma_Y^2 + a^2 \sigma_X^2 - 2a\Cov(X,Y)
+        \end{align*}
+        那么(利用均值不等式)
+        \begin{align*}
+            \Corr(X,Y) = \frac{\Cov(X,Y)}{\sigma_X \sigma_Y} = \frac{1}{2a} \frac{\sigma_Y}{\sigma_X} + \frac{a}{2} \frac{\sigma_X}{\sigma_Y} \implies |\Corr(X,Y)| \ge 1.
+        \end{align*}
+        由于 $|\Corr(X,Y)| \le 1$, 那么 $\Corr(X,Y) = \pm 1$. 证毕.
+    \end{enumerate}
+    综上所述, $\Corr(X,Y) = \pm 1$ 当且仅当存在实数 $a\neq 0,b$, 使得 $\PP(Y=aX+b) = 1$.
+\end{answer}
+
+\begin{problem}{2}
+    对于 $\sigma_1 >0, \sigma_2 > 0, -1 < \rho < 1$, 二维随机变量 $(U,V) \sim \mathcal{N}(0,0, \sigma_1^2, \sigma_2^2, \rho)$. 
+    本题中我们将计算 $\E(\ReLU(U) \cdot \ReLU(V))$. 其中 $\ReLU(x) = \max\{0,x\}$.
+
+    设二维随机变量 $(X,Y)\sim \mathcal{N}(0,0,1,1,\rho)$, 令二维随机变量 $(R,\Theta)$ 满足 $R\ge 0, \Theta\in [0,2\pi]$, 且
+    \begin{equation}
+        \begin{aligned}
+            \begin{cases}
+                X = R\cdot \left(\sqrt{1-\rho^2} \cdot \cos\Theta + \rho \cdot \sin \Theta\right) = R \cdot \sin(\arccos \rho + \Theta)\\
+                Y = R\sin\Theta
+            \end{cases}
+        \end{aligned}
+        \label{eq:2}
+    \end{equation}
+    \begin{enumerate}[label=(\arabic*)]
+        \item 令 $x = r\cdot\left(\sqrt{1-\rho^2} \cdot \cos\theta + \rho \cdot \sin \theta\right)$, $y = r\sin\theta$. 验证 $x^2 + y^2 - 2\rho xy = r^2 (1- \rho^2)$.
+        \item 计算 $R, \Theta$ 的联合密度函数, $R$ 和 $\Theta$ 的各自边际密度函数, 并判断 $R$ 和 $\Theta$ 的独立性.
+        \item 计算 $\E(\ReLU(X) \cdot \ReLU(Y))$. {\kaishu 提示: 利用结论 (无需证明)} 
+        \begin{align*}
+            \int_{0}^{+\infty} x^3 e^{-x^2/2} \dd x &= 2, \\
+            \int_{0}^{\pi - \arccos \rho} \left(\rho \cdot \sin^2 \theta + \sqrt{1-\rho^2}\sin\theta\cos\theta\right)\dd \theta &= \frac{1}{2} \left(\rho(\pi - \arccos\rho) + \sqrt{1-\rho^2}\right).
+        \end{align*}
+        \item 验证 $(\sigma_1X, \sigma_2Y)$ 与 $(U,V)$ 具有相同的分布.
+        \item 计算 $\E(\ReLU(U) \cdot \ReLU(V))$.
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label=(\arabic*)]
+        \item 直接带入验证即可.
+        \begin{align*}
+            x^2 + y^2 - 2\rho xy &= r^2\left(\sqrt{1-\rho^2} \cos\theta + \rho \sin\theta\right)^2 + r^2 \sin^2\theta - 2\rho r^2 \left(\sqrt{1-\rho^2} \cos\theta + \rho \sin\theta\right)\sin\theta \\
+            &= r^2(1-\rho^2)\cos^2\theta + r^2\rho^2\sin^2\theta + r^2\sin^2\theta - 2\rho r^2 \sin\theta\cos\theta \\
+            &= r^2(1-\rho^2).
+        \end{align*}
+        \item 我们先来计算
+        \begin{align*}
+            \left|\frac{\partial(X, Y)}{\partial(R,\Theta)}\right| = \left| \begin{pmatrix}
+                \sqrt{1-\rho^2}\cos\Theta + \rho\sin\Theta & R(-\sqrt{1-\rho^2}\sin\Theta + \rho\cos\Theta) \\
+                \sin\Theta & R\cos\Theta 
+            \end{pmatrix}\right| = R\sqrt{1-\rho^2}.
+        \end{align*}
+        那么 $R, \Theta$ 的联合密度函数为
+        \begin{align*}
+            f_{R,\Theta}(r,\theta) &= f_{X,Y}(x(r,\theta),y(r,\theta)) \cdot \left|\frac{\partial(X, Y)}{\partial(R,\Theta)}\right| \\
+            &= \frac{1}{2\pi\sqrt{1-\rho^2}} \exp\left(-\frac{1}{2(1-\rho^2) }(x^2 + y^2 -2\rho xy)\right) \cdot r \sqrt{1-\rho^2} \\
+            &= \frac{1}{2\pi} r \exp\left(-\frac{r^2}{2}\right). \quad \text{利用(1)中结论}
+        \end{align*}
+        那么 $R$ 的边际密度函数为
+        \begin{align*}
+            f_R(r) = \int_{0}^{2\pi} f_{R,\Theta}(r,\theta) \dd \theta = r e^{-r^2/2} \int_{0}^{2\pi} \frac{1}{2\pi} \dd \theta = r e^{-r^2/2}.
+        \end{align*}
+        而 $\Theta$ 的边际密度函数为
+        \begin{align*}
+            f_{\Theta}(\theta) = \int_{0}^{+\infty} f_{R,\Theta}(r,\theta) \dd r = \frac{1}{2\pi} \int_{0}^{+\infty} r e^{-r^2/2} \dd r = \frac{1}{2\pi}.
+        \end{align*}
+        由于 $f_{R,\Theta}(r,\theta) = f_R(r) f_{\Theta}(\theta)$, 那么 $R$ 和 $\Theta$ 是独立的.
+        \item 注意到
+        \begin{align*}
+            \E(\ReLU(X) \cdot \ReLU(Y)) &= \iint_{x\ge 0 \land y\ge 0} xy\cdot f_{X,Y}(x,y) \,\dd x\, \dd y \\
+            \text{(使用\eqref{eq:2}换元) }&= \iint_{\mathbf{D}} xy \cdot f_{X,Y}(x(r,\theta),y(r,\theta)) \cdot \left|\frac{\partial(X, Y)}{\partial(R,\Theta)}\right| \,\dd r\, \dd \theta \\
+            &= \iint_{\mathbf{D}} f_{R,\Theta}(r,\theta) \cdot r^2\left(\sqrt{1-\rho^2}\sin \theta \cos\theta + \rho \sin^2\theta\right) \,\dd r\, \dd \theta \\
+        \end{align*}
+        其中区域
+        \begin{align*}
+            \mathbf{D} &= \left\{(r,\theta): r\ge 0, \sin \theta \ge 0, \sqrt{1-\rho^2}\cos\theta + \rho\sin\theta \ge 0\right\} \\
+                    &= \left\{(r,\theta): r\ge 0, \theta \in [0, \pi - \arccos \rho]\right\}.
+        \end{align*} 
+        那么我们有
+        \begin{align*}
+            \E(\ReLU(X) \cdot \ReLU(Y)) &= \frac{1}{2\pi}\int_{0}^{\pi - \arccos \rho} \int_{0}^{+\infty} r^3 e^{-r^2/2} \cdot \left(\sqrt{1-\rho^2}\sin \theta \cos\theta + \rho \sin^2\theta\right) \,\dd r\, \dd \theta \\
+            &= \frac{1}{2\pi} \int_{0}^{+\infty} r^3 e^{-r^2/2}\int_{0}^{\pi - \arccos \rho} \left(\rho \cdot \sin^2 \theta + \sqrt{1-\rho^2}\sin\theta\cos\theta\right)\dd \theta  \,\dd r \\
+            &= \frac{1}{2\pi} \left(\rho(\pi - \arccos\rho) + \sqrt{1-\rho^2}\right).
+        \end{align*}
+        最后一个等式利用了提示中的结论.
+        \item 记 $(W,T) = (\sigma_1X, \sigma_2 Y)$, 那么
+        \begin{align*}
+            f_{W,T}(w,t) &= f_{X,Y}\left(x,y\right) \cdot \left|\frac{\partial(X, Y)}{\partial(W,T)}\right| \\
+            &= \frac{1}{\sigma_1 \sigma_2} \cdot \frac{1}{2\pi\sqrt{1-\rho^2}} \exp\left(-\frac{1}{2(1-\rho^2)}\left(x^2 + y^2 - 2\rho xy\right)\right) \\
+            &= \frac{1}{2\pi \sigma_1\sigma_2\sqrt{1-\rho^2}}\exp\left\{-\frac{1}{2(1-\rho^2)} \left(\frac{x^2}{\sigma_1^2} + \frac{y^2}{\sigma_2^2} - \frac{2\rho xy}{\sigma_1\sigma_2}\right)\right\}.
+        \end{align*}
+        故$(\sigma_1X, \sigma_2Y)=(W,T) \sim \mathcal{N}(0,0,\sigma_1^2,\sigma_2^2,\rho)$, 与 $(U,V)$ 具有相同的分布.
+        \item 由于 $(\sigma_1X, \sigma_2Y)$ 与 $(U,V)$ 具有相同的分布, 那么
+        \begin{align*}
+            \E(\ReLU(U)\cdot\ReLU(V)) &= \E(\ReLU(\sigma_1 X)\cdot\ReLU(\sigma_2 Y)) = \sigma_1 \sigma_2 \E(\ReLU(X)\cdot\ReLU(Y)) \\
+            &= \frac{\sigma_1\sigma_2}{2\pi} \left(\rho(\pi - \arccos\rho) + \sqrt{1-\rho^2}\right).
+        \end{align*}
+    \end{enumerate}
+\end{answer}
+
+\begin{problem}{3}
+    在课上我们考虑了如下矩阵 $A \in \R^{n\times n}$: 对于任意 $1\le i,j \le n, A_{i,j} \sim \mathcal{N}(0,1)$, 且不同元素相互独立. 
+    计算 $\E(\tr(A^3))$ 和 $\E(\tr(A^4))$. {\kaishu 提示: 考虑 $n=1$ 的情况, 并参考作业三第六题.}
+\end{problem}
+\begin{answer}
+    我们先来计算 $\E(A_{i,j}^3)$ 与 $\E(A_{i,j}^4)$. 有对称性知 $\E(A_{i,j}^3) = 0$. 而由作业三第六题知 $X\sim \mathcal{N}(0,1) \implies X^2 \sim \chi^2(1)$. 那么
+    $\E(A_{i,i}^2) = 1, \Var(A_{i,i}^2) = 2$. 由此知 
+    \begin{align*}
+        \E(A_{i,j}^4) = \E(A_{i,j}^2)^2 + \Var(A_{i,j}^2) = 3.
+    \end{align*} 
+    记 $A^{(t)}_{(i,j)}$ 表示 $A^t$ 的第 $(i,j)$ 个元素. 那么我们有
+    \begin{align*}
+        A^{(2)}_{i,j} = \sum_{k=1}^{n} A_{i,k}A_{k,j} \implies A^{(3)}_{i,i} = \sum_{j=1}^{n} A^{(2)}_{i,j}A_{j,i} = \sum_{j=1}^{n} \sum_{k=1}^{n} A_{i,k}A_{k,j}A_{j,i}.
+    \end{align*}
+    那么
+    \begin{align*}
+        \E(A^{(3)}_{i,i}) = \E\left(\sum_{j=1}^{n} \sum_{k=1}^{n} A_{i,k}A_{k,j}A_{j,i}\right) &= \sum_{j=1}^{n} \sum_{k=1}^{n} \E(A_{i,k}A_{k,j}A_{j,i}) = \E(A_{i,i}^3) = 0. \\
+        \E(\tr(A^3)) = \E\left(\sum_{i=1}^{n} A^{(3)}_{i,i}\right) &= \sum_{i=1}^{n} \E\left(A^{(3)}_{i,i}\right) = 0.
+    \end{align*}
+    类似地, 我们有
+    \begin{align*}
+        A^{(4)}_{i,j} = \sum_{k=1}^{n} A_{i,k}A^{(3)}_{k,j} \implies A^{(4)}_{i,i} = \sum_{j=1}^{n} \sum_{k=1}^{n} \sum_{t=1}^{n} A_{i,k}A_{k,j}A_{j,t}A_{t,i}.
+    \end{align*}
+    那么
+    \begin{align*}
+        \E(A^{(4)}_{i,i}) &= \E\left(\sum_{j=1}^{n} \sum_{k=1}^{n} \sum_{t=1}^{n} A_{i,k}A_{k,j}A_{j,t}A_{t,i}\right) = \sum_{j=1}^{n} \sum_{k=1}^{n} \sum_{t=1}^{n} \E(A_{i,k}A_{k,j}A_{j,t}A_{t,i}) \\
+        &= \sum_{j=1}^{n} \E(A_{i,j}A_{j,j}A_{j,j}A_{j,i}) = \E(A_{i,i}^4) + \sum_{j\neq i} \E(A_{i,j}^2) \E(A_{j,j}^2) = n + 2
+    \end{align*}
+    故
+    \begin{align*}
+        \E(\tr(A^4)) = \E\left(\sum_{i=1}^{n} A^{(4)}_{i,i}\right) = \sum_{i=1}^{n} \E\left(A^{(4)}_{i,i}\right) = n^2 + 2n.
+    \end{align*}
+    综上, $\E(\tr(A^3)) = 0, \E(\tr(A^4)) = 3n$.
+\end{answer}
+
+\begin{problem}{4}
+    回答下列问题:
+    \begin{enumerate}[label = (\arabic*)]
+        \item 令 $X_1, X_2, \cdots, X_n$ 为独立同分布随机变量, 且 $X_i \sim \mathcal{N}(0,1)$. 令 $Y = \sum_{i=1}^{n}X_i^2$. 对于任意实数 $t\in [0, 1/4)$, 证明
+        \begin{align*}
+            \E\left(e^{t(Y-n)}\right) \le e^{2t^2n}.
+        \end{align*}
+        {\kaishu 提示: 首先考虑 $n=1$ 的情况, 并参考作业三第六题, 以及作业一第三题的提示.}
+        \item 对于任意 $0\le \Delta < 1$, 证明 
+        \begin{align*}
+            \PP(Y \ge (1+\Delta)n) \le e^{-n\Delta^2/8}.
+        \end{align*}
+        {\kaishu 提示: 根据$0\le \Delta < 1$, 选择合适的 $t$ 使得 $t\in [0,1/4)$, 并利用马尔可夫不等式.}
+        \item 对于任意 $0\le \Delta < 1$, 证明
+        \begin{align*}
+            \PP(Y \le (1-\Delta)n) \le e^{-n\Delta^2/8}.
+        \end{align*}
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label=(\arabic*)]
+        \item 在 作业三第六题 中我们已经计算了, 对于 $X\sim \mathcal{N}(0,1)$, 有
+        \begin{align*}
+            \E\left(e^{tX^2}\right) = \frac{1}{\sqrt{1-2t}}, \quad \text{for } t\in (-\infty, 1/2).
+        \end{align*}
+        注意到 $\{X_i\}_{i=1}^n \iid \mathcal{N}(0,1)$, 那么
+        \begin{align*}
+            \E\left(e^{t(Y-n)}\right) &= e^{-nt} \E\left(e^{t\sum_{i=1}^{n}X_i^2}\right) = e^{-nt} \prod_{i=1}^{n} \E\left(e^{tX_i^2}\right) = e^{-nt} \frac{1}{(1-2t)^{n/2}} 
+        \end{align*}
+        对于 $t\in (-1/4, 1/4)$, 等价于需证明
+        \begin{align*}
+            \frac{e^{-nt}}{(1-2t)^{n/2}} \le e^{2t^2n} &\iff (1-2t)^{n/2} \ge e^{-2t^2n-tn} \\
+            &\iff \ln(1-2t) \ge -(2t)^2 -2t 
+        \end{align*}
+        令 $h(t) = \ln(1-2t) + 4t^2 + 2t$, 而
+        \begin{align*}
+            h'(t) = \frac{4t(1-4t)}{1-2t} \implies h(t) \text{ 在 $(-1/4, 0)$ 上单调递减, 在 $(0, 1/4)$ 上单调递增.}
+        \end{align*}
+        那么 $h(t) \ge h(0) = 0$, 证毕.
+        \item 取 $t = \Delta/4 \in [0, 1/4)$, 那么
+        \begin{align*}
+            \PP(Y \ge (1+\Delta)n) &= \PP\left(e^{tY} \ge e^{t(1+\Delta)n}\right) = \PP\left(e^{t(Y-n)} \ge e^{t\Delta n}\right) \\
+            \text{(Markov's inequality) }&\le \frac{\E\left[e^{t(Y-n)}\right]}{e^{tn\Delta}} \le \frac{e^{2t^2 n}}{e^{tn\Delta}} \\
+            (t = \Delta/4)~&= e^{-n\Delta^2/8}.
+        \end{align*}
+        证毕.
+        \item 类似 (2) 中的证明, 取 $t = \Delta/4 \in [0, 1/4)$, 那么:
+        \begin{align*}
+            \PP(Y \le (1-\Delta)n) &= \PP\left(e^{tY} \le e^{t(1-\Delta)n} \right) = \PP\left(e^{-t(Y-n)} \ge e^{t\Delta n}\right) \\
+            \text{(Markov's inequality) }&\le \frac{\E\left[e^{-t(Y-n)}\right]}{e^{tn\Delta}} \\
+            (-t = -\frac{\Delta}{4} \in (-\frac{1}{4}, 0], \text{ Use (1)})~ &\le \frac{e^{2t^2 n}}{e^{tn\Delta}} = e^{-n\Delta^2/8}.
+        \end{align*} 
+        证毕.
+    \end{enumerate}
+\end{answer}
+\end{document}

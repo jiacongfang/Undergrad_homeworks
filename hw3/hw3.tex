@@ -1,0 +1,302 @@
+\documentclass[11pt]{article}           
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.25cm}
+
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{sgame} % For Game Theory Matrices 
+% \usepackage{diagbox} % Conflict with sgame
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+%\usepackage{algorithm,algorithmicx}
+\usepackage[ruled]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage[hidelinks]{hyperref}
+\usepackage{extarrows}
+\usepackage{totcount}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+\usepackage{helvet}
+\usepackage{dsfont}
+% \usepackage{newtxmath}
+\usepackage[labelfont=bf]{caption}
+\renewcommand{\figurename}{Figure}
+\usepackage{lastpage}
+\usepackage{istgame}
+\usepackage{tcolorbox}
+% \newdateformat{mydate}{\shortmonthname[\THEMONTH]. \THEDAY \THEYEAR}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]\songti}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Solution]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\1{\mathds{1}}
+% \newcommand\1{\mathbf{1}}
+\newcommand\R{\mathbb{R}}
+\newcommand\E{\mathbb{E}}
+\newcommand\N{\mathbb{N}}
+\newcommand\NN{\mathcal{N}}
+\newcommand\per{\mathrm{per}}
+\newcommand\PP{\mathbb{P}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\Var{\mathrm{Var}}
+\newcommand\Cov{\mathrm{Cov}}
+\newcommand{\Exp}{\mathrm{Exp}}
+\newcommand{\arrp}{\xrightarrow{P}}
+\newcommand{\arrd}{\xrightarrow{d}}
+\newcommand{\arras}{\xrightarrow{a.s.}}
+\newcommand{\arri}{\xrightarrow{n\rightarrow\infty}}
+
+\definecolor{lightgray}{gray}{0.75}
+
+\DeclareMathOperator*{\argmax}{argmax} % 定义 \argmax 运算符
+\title{Homework \#3}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} 北京大学}
+\chead{}
+\rhead{\CJKfamily{zhkai} 2024年秋\ 信息学中的概率统计(王若松)}
+\fancyfoot[R]{} 
+\fancyfoot[C]{\thepage\ /\ \pageref{LastPage} \\ \textcolor{lightgray}{最后编译时间: \today}}
+% \regtotcounter{page}
+% \fancyfoot[C]{\kaishu 第\thepage 页共\totvalue{page}页}
+
+
+\begin{center}
+    {\LARGE \bf Homework 3}
+
+    {姓名:方嘉聪\ \  学号: 2200017849}            % Write down your name and ID here.
+\end{center}
+
+\begin{problem}{1}
+    \begin{enumerate}[label=(\arabic*)]
+        \item $X$ 为离散随机变量, 且 $X$ 仅取非负整数值. 证明: $\E(X) = \sum_{x=0}^{+\infty}\PP(X>x)$.
+        \item $X$ 为连续随机变量, 且 $X$ 仅取非负实数值. 证明: $\E(X) = \int_{0}^{+\infty}\PP(X>x)\dd x$.
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label=(\arabic*)]
+        \item 注意到, 对于 $\forall k\in \N_{\ge 0}$, 有
+        \begin{align*}
+            \PP(X\ge k) = \sum_{x=k}^{+\infty}\PP(X=x) 
+        \end{align*}
+        那么有:
+        \begin{align*}
+            \E(X) &= \sum_{x=0}^{+\infty} x\PP(X=x) = \sum_{x=1}^{+\infty} \sum_{k=1}^{x} \PP(X=x) \\
+            (\text{交换求和次序}) \quad &= \sum_{k=1}^{+\infty} \sum_{x=k}^{+\infty} \PP(X=x) = \sum_{k=1}^{+\infty} \PP(X\ge k) \\
+            &= \sum_{k=0}^{+\infty} \PP(X>k).
+        \end{align*}
+        由于期望的定义保证了上述求和是绝对收敛的, 进而上述求和次序是可交换. 证毕.
+        % \item 
+        % 对于连续随机变量, 由于$X$仅取非负实数值, 由期望的定义有
+        % \begin{align*}
+        %     \E(X) &= \int_{0}^{+\infty} x f(x)\dd x = \int_{0}^{+\infty} x\,\dd F(x) \\
+        %     \text{ (分部积分) }&= xF(x)\Big|_{0}^{+\infty} - \int_{0}^{+\infty} F(x)\dd x \\
+        %     \left(\lim_{x\to +\infty} F(x) = 1\right)\,&= \int_{0}^{+\infty} (1-F(x))\dd x = \int_{0}^{+\infty} \PP(X>x)\dd x.
+        % \end{align*}
+        % 其中 $F(x):=\PP(X\le x)$ 为 $X$ 的分布函数. 证毕.
+        \item 类似于离散情形, 用交换求和次序的方法证明.
+        \begin{align*}
+            \int_{0}^{+\infty} \PP(X>x)\dd x &= \int_{0}^{+\infty} \int_{x}^{+\infty} f(t)\,\dd t\,\dd x = \int_{0}^{+\infty} \int_{0}^{t} f(t)\,\dd x\,\dd t \\
+            &= \int_{0}^{+\infty} [xf(t)] \bigg|_{0}^{t}\dd t = \int_{0}^{+\infty} tf(t)\dd t = \E(X).
+        \end{align*}
+        由于期望的定义保证了上述积分中的被积函数是绝对收敛的, 积分次序交换的正确性由下述引理保证. 证毕.
+        \begin{lemma}
+            对多重黎曼积分，如果被积函数是绝对值可积的，那么积分结果与积分变量的次序无关.
+        \end{lemma}
+        该引理在数学分析课上中给出过证明, 这里略去. 
+    \end{enumerate}
+\end{answer}
+
+\begin{problem}{2}
+    在Unix操作系统中, 用随机变量 $X$ 表示一个随机的任务所需的内存. 历史数据表明, 对于任意实数 $x\ge 1$, $\PP(X>x) = 1/x^{\alpha}$. 这里面 $\alpha \in (0,2)$ 为固定常数.
+    \begin{enumerate}[label=(\arabic*)]
+        \item 计算随机变量 $X$ 的概率分布函数和概率密度函数.
+        \item 计算 $\E(X), \E(X^2)$.
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label = (\arabic*)]
+        \item 概率分布函数为
+        \begin{align*}
+            F(x) = \PP(X\le x) = \begin{cases}
+                1 - 1/x^\alpha, &\text{if } x \ge 1 \\
+                0, &\text{Otherwise}
+            \end{cases}
+        \end{align*}
+        概率密度函数为:
+        \begin{align*}
+            f(x) = \begin{cases}
+                \alpha / x^{\alpha + 1}, &\text{if } x \ge 1 \\
+                0, &\text{otherwise}
+            \end{cases}
+        \end{align*}
+        容易验证上述概率密度函数满足正则性.
+        \item 计算如下(注意需要讨论一下期望是否收敛) \begin{align*}
+            \E(X) &= \int_{1}^{+\infty} x\cdot \frac{\alpha}{x^{\alpha+1}}\dd x =\begin{cases}
+                \frac{\alpha}{1-\alpha} x^{1-\alpha} |_{1}^{+\infty} = \frac{\alpha}{\alpha-1}. &\text{if } \alpha \in (1,2)\\
+                \alpha\ln x |_{1}^{+\infty}\, \text{不收敛}. &\text{if } \alpha = 1. \\
+                \frac{\alpha}{1-\alpha} x^{1-\alpha} |_{1}^{+\infty}\, \text{不收敛}. &\text{if } \alpha \in (0,1).  
+            \end{cases} \\
+            \E(X^2) &= \int_{1}^{+\infty} x^2\cdot \frac{\alpha}{x^{\alpha + 1}} \dd x = \frac{\alpha}{2-\alpha} x^{2-\alpha} \bigg|_{1}^{+\infty} \, \text{不收敛}.
+        \end{align*}
+        综上所述, 当 $\alpha \in (1,2)$ 时, 期望$\E(X)$存在且为 $\alpha/(\alpha-1)$. 其余情况期望不收敛. $\E(X^2)$ 在所有情况下均不收敛.
+    \end{enumerate}
+\end{answer}
+
+\begin{problem}{3}
+\begin{enumerate}[label=(\arabic*)]
+    \item 对于任意实数 $x>0$, 证明 \[\int_{x}^{+\infty}\frac{t}{x}e^{-t^2/2}\dd t = \frac{e^{-x^2/2}}{x}.\]
+    \item 令 $X \sim \mathcal{N}(0,1)$, 证明对于任意实数 $x>0$, 有 \[\PP(X\ge x) \le \frac{e^{-x^2/2}}{x\sqrt{2\pi}}.\]  
+    \item 令 $X \sim \mathcal{N}(\mu,\sigma^2)$, 证明对于任意实数 $k>0$, \[\PP(|Y-\mu| \le k\sigma) \ge 1 - \frac{e^{-k^2/2}}{k}\cdot \sqrt{\frac{2}{\pi}}.\]
+\end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label = (\arabic*)]
+        \item 对任意实数$x > 0$, 有
+        \begin{align*}
+            \int_{x}^{+\infty}\frac{t}{x} e^{-t^2/2} \dd t = \frac{1}{x}\int_{x}^{+\infty} e^{-t^2/2}\dd\left(\frac{t^2}{2}\right) = -\frac{1}{x}e^{-t^2/2}\bigg|_{x}^{+\infty} = \frac{e^{-x^2/2}}{x}.
+        \end{align*}
+        \item 对任意实数$x > 0$, 有
+        \begin{align*}
+            \PP(X\ge x) = \int_{x}^{+\infty} \frac{1}{\sqrt{2\pi}} e^{-t^2/2} \dd t \le \int_{x}^{+\infty} \frac{t}{x\sqrt{2\pi}} e^{-t^2/2} \dd t = \frac{e^{-x^2/2}}{x\sqrt{2\pi}}.
+        \end{align*}
+        证毕.
+        \item $Y\sim\NN(\mu, \sigma^2) \implies X := (Y-\mu)/\sigma \sim \NN(0,1)$. 那么我们有
+        \begin{align*}
+            \PP\left(\left|\frac{Y-\mu}{\sigma}\right| > k\right) &= 2\PP\left(\frac{Y-\mu}{\sigma} > k\right) = 2\PP(X>k) \le \sqrt{\frac{2}{\pi}}\cdot\frac{e^{-k^2/2}}{k} \\
+            \implies \PP(|Y-\mu|\le k\sigma) &= \PP\left(\left|\frac{Y-\mu}{\sigma}\right|\le k\right) = 1 - \PP\left(\left|\frac{Y-\mu}{\sigma}\right|> k\right) \ge 1 - \frac{e^{-k^2/2}}{k}\cdot \sqrt{\frac{2}{\pi}}.
+        \end{align*}
+        证毕.
+    \end{enumerate}
+\end{answer}
+
+\begin{problem}{4}
+    随机变量 $X$ 的分布函数 $F(x)$ 为严格单调递增的连续函数, 其反函数存在. 证明: 随机变量 $Y = F(X)$ 服从 $(0,1)$ 上的均匀分布 $U(0,1)$.
+\end{problem}
+\begin{answer}
+    注意到当 $y\le 0$时, 有 $\PP(Y\le y) = 0$, 当 $y\ge 1$时, 有 $\PP(Y\le y) = 1$. 下面考虑$y\in (0,1)$, 记$F(x)$的反函数为 $F^{-1}(y)$. 由于$F(x)$为严格单调递增的连续函数, 那么有
+    \begin{align*}
+        f_{Y}(y) = f_X(F^{-1}(y)) \frac{\dd F^{-1}(y)}{\dd y} = f_X(F^{-1}(F(x)))\frac{1}{\dd F(x)/\dd x} = \frac{f_X(x)}{f_X(x)} = 1 
+    \end{align*}
+    故$Y\sim U(0,1)$, 证毕.
+\end{answer}
+
+\begin{problem}{5}
+    对于实数参数 $\mu$ 和 $b >0$, 已知连续随机变量 $X$ 的概率密度函数 $f(x)$ 满足对于任意实数 $x$, 
+    \begin{align*}
+        f(x) = c\cdot e^{-|x-\mu|/b}.
+    \end{align*}
+    其中 $c$ 为某个与参数$\mu, b$有关的常数.
+    \begin{enumerate}[label=(\arabic*)]
+        \item 计算常数 $c$ 以及 $X$ 的分布函数 $F(x)$.
+        \item 计算 $\E(X)$ 和 $\Var(X)$.
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label = (\arabic*)]
+        \item 由概率密度函数正则性有
+        \begin{align*}
+            \int_{-\infty}^{+\infty}c\cdot e^{-|x-\mu|/b} \dd x = c\cdot \int_{-\infty}^{\mu} e^{(x-\mu)/b} \dd x + c\cdot\int_{\mu}^{+\infty} e^{-(x-\mu)/b} \dd x = 2bc = 1
+        \end{align*}
+        故$c = 1/2b$. 当 $x\in(-\infty, \mu]$, 有
+        \begin{align*}
+            F(x) = \int_{-\infty}^{x} f(t)\dd t = \int_{-\infty}^{x} \frac{1}{2b} e^{(t-\mu)/b}\dd t = \frac{1}{2} e^{(x-\mu)/b}.
+        \end{align*}
+        当 $x\in (\mu, +\infty)$, 有
+        \begin{align*}
+            F(x) = \int_{-\infty}^{x} f(t)\dd t = \frac{1}{2} + \int_{\mu}^{x} \frac{1}{2b} e^{-(t-\mu)/b}\dd t = 1 - \frac{1}{2} e^{-(x-\mu)/2}.
+        \end{align*}
+        综上所述, 分布函数为
+        \begin{align*}
+            F(x) = \begin{cases}
+                \exp[(x-\mu)/b] / 2, &\text{if }  x\in (-\infty, \mu] \\
+                1 - \exp[-(x-\mu)/b] / 2, &\text{if } x \in(\mu, +\infty).
+            \end{cases}
+        \end{align*}
+        \item 计算如下\begin{align*}
+            \E(X) &= \int_{-\infty}^{+\infty} \frac{1}{2b}xe^{-|x-\mu|/b}\dd x = \int_{-\infty}^{\mu}\frac{1}{2b}xe^{(x-\mu)/b}\dd x + \int_{\mu}^{+\infty}\frac{1}{2b}xe^{-(x-\mu)/b}\dd x \\
+            &= \frac{1}{2}xe^{(x-\mu)/b}\bigg|_{-\infty}^{\mu} - \frac{1}{2}\int_{-\infty}^{\mu}e^{(x-\mu)/b}\dd x - \frac{1}{2}xe^{-(x-\mu)/b}\bigg|_{\mu}^{+\infty} + \frac{1}{2}\int_{\mu}^{+\infty}e^{-(x-\mu)/b}\dd x \\
+            &= \frac{\mu}{2} - \frac{b}{2} + \frac{\mu}{2} + \frac{b}{2} = \mu.
+        \end{align*}
+        下面来计算 $\E(X^2)$. 
+        \begin{align*}
+            \E(X^2) &= \int_{-\infty}^{+\infty} \frac{1}{2b}x^2e^{-|x-\mu|/b}\dd x = \int_{-\infty}^{\mu}\frac{1}{2b}x^2e^{(x-\mu)/b}\dd x + \int_{\mu}^{+\infty}\frac{1}{2b}x^2e^{-(x-\mu)/b}\dd x \\
+            &= \frac{1}{2}x^2e^{(x-\mu)/b}\bigg|_{-\infty}^{\mu} - \int_{-\infty}^{\mu}xe^{(x-\mu)/b}\dd x - \frac{1}{2}x^2e^{-(x-\mu)/b}\bigg|_{\mu}^{+\infty} + \int_{\mu}^{+\infty}xe^{-(x-\mu)/b}\dd x \\ 
+            &= \mu^2 - 2b\left(\frac{\mu}{2} - \frac{b}{2}\right) + 2b\left(\frac{\mu}{2} + \frac{b}{2}\right) = \mu^2 + 2b^2.
+        \end{align*}
+        那么我们有$\Var(X) = \E(X^2) - \E(X)^2 = 2b^2.$
+    \end{enumerate}
+\end{answer}
+
+\begin{problem}{6}
+    回答下列问题:
+    \begin{enumerate}[label=(\arabic*)]
+        \item 若 $X\sim \NN(0,1)$, 对于任意实数 $t$, 计算 $\E\left(e^{tX^2}\right)$.
+        \item 对于任意正整数 $n$, 若 $Y_n \sim \chi^2(n)$, 即 $Y_n \sim \Gamma(n/2, 1/2)$. 对于任意实数 $t$, 计算 $\E\left(e^{tY_n}\right)$.
+        \item 若 $X\sim \NN(0,1)$, 计算 $Y = X^2$ 的概率密度函数.
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label=(\arabic*)]
+        \item 注意到我们有
+        \begin{align*}
+            \int_{-\infty}^{+\infty} e^{-x^2}\dd x = \sqrt{\pi}.
+        \end{align*}
+        那么, 当 $t < 1/2$ 时有
+        \begin{align*}
+            \E\left(e^{tX^2}\right) &= \int_{-\infty}^{+\infty} e^{tx^2} \frac{1}{\sqrt{2\pi}} e^{-x^2/2} \dd x = \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{+\infty} e^{-(1/2 - t)x^2} \dd x \\
+            &= \frac{1}{\sqrt{2\pi}} \cdot\frac{1}{\sqrt{1/2 - t}} \cdot \sqrt{\pi} = \frac{1}{\sqrt{1-2t}}.
+        \end{align*}
+        当$t \ge 1/2$ 时, $\E\left(e^{tX^2}\right)$ 显然不收敛. 
+        \item 令 \[c := \frac{(1/2)^{n/2}}{\Gamma(n/2)}\] 那么当 $t<1/2$时, 我们有
+        \begin{align*}
+            \E\left(e^{tY_n}\right) & = c \int_{0}^{+\infty} x^{n/2-1} \exp\left(-\frac{1}{2} + t\right) \dd x \\
+            \text{令 $y = (1/2 -t)x$ }&= c\cdot \frac{1}{(1/2 - t)^{n/2}} \int_{0}^{+\infty} y^{n/2 - 1} e^{-y} \dd y \\
+            \text{$\Gamma$ 函数定义 }&= \frac{1}{\Gamma(n/2)} \frac{1}{(1-2t)^{n/2}} \Gamma\left(\frac{n}{2}\right) \\
+            &= \frac{1}{(1-2t)^{n/2}}.
+        \end{align*}
+        当  $t\ge 1/2$ 时, $\E\left(e^{tY_n}\right)$ 显然不收敛.
+        \item 对于任意$y\ge 0$, 我们有
+        \begin{align*}
+            \PP(Y\le y) &= \PP(-\sqrt{y}\le X\le \sqrt{y}) = \int_{-\sqrt{y}}^{\sqrt{y}} f_X(x) \dd x 
+        \end{align*}
+        对等号两边求导, $Y$ 的概率密度函数为
+        \begin{align*}
+            f_Y(y) = \frac{1}{\sqrt{2\pi}}e^{-y/2}\frac{1}{2\sqrt{y}} + \frac{1}{\sqrt{2\pi}}e^{-y/2}\frac{1}{2\sqrt{y}} = \frac{1}{\sqrt{2\pi y}} e^{-y/2}, \quad y\ge 0.
+        \end{align*}
+        当 $y<0$ 时, $f_Y(y) = 0$.注意到$\Gamma(1/2) = \sqrt{\pi}$, 那么$Y = X^2\sim \chi^2(1)$.
+
+        \textbf{Note: } 通过上述矩母函数的计算也可以发现$\chi^2(1)$即为$\NN(0,1)$的平方.
+    \end{enumerate}
+\end{answer}
+
+
+\end{document}
