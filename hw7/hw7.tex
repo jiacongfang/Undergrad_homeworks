@@ -204,11 +204,11 @@
         \] 
         故 $\hat{p}_1$ 是一致估计量. 下面计算 $\hat{p}_1$ 的均方误差,
         \begin{align*}
-            \E\left(\hat{p}_1^2\right) = \E\left(e^{-2\bar{X}}\right) =  \left(\prod_{i=1}^{n}\E\left(e^{-2X_i}\right)\right)^{1/n} = e^{2\lambda(e^{-2} - 1)} 
+            \E\left(\hat{p}_1^2\right) = \E\left(e^{-2\bar{X}}\right) =  \left(\prod_{i=1}^{n}\E\left(e^{-2X_i}\right)\right)^{1/n} = e^{\lambda(e^{-2} - 1)} 
         \end{align*}
         那么 $\hat{p}_1$ 的均方误差为
         \begin{align*}
-            \MSE(\hat{p}_1) = \E\left(\hat{p}_1^2\right) + p^2 - 2p\E(\hat{p}_1) = e^{2\lambda(e^{-2} - 1)} + e^{-2\lambda} - 2e^{-\lambda}e^{\lambda(e^{-1} - 1)}.
+            \MSE(\hat{p}_1) = \E\left(\hat{p}_1^2\right) + p^2 - 2p\E(\hat{p}_1) = e^{\lambda(e^{-2} - 1)} + e^{-2\lambda} - 2e^{-\lambda}e^{\lambda(e^{-1} - 1)}.
         \end{align*}
         \item 注意到
         \begin{align*}
@@ -333,7 +333,78 @@
             \PP(p_o \ge \max_{i=1,2} p_i - \varepsilon) = \PP(p_o \ge \max_{i=1,2} p_i - \Delta/2) = \PP(p_o = \max \{p_1,p_2\}) \ge \frac{2}{3}
         \end{align*}
         证毕.
-        \item 
+        \item 考虑如下算法, 主要思想是每一轮将两个游戏机均运行若干次, 如果采样均值低于某个临界值, 则将该游戏机从备选游戏机中删去, 每一轮将临界值缩小2倍(这个算法对于$n$台游戏机的情况也成立).
+        \begin{algo}
+            \caption{\textbf{Successive Reject Algorithm}}
+            \begin{algorithmic}[1]
+                \Require 输入 $n = 2$, 待定参数 $\delta > 0$ 和 每一轮运行的次数 $T$
+                \Ensure 输出 $o$
+                \State $S_0 \leftarrow [n], t \leftarrow 0$
+                \While{$|S_t| > 1$}
+                    \State $t \leftarrow t+1$, $\varepsilon_t \leftarrow 2^{-t}$.
+                    \State 对于每个 $i\in S_{t-1}$, 运行 $T$ 次.
+                    \State $S_t \leftarrow \{i\in S_{t-1}: \hat{p}_{i,t} \ge \max_{j\in S_{t-1}} \hat{p}_{j,t} - \varepsilon_t\}$
+                \EndWhile
+                \State \Return $S_t$    
+            \end{algorithmic}
+        \end{algo}
+        其中 $\hat{p}_{i,t}$ 为第 $t$ 轮中第 $i$ 台游戏机的样本均值. 注意到 $p_1, p_2 \in [0,1]$, 在第$t$轮, 由 Hoeffding 不等式, 有
+        \begin{align*}
+            \PP\left(|p_i - \hat{p}_{i,t}| > \frac{\varepsilon_t}{2}\right) \le 2e^{-2T\varepsilon_t^2}  
+        \end{align*}
+        取$T = \log(nt^2/\delta) / \varepsilon_t^2$, 那么有
+        \begin{align*}
+            \PP\left(|p_i - \hat{p}_{i,t}| > \frac{\varepsilon_t}{2}\right) \le \frac{2\delta}{nt^2}, \quad \forall i\in [n], \forall t\ge 1.
+        \end{align*}
+        由 Union Bound, 有
+        \begin{align}
+            \label{eq:1}
+            \PP\left(\forall i\in [n], |p_i - \hat{p}_{i,t}| \le \frac{\varepsilon_t}{2}\right) \ge 1 - \frac{2\delta}{t^2}.
+        \end{align}
+        记事件(不妨设$p_1 > p_2$)
+        \begin{align*}
+            E_t = \{1 \in S_t \text{ and } \forall j, p_j < p_1 - 2 \varepsilon_t \Rightarrow j \notin S_t\}.
+        \end{align*}
+        对于 $E_0$, $\varepsilon_0 = 1$, $S_0 = [2]$, $p_2 > p_1 - 2 \varepsilon_0 = p_1 - 2$, 故$\PP(E_0) = 1$. 
+        
+        记事件 $E = \bigwedge_{t=1}^{\infty} E_t$. 注意到 $E$ 表示$S_t$ 中剩下的游戏机是 $1$. 故我们来分析 $\PP(E)$. 注意到\footnote{第一个不等号需要分析事件$E_t|E_{t-1}$, 证明在作业最后一页. }
+        \begin{align}
+            \label{eq:2}
+            \PP(E_t|E_{t-1}) \ge \PP\left(\forall i\in S_{t-1}, |p_i - \hat{p}_{i,t}| \le \frac{\varepsilon}{2} \bigg| E_{t-1}\right) \ge 1 - \frac{2\delta}{t^2}.
+        \end{align}
+        那么有
+        \begin{align*}
+            \PP(E) &= \PP\left(\bigwedge_{t=1}^{\infty} E_t\right) = \prod_{t=1}^{\infty} \PP(E_t|E_{t-1}) \ge \prod_{t=1}^{\infty} \left(1 - \frac{2\delta}{t^2}\right) \ge 1 - \sum_{i=1}^{\infty} \frac{2\delta}{i^2} \ge 1 - 2\delta\cdot \frac{\pi^2}{6} 
+        \end{align*}
+        令$\delta = 1/\pi^2$, 那么有 $\PP(E) \ge 2/3$. 下面来证明算法的总观测次数与$1/\Delta$为多项式关系. 
+        
+        在 $n=2$ 的情况下, 游戏机$1$的运行次数不会超过游戏机$2$的运行次数. 而对于游戏机$2$, 由\eqref{eq:1}知, 有至少 2/3 的概率有
+        \begin{align*}
+            |p_2 - \hat{p}_{2,t}| \le \frac{\varepsilon_t}{2}, \quad |p_1 - \hat{p}_{1,t}| \le \frac{\varepsilon_t}{2}. \implies \hat{p}_{1,t} - \hat{p}_{2,t} - \varepsilon_t \le \Delta \le \hat{p}_{1,t} - \hat{p}_{2,t} + \varepsilon_t.
+        \end{align*}
+        故当 $t = \log_2(1/\Delta) + 2$ 时, 有
+        \begin{align*}
+            \hat{p}_{1,t} - \hat{p}_{2,t} \ge \Delta - \varepsilon_t > \varepsilon_t. \implies \hat{p}_{2,t} < \hat{p}_{1,t} - \varepsilon_t. \implies 1 \notin S_t.
+        \end{align*}
+        故游戏机 2 的总运行次数不超过
+        \begin{align*}
+            \sum_{t=1}^{\lceil\log_2(1/\Delta) + 2\rceil} \frac{\log(2t^2 / \delta)}{2^{-2t}} < \sum_{t=1}^{\lceil\log_2(4/\Delta)\rceil} \frac{\log(2\log^2(4/\Delta))}{2^{-2t}} = O\left(\frac{1}{\Delta^2}\left(\log\log^2(1/\Delta) + C\right)\right) 
+        \end{align*}
+        其中$C$为与$\Delta$无关的常数. 故总的观测次数为 $\mathrm{poly}(1/\Delta)$. 证毕.
     \end{enumerate}
+    注: 对于\eqref{eq:2}中的第一个不等号, 我们来证明 $\{\forall i \in S_{t-1}, |p_i - \hat{p}_{i,t}| \le \varepsilon/2 | E_{t-1}\} \subseteq E_t|E_{t-1}$.
+    \begin{itemize}
+        \item 由于 $\forall i \in S_{t-1}, \hat{p}_{i,t}\in p_i \pm \varepsilon/2$, 有
+        \begin{gather*}
+            \max_{j\in S_{t-1}} \hat{p}_{j,t} - \varepsilon_t \le \max_{j\in S_{t-1}} p_j - \frac{\varepsilon}{2} < p_1 - \varepsilon  \\
+            \implies \hat{p}_{1,t} \ge p_1 - \frac{\varepsilon}{2} >  \max_{j\in S_{t-1}} \hat{p}_{j,t} - \varepsilon_t. \implies 1 \in S_t.
+        \end{gather*}
+        \item 假设存在 $j_0$, $p_{j_0} < p_1 - 2\varepsilon$, 且 $j_0 \in S_t$. 那么有
+        \begin{gather*}
+            \hat{p}_{j_0,t} \ge \max_{j\in S_{t-1}} \hat{p}_{j,t} - \varepsilon_t, \quad \hat{p}_{j_0,t} \le p_{j_0} + \frac{\varepsilon}{2} < p_1 - \frac{3\varepsilon}{2}  \implies p_1 > \max_{j\in S_{t-1}} \hat{p}_{j,t} + \frac{\varepsilon}{2}
+        \end{gather*}
+        与 $\forall i \in S_{t-1}, |p_i - \hat{p}_{i,t}| \le \varepsilon/2$ 矛盾. 故 $\forall j, p_j < p_1 - 2 \varepsilon_t \Rightarrow j \notin S_t$.
+    \end{itemize}
+    综上, $\{\forall i \in S_{t-1}, |p_i - \hat{p}_{i,t}| \le \varepsilon/2 | E_{t-1}\} \subseteq E_t|E_{t-1}$. 证毕.
 \end{answer}
 \end{document}
