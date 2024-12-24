@@ -216,8 +216,8 @@
         \end{align*}
         故 $\hat{p}_2$ 是无偏估计量, 渐进无偏估计量. 那么 $\MSE(\hat{p}_2) = \Var(\hat{p}_2)$, 我们先来计算 $\E\left(\hat{p}_2^2\right)$,
         \begin{align*}
-            \E\left(\hat{p}_2^2\right) &= \E\left[\frac{1}{n^2}\left(\sum_{i=1}^{n} \1_{\{X_i=1\}}\right)^2\right]  \\
-            &= \frac{1}{n^2} \E\left[\sum_{i=1}^{n}\1_{\{X_i=1\}}^2 + \sum_{i\neq j} \1_{\{X_i = 0 \land X_j = 0\}}\right] \\
+            \E\left(\hat{p}_2^2\right) &= \E\left[\frac{1}{n^2}\left(\sum_{i=1}^{n} \1_{\{X_i=0\}}\right)^2\right]  \\
+            &= \frac{1}{n^2} \E\left[\sum_{i=1}^{n}\1_{\{X_i=0\}}^2 + \sum_{i\neq j} \1_{\{X_i = 0 \land X_j = 0\}}\right] \\
             &= \frac{1}{n^2} \left[\sum_{i=1}^{n}\PP(X_i = 0) + \sum_{i\neq j} \PP(X_i=0) \cdot \PP(X_j =0)\right] \\
             &= \frac{1}{n^2} \left[n e^{-\lambda} + (n^2 - n) e^{-2\lambda}\right] = e^{-2\lambda} + \frac{e^{-\lambda}}{n}(1 - e^{-\lambda}).
         \end{align*}
