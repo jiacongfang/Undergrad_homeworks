@@ -87,7 +87,7 @@
 \begin{center}
     {\LARGE \bf Homework 4}
 
-    {姓名:方嘉聪\ \  学号: 2200017849}            % Write down your name and ID here.
+    {姓名:方嘉聪\ \  学号: 2200017849 \ \ \textcolor{red}{得分: 93}}            % Write down your name and ID here.
 \end{center}
 \begin{problem}{1}
     \begin{enumerate}[label=(\arabic*)]
@@ -101,14 +101,14 @@
             \textbf{变量} & \textbf{均值} & \textbf{方差}  \\
             \hline
             居民收入对数 & 7.44 & 0.43 \\
-            性别(男=0)   & 0.48 & 0.50 \\
+            性别\textcolor{red}{(女性)}(男=0)   & 0.48 & 0.50 \\
             教育年限 & 10.67 & 3.12 \\
             工作年限 & 19.72 & 10.25\\
-            党员身份(非党员=0) & 0.24 & 0.43 \\
+            党员身份\textcolor{red}{(党员)}(非党员=0) & 0.24 & 0.43 \\
             \hline
         \end{tabularx}
     \end{table} 
-    \item 回归分析结果见表\ref{tab:1.2}:
+    \item 回归分析结果见表\ref{tab:1.2}:  \textcolor{red}{类似上述表格修改一下}
     \begin{table}[H]
         \centering 
         \caption{居民收入影响因素的多元线性回归模型回归表($N=15862$)}
@@ -165,6 +165,7 @@
     \]
     \item 根据回归模型(即模型4)的估计结果, 解释如下:
     \begin{itemize}
+        \item \textcolor{red}{对于主效应要使用还未添加交互项的模型(模型3)进行分析!!!, 注意强调显著性水平.}
         \item {\kaishu 教育年限变量的主效应($\beta_4 = 0.036$):} 在控制其他变量不变的情况下, 教育年限每增加一个单位, 居民收入的对数期望值将增加$0.036$个单位. 说明教育年限对居民收入有 \underline{正向}影响.
         \item {\kaishu 党员身份虚拟变量(参照组 $\text{非党员}=0$, $\beta_5 = 0.230$)的主效应:} 在控制其他变量不变的情况下, 党员收入的对数期望值相较于非党员将增加$0.230$个单位. 说明党员身份对居民收入有 \underline{正向}影响.
         \item {\kaishu 教育年限与党员身份的交互效应:} 偏回归系数 $\beta_6 = -0.014$刻画了这两个变量对因变量的非线性作用, 表明教育年限对收入的作用和党员身份对收入的作用间存在着 \underline{相互削弱} 的关系。
