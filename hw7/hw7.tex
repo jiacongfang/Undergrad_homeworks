@@ -279,12 +279,12 @@
         \end{align*}
         记$\sigma' = \sqrt{\sigma_1^2/n + \sigma_2^2/m}$, 那么有
         \begin{gather*}
-            \PP\left[-\Phi\left(1-\frac{\alpha}{2}\right) \le Z \le \Phi\left(1-\frac{\alpha}{2}\right)\right] = 1 - \alpha. \\
-            \PP\left[\bar{X} - \bar{Y} - \sigma'\cdot \Phi\left(1-\frac{\alpha}{2}\right) \le \mu_1 - \mu_2 \le \bar{X} - \bar{Y} + \sigma' \cdot \Phi\left(1-\frac{\alpha}{2}\right)\right] = 1 - \alpha.
+            \PP\left[-\Phi^{-1}\left(1-\frac{\alpha}{2}\right) \le Z \le \Phi^{-1}\left(1-\frac{\alpha}{2}\right)\right] = 1 - \alpha. \\
+            \PP\left[\bar{X} - \bar{Y} - \sigma'\cdot \Phi^{-1}\left(1-\frac{\alpha}{2}\right) \le \mu_1 - \mu_2 \le \bar{X} - \bar{Y} + \sigma' \cdot \Phi^{-1}\left(1-\frac{\alpha}{2}\right)\right] = 1 - \alpha.
         \end{gather*}
         故 $\mu_1 - \mu_2$ 的置信水平为 $1-\alpha$ 的置信区间为
         \begin{align*}
-            \bigg[\bar{X} - \bar{Y} - \sigma' \cdot \Phi\left(1-\frac{\alpha}{2}\right), \bar{X} - \bar{Y} + \sigma' \cdot \Phi\left(1-\frac{\alpha}{2}\right)\bigg].
+            \bigg[\bar{X} - \bar{Y} - \sigma' \cdot \Phi^{-1}\left(1-\frac{\alpha}{2}\right), \bar{X} - \bar{Y} + \sigma' \cdot \Phi^{-1}\left(1-\frac{\alpha}{2}\right)\bigg].
         \end{align*}
         \item 对于 $Z \sim \mathcal{N}(0,1)$, 有$M_Z(t) = \E(e^{tZ}) = e^{t^2/2}$. 由 Chernoff Bound, 对于任意 $t > 0$, 有
         \begin{align*}
@@ -384,7 +384,7 @@
         \end{align*}
         故当 $t = \log_2(1/\Delta) + 2$ 时, 有
         \begin{align*}
-            \hat{p}_{1,t} - \hat{p}_{2,t} \ge \Delta - \varepsilon_t > \varepsilon_t. \implies \hat{p}_{2,t} < \hat{p}_{1,t} - \varepsilon_t. \implies 1 \notin S_t.
+            \hat{p}_{1,t} - \hat{p}_{2,t} \ge \Delta - \varepsilon_t > \varepsilon_t. \implies \hat{p}_{2,t} < \hat{p}_{1,t} - \varepsilon_t. \implies 2 \notin S_t.
         \end{align*}
         故游戏机 2 的总运行次数不超过
         \begin{align*}
