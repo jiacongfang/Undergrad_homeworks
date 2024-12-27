@@ -230,9 +230,10 @@
         \begin{align*}
             \PP\left( \bigcup_{m=n}^\infty B_m(\varepsilon) \right) \le \sum_{m=n}^\infty\PP(B_m(\varepsilon)) \le \sum_{m=n}^\infty \frac{C(p)}{m^2 \varepsilon^4}  = \frac{C(p)}{\varepsilon^4} \sum_{m=n}^\infty \frac{1}{m^2} \arri 0
         \end{align*}
-        即 $Y_n \arras p$. 证毕.
-
-        注: 这题也可以用 Union Bound + Chernoff Bound 来证明. 
+        即 $Y_n \arras p$. 证毕. 这题也可以用 Union Bound + Chernoff Bound 来证明, 有
+        \begin{align*}
+            \PP\left(\bigcup_{m=n}^\infty B_m(\varepsilon)\right) \le \sum_{m=n}^\infty \PP(B_m(\varepsilon)) \le \sum_{m=n}^\infty e^{-2m\varepsilon^2} = e^{-2n\varepsilon^2} \sum_{m=0}^\infty e^{-2m\varepsilon^2} \arri 0.
+        \end{align*}
     \end{enumerate}
 \end{answer}
 
@@ -249,19 +250,7 @@
 \end{problem}
 
 \begin{answer}
-    我们先证明一个引理:
-    \begin{lemma}{（伯努利不等式）}
-        若 $x > -1, n\in \N^+$, 则有$(1+x)^n \ge 1 + nx.$
-    \end{lemma}
-    \begin{proof}
-        用数学归纳法. 容易验证 $n=1, n=2$ 时均成立. 假设对于 $n=k$ 成立, 考虑$n = k + 2$时:
-        \begin{align*}
-            (1+x)^{k+2} &= (1+x)^k(1+x)^2 \ge (1+kx)(1+2x+x^2) \\
-            &= 1 + (k+2)x + kx^2(k+2) + x^2 \ge 1 + (k+2)x.
-        \end{align*} 
-        引理证毕.
-    \end{proof}
-    回到本题, 考虑一个如下的算法(即重复运行$T$轮, 每轮调用$B'$共$t_0$次, 选择出现次数最多的结果):
+    考虑一个如下的算法(即重复运行$T$轮, 每轮调用$B'$共$t_0$次, 选择出现次数最多的结果):
     \begin{algo}
         \caption{\textbf{$1-\delta$ Algorithm}}
         \begin{algorithmic}[1]
@@ -278,6 +267,18 @@
             \State \Return $A(s)$    
         \end{algorithmic}
     \end{algo}
+    我们先证明一个引理:
+    \begin{lemma}{（伯努利不等式）}
+        若 $x > -1, n\in \N^+$, 则有$(1+x)^n \ge 1 + nx.$
+    \end{lemma}
+    \begin{proof}
+        用数学归纳法. 容易验证 $n=1, n=2$ 时均成立. 假设对于 $n=k$ 成立, 考虑$n = k + 2$时:
+        \begin{align*}
+            (1+x)^{k+2} &= (1+x)^k(1+x)^2 \ge (1+kx)(1+2x+x^2) \\
+            &= 1 + (k+2)x + kx^2(k+2) + x^2 \ge 1 + (k+2)x.
+        \end{align*} 
+        引理证毕.
+    \end{proof}
     对于 $i\in [T]$, 记事件 $E_i$ 为 前$i-1$轮调用结果与$B$相同的条件下, 第$i$轮调用$B'$输出正确结果. 
     记 $X_{i, j}(\forall j\in[t_0])$ 为 前$i-1$轮调用结果与$B$相同的条件下, 第$i$轮调用$B'$ 输出错误结果. 
     那么 
@@ -601,7 +602,13 @@
 
         注: 这样我们就顺便证明了当 $m=n$ 时, (3)中的结论同样成立.
     \end{enumerate}
+
+    \textcolor{red}{注: 第二问的insight是可以将 $\chi$ 分解为两部分, $\sum \chi(j) = X-Y$, 其中$X\sim B(k,1/2)$, $Y\sim B(n-k,1/2)$, 而$Y = n-k - \bar{Y}$, 其中$\bar{Y}\sim B(n-k,1/2)$ 那么 $\sum \chi(j) = X - (n-k) + \bar{Y} \sim B(n,1/2) - (n-k)$, 从而可以利用(1)中的结论.} 
+
+    \textcolor{red}{注: 第三问的记号如下面这么写会直观一些
+    \begin{align*}
+        \PP\left( \bigcap_\chi \left\{\bigcup_{i=1}^m\left|\sum_{j\in S_i} \chi(j)\right| \ge c_3 \sqrt{n}\right\}\right) \iff \PP\left( \forall \chi, \exists i, \text{ s.t. } \left|\sum_{j\in S_i} \chi(j)\right| \ge c_3 \sqrt{n}\right)
+    \end{align*}
+    对于其他的地方类似.}
 \end{answer}
-
-
 \end{document}

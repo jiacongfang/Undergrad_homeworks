@@ -196,20 +196,27 @@
         \end{align*}
         说明 $\hat{p}_1$ 是 $p = e^{-\lambda}$ 的最大似然估计. 由作业二第六题, 对于$X\sim \pi(\lambda)$ 与 任意 $t\in \R$, 我们有
         \begin{align*}
-            \E\left(e^{tX}\right) = e^{\lambda(e^t - 1)} \implies \E\left(\hat{p}_1\right) =  \left(\prod_{i=1}^{n}\E\left(e^{-X_i}\right)\right)^{1/n} = e^{\lambda(e^{-1} - 1)} \neq e^{-\lambda} = p.
+            \E\left(e^{tX}\right) = e^{\lambda(e^t - 1)} \implies \E\left(\hat{p}_1\right) = \left(e^{\lambda(e^{-1/n} - 1)}\right)^n = e^{\lambda n(e^{-1/n} - 1)} \neq e^{-\lambda} = p.
         \end{align*}
-        故 $\hat{p}_1$ 不是无偏估计量和渐进无偏估计量. 由大数定律知, $\bar{X} \arrp \lambda$, 故由\textbf{Lemma~\ref{lemma:1}} 有, 
-        \[
-        \hat{p}_1 = e^{-\bar{X}} \arrp e^{-\lambda} = p.
-        \] 
-        故 $\hat{p}_1$ 是一致估计量. 下面计算 $\hat{p}_1$ 的均方误差,
+        故 $\hat{p}_1$ 不是无偏估计量. 又有
         \begin{align*}
-            \E\left(\hat{p}_1^2\right) = \E\left(e^{-2\bar{X}}\right) =  \left(\prod_{i=1}^{n}\E\left(e^{-2X_i}\right)\right)^{1/n} = e^{\lambda(e^{-2} - 1)} 
+            \lim_{n\to \infty}e^{\lambda n(e^{-1/n} - 1)}  = \lim_{n\to \infty} e^{\lambda n(-1/n + o(1/n^2))} = e^{-\lambda} = p.
+        \end{align*}
+        故 $\hat{p}_1$ 是渐进无偏估计量.
+        % 由大数定律知, $\bar{X} \arrp \lambda$, 故由\textbf{Lemma~\ref{lemma:1}} 有, 
+        % \[
+        % \hat{p}_1 = e^{-\bar{X}} \arrp e^{-\lambda} = p.
+        % \] 
+        % 故 $\hat{p}_1$ 是一致估计量. 
+        下面计算 $\hat{p}_1$ 的均方误差,
+        \begin{align*}
+            \E\left(\hat{p}_1^2\right) = \prod_{i=1}^{n} \E\left(e^{-2X_i/n}\right) = \left(e^{\lambda(e^{-2/n} - 1)}\right)^n = e^{\lambda n(e^{-2/n} - 1)},
         \end{align*}
         那么 $\hat{p}_1$ 的均方误差为
         \begin{align*}
-            \MSE(\hat{p}_1) = \E\left(\hat{p}_1^2\right) + p^2 - 2p\E(\hat{p}_1) = e^{\lambda(e^{-2} - 1)} + e^{-2\lambda} - 2e^{-\lambda}e^{\lambda(e^{-1} - 1)}.
+            \MSE(\hat{p}_1) = \E\left(\hat{p}_1^2\right) + p^2 - 2p\E(\hat{p}_1) = e^{\lambda n(e^{-2/n} - 1)} + e^{-2\lambda} - 2e^{-\lambda}e^{\lambda n(e^{-1/n} - 1)} \arri 0.
         \end{align*}
+        故 $\hat{p}_1$ 是一致估计量. 证毕.
         \item 注意到
         \begin{align*}
             \E\left(\hat{p}_2\right) = \E\left[\frac{1}{n}\sum_{i=1}^{n} \1_{\{X_i = 0\}}\right] = \frac{1}{n} \sum_{i=1}^{n} \PP(X_i = 0) = e^{-\lambda} = p.
@@ -227,34 +234,34 @@
         \end{align*}
         故 $\hat{p}_2$ 是一致估计量. 证毕.
     \end{enumerate}
-    \begin{lemma}
-        \label{lemma:1}
-        设 $X_n \arrp X$, $g$ 为$\R^1$上的连续函数, 则 $g(X_n) \arrp g(X)$.
-    \end{lemma}
-    \begin{proof}
-        对于任意的 $\delta > 0$, 存在 $M > 0$ 与 $N_1 \in \N^+$, 当 $n > N_1$ 时, 有 
-        \begin{align*}
-            \PP\left(|X| \ge \frac{M}{2}\right) \le \frac{\delta}{4}, \quad\PP\left(|X_n - X| \ge \frac{M}{2}\right) \le \frac{\delta}{4}.
-        \end{align*}
-        那么有
-        \begin{align*}
-            \PP(|X_n| \ge M) &= \PP\left(|X_n| \ge M, |X| < \frac{M}{2}\right) + \PP\left(|X_n| \ge M, |X| \ge \frac{M}{2}\right) \\
-            &\le \PP\left(|X_n - X| \ge \frac{M}{2}\right) + \PP\left(|X|\ge \frac{M}{2}\right) < \frac{\delta}{2}.
-        \end{align*}
-        由于 $g(x)$ 在 $\R^1$ 上连续, 故$g(x)$ 在$[-M, M]$ 上一致连续, 即对于任意 $\varepsilon > 0$, 存在 $\eta >0$, 对于 $x_1, x_2 \in [-M, M]$, 
-        若 $|x_1 - x_2| < \eta$, 则 $|g(x_1) - g(x_2)| < \varepsilon$. 由于 $X_n \arrp X$, 故存在 $N_2 \in \N^+$, 当 $n > N_2$ 时, 有
-        \begin{align*}
-            \PP(|X_n - X| \ge \eta) < \frac{\delta}{4}.
-        \end{align*}
-        于是当 $n > \max\{N_1, N_2\}$ 时, 有
-        \begin{align*}
-            &\PP(|g(X_n) - g(X)| \ge \varepsilon) \\
-            &\le \PP\left(|g(X_n) - g(X)| \ge \varepsilon, |X_n| < M, |X| < M\right) + \PP\left(\{|X_n| \ge M\} \cup \{|X| \ge M\}\right) \\
-            &\le \PP\left(|X_n - X| \ge \eta\right) + \PP\left(|X| \ge \frac{M}{2}\right) + \PP\left(|X_n| \ge M\right) \\
-            &\le \frac{\delta}{4} + \frac{\delta}{4} + \frac{\delta}{2} = \delta.
-        \end{align*}
-        由任意性可知 $g(X_n) \arrp g(X)$. 证毕.
-    \end{proof}
+    % \begin{lemma}
+    %     \label{lemma:1}
+    %     设 $X_n \arrp X$, $g$ 为$\R^1$上的连续函数, 则 $g(X_n) \arrp g(X)$.
+    % \end{lemma}
+    % \begin{proof}
+    %     对于任意的 $\delta > 0$, 存在 $M > 0$ 与 $N_1 \in \N^+$, 当 $n > N_1$ 时, 有 
+    %     \begin{align*}
+    %         \PP\left(|X| \ge \frac{M}{2}\right) \le \frac{\delta}{4}, \quad\PP\left(|X_n - X| \ge \frac{M}{2}\right) \le \frac{\delta}{4}.
+    %     \end{align*}
+    %     那么有
+    %     \begin{align*}
+    %         \PP(|X_n| \ge M) &= \PP\left(|X_n| \ge M, |X| < \frac{M}{2}\right) + \PP\left(|X_n| \ge M, |X| \ge \frac{M}{2}\right) \\
+    %         &\le \PP\left(|X_n - X| \ge \frac{M}{2}\right) + \PP\left(|X|\ge \frac{M}{2}\right) < \frac{\delta}{2}.
+    %     \end{align*}
+    %     由于 $g(x)$ 在 $\R^1$ 上连续, 故$g(x)$ 在$[-M, M]$ 上一致连续, 即对于任意 $\varepsilon > 0$, 存在 $\eta >0$, 对于 $x_1, x_2 \in [-M, M]$, 
+    %     若 $|x_1 - x_2| < \eta$, 则 $|g(x_1) - g(x_2)| < \varepsilon$. 由于 $X_n \arrp X$, 故存在 $N_2 \in \N^+$, 当 $n > N_2$ 时, 有
+    %     \begin{align*}
+    %         \PP(|X_n - X| \ge \eta) < \frac{\delta}{4}.
+    %     \end{align*}
+    %     于是当 $n > \max\{N_1, N_2\}$ 时, 有
+    %     \begin{align*}
+    %         &\PP(|g(X_n) - g(X)| \ge \varepsilon) \\
+    %         &\le \PP\left(|g(X_n) - g(X)| \ge \varepsilon, |X_n| < M, |X| < M\right) + \PP\left(\{|X_n| \ge M\} \cup \{|X| \ge M\}\right) \\
+    %         &\le \PP\left(|X_n - X| \ge \eta\right) + \PP\left(|X| \ge \frac{M}{2}\right) + \PP\left(|X_n| \ge M\right) \\
+    %         &\le \frac{\delta}{4} + \frac{\delta}{4} + \frac{\delta}{2} = \delta.
+    %     \end{align*}
+    %     由任意性可知 $g(X_n) \arrp g(X)$. 证毕.
+    % \end{proof}
 \end{answer}
 
 \begin{problem}{4}
@@ -367,7 +374,7 @@
         \end{align*}
         对于 $E_0$, $\varepsilon_0 = 1$, $S_0 = [2]$, $p_2 > p_1 - 2 \varepsilon_0 = p_1 - 2$, 故$\PP(E_0) = 1$. 
         
-        记事件 $E = \bigwedge_{t=1}^{\infty} E_t$. 注意到 $E$ 表示$S_t$ 中剩下的游戏机是 $1$. 故我们来分析 $\PP(E)$. 注意到\footnote{第一个不等号需要分析事件$E_t|E_{t-1}$, 证明在作业最后一页. }
+        记事件 $E = \bigwedge_{t=1}^{\infty} E_t$. 注意到 $E$ 表示$S_t$ 中剩下的游戏机是 $1$. 故我们来分析 $\PP(E)$. 注意到 %\footnote{第一个不等号需要分析事件$E_t|E_{t-1}$, 证明在作业最后一页. }
         \begin{align}
             \label{eq:2}
             \PP(E_t|E_{t-1}) \ge \PP\left(\forall i\in S_{t-1}, |p_i - \hat{p}_{i,t}| \le \frac{\varepsilon}{2} \bigg| E_{t-1}\right) \ge 1 - \frac{2\delta}{t^2}.
