@@ -1,0 +1,217 @@
+\documentclass[11pt]{article}           
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.25cm}
+
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=1pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{sgame} % For Game Theory Matrices 
+% \usepackage{diagbox} % Conflict with sgame
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+%\usepackage{algorithm,algorithmicx}
+\usepackage{algorithm,algorithmicx}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage[hidelinks]{hyperref}
+\usepackage{extarrows}
+\usepackage{totcount}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+\usepackage{helvet}
+\usepackage{dsfont}
+% \usepackage{newtxmath}
+\usepackage[labelfont=bf]{caption}
+\renewcommand{\figurename}{Figure}
+\usepackage{lastpage}
+\usepackage{istgame}
+\usepackage{tcolorbox}
+% \newdateformat{mydate}{\shortmonthname[\THEMONTH]. \THEDAY \THEYEAR}
+
+\RequirePackage{algorithm}
+
+\makeatletter
+\newenvironment{algo}
+  {% \begin{breakablealgorithm}
+    \begin{center}
+      \refstepcounter{algorithm}% New algorithm
+      \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+      \parskip 0pt
+      \renewcommand{\caption}[2][\relax]{% Make a new \caption
+        {\raggedright\textbf{\fname@algorithm~\thealgorithm} ##2\par}%
+        \ifx\relax##1\relax % #1 is \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+        \else % #1 is not \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+        \fi
+        \kern2pt\hrule\kern2pt
+     }
+  }
+  {% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+   \end{center}
+  }
+\makeatother
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]\songti}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Solution]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\1{\mathds{1}}
+% \newcommand\1{\mathbf{1}}
+\newcommand\R{\mathbb{R}}
+\newcommand\E{\mathbb{E}}
+\newcommand\N{\mathbb{N}}
+\newcommand\NN{\mathcal{N}}
+\newcommand\per{\mathrm{per}}
+\newcommand\PP{\mathbb{P}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\ReLU{\mathrm{ReLU}}
+\newcommand{\Exp}{\mathrm{Exp}}
+\newcommand{\arrp}{\xrightarrow{P}}
+\newcommand{\arrd}{\xrightarrow{d}}
+\newcommand{\arras}{\xrightarrow{a.s.}}
+\newcommand{\arri}{\xrightarrow{n\rightarrow\infty}}
+\newcommand{\iid}{\overset{\text{i.i.d}}{\sim}}
+
+% New math operators
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Corr}{Corr}
+\DeclareMathOperator{\MSE}{MSE}
+\DeclareMathOperator{\Bias}{Bias}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+
+\definecolor{lightgray}{gray}{0.75}
+
+
+\begin{document}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} 北京大学}
+\chead{}
+\rhead{\CJKfamily{zhkai} 2024年秋\ 信息学中的概率统计(王若松)}
+\fancyfoot[R]{} 
+\fancyfoot[C]{\thepage\ /\ \pageref{LastPage} \\ \textcolor{lightgray}{最后编译时间: \today}}
+
+\begin{center}
+    {\LARGE \bf Final Review}
+\end{center}
+
+\begin{problem}{1. 多元随机变量}
+    $X_1, \cdots, X_n \sim \Exp(\theta_1), \cdots ,\Exp(\theta_n)$. 求
+    \begin{align*}
+        Y = \max\left\{\frac{a_1}{X_1}, \cdots, \frac{a_n}{X_n}\right\}
+    \end{align*}
+    的概率密度函数.
+    \textcolor{red}{对于多元连续随机变量关注一下 min/max 的计算等等.}
+\end{problem}
+
+\begin{answer}
+    \begin{align*}
+        \PP(Y \le y) = \prod_{i=1}^{n} \PP\left(\frac{a_i}{X_i} \le y\right) = \prod_{i=1}^{n} \PP\left(X_i \ge \frac{a_i}{y}\right)
+    \end{align*}
+\end{answer}
+
+\begin{problem}{2. Tail inequality}
+    关注 Chernoff-Hoeffding 的 Chernoff Bound 形式.
+\end{problem}
+
+\begin{problem}{3. Law of Large Number}
+    关注一下大数定律的各个条件
+    \begin{itemize}
+        \item Chebyshev大数定律.
+        \item 辛钦大数定律. $\{X_n\}$ 独立同分布
+    \end{itemize}
+    举例的一个问题是重要性采样.
+
+    Chernoff Bound 可能要出一道压轴题, 比较看数学直觉.
+\end{problem}
+
+\begin{problem}{4. 参数估计}
+    点估计和极大似然估计, 要会计算, 会出一些特殊分布的参数估计计算. 下面是一些例子:
+    \begin{gather*}
+        X = e^Y, Y \sim \NN(\mu, \sigma^2) \implies \hat{\mu} = \frac{1}{n} \sum_{i=1}^n \log X_i. \\
+        \text{(反Gamma分布)}, f(x) = \theta x^{-2} \exp(-\theta/x). \\
+        \text{(指数分布族)}, f(x) = \exp(\theta h(x) - H(x)) \cdot g(x) \implies \hat{\theta}_n = h^{-1}\left(\frac{1}{n}\sum_{i=1}^n h(x_i)\right). 
+    \end{gather*}
+    矩估计. 无偏估计量, 渐进无偏估计量, 一致估计量, 均方误差. \textcolor{red}{计算的速度}.
+\end{problem}
+
+\begin{problem}{5. 假设检验}
+    对于显著性水平$\alpha$, 建立假设, 找到一个统计量, 计算拒绝域$c(\alpha)$. 例如分成两问, 一问先算算统计量, 后面去计算拒绝域. 
+
+    从广义似然比的视角来理解, 计算似然函数 $L(\theta)$, 设 $H_0: \theta \in \Theta_1, H_0 \in \Theta_1$, 那么拒绝域也可以写成:
+    \begin{align*}
+        W = \left\{\frac{\sup_{\theta\in\Theta_0} L(\theta; x_1, \cdots, x_n)}{\sup_{\theta\in\Theta_1} L(\theta; x_1, \cdots, x_n)} \le \lambda\right\}.
+    \end{align*}
+    例如, 考虑一个均匀分布 $U(0, \theta)$, 样本$x_1, \cdots, x_n$, 那么 $\theta$ 的极大似然估计为 $\hat{\theta} = \max\{x_1, \cdots, x_n\}$. 之后再进行假设检验, 求拒绝域. 可以再加上与矩估计量有效性的比较(无偏, 一致, MSE).
+\end{problem}
+
+\begin{problem}{6. 区间估计}
+    大概的一个形式是, 给定显著性水平 $\alpha$, 估计 $\theta$ 的区间 $[L, U]$, 使得
+    \begin{align*}
+        \PP(\theta \in [L, U]) \ge 1 - \alpha.
+    \end{align*}
+    需要找一下枢轴量, 由待估计量组成的函数, 且其分布不依赖于待估计量. 或是用 Chernoff Bound 来估计.
+\end{problem}
+
+\begin{problem}{7. 回归分析}
+    最小二乘估计
+    \begin{align*}
+        Q(\alpha, \beta) = \sum_{i=1}^n (y_i - \alpha - \beta x_i)^2.
+    \end{align*}
+    $Q(\alpha, \beta)$ 可能会加上一些正则项. 解正规方程 
+    \begin{align*}
+        \frac{\partial Q}{\partial \alpha} = 0, \quad \frac{\partial Q}{\partial \beta} = 0.
+    \end{align*}
+
+    除了最小二乘估计, 还可以使用极大似然估计. 例如, 存在一个未知的常数 $\eta_i$, 且有
+    \begin{align*}
+        y_i &= \alpha + \beta \eta_i + \varepsilon_i \sim \NN(\alpha + \beta \eta_i, \sigma_{\varepsilon}^2). \\
+        x_i &= \eta_i + \xi_i \sim \NN(\eta_i, \sigma_{\xi}^2).
+    \end{align*}
+    那么极大似然估计为
+    \begin{align*}
+        L(\alpha, \beta, \sigma_\varepsilon, \sigma_\xi) = \frac{1}{(2\pi)^n}\frac{\lambda^{n/2}}{\sigma_\xi^{2n}} \exp(\cdot)
+    \end{align*}
+    先微分求一下 $\eta_i$ 的极大似然估计, 带入之后, 再求 $\alpha, \beta, \sigma_\varepsilon, \sigma_\xi$ 的极大似然估计.
+
+    之后会再求一些期望, MSE, Covariance 等等. 这里可以考虑将
+    \begin{align*}
+        \hat{\beta} = c_1 \beta + c_2 \varepsilon + c_3 \xi 
+    \end{align*}
+    之后再计算可能会简单一些.
+\end{problem}
+
+
+\end{document}

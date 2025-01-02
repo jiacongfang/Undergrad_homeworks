@@ -1,0 +1,294 @@
+\documentclass[11pt]{article}           
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.25cm}
+
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=1pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{sgame} % For Game Theory Matrices 
+% \usepackage{diagbox} % Conflict with sgame
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+%\usepackage{algorithm,algorithmicx}
+\usepackage{algorithm,algorithmicx}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage[hidelinks]{hyperref}
+\usepackage{extarrows}
+\usepackage{totcount}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+\usepackage{helvet}
+\usepackage{dsfont}
+% \usepackage{newtxmath}
+\usepackage[labelfont=bf]{caption}
+\renewcommand{\figurename}{Figure}
+\usepackage{lastpage}
+\usepackage{istgame}
+\usepackage{tcolorbox}
+% \newdateformat{mydate}{\shortmonthname[\THEMONTH]. \THEDAY \THEYEAR}
+
+\RequirePackage{algorithm}
+
+\makeatletter
+\newenvironment{algo}
+  {% \begin{breakablealgorithm}
+    \begin{center}
+      \refstepcounter{algorithm}% New algorithm
+      \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+      \parskip 0pt
+      \renewcommand{\caption}[2][\relax]{% Make a new \caption
+        {\raggedright\textbf{\fname@algorithm~\thealgorithm} ##2\par}%
+        \ifx\relax##1\relax % #1 is \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+        \else % #1 is not \relax
+          \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+        \fi
+        \kern2pt\hrule\kern2pt
+     }
+  }
+  {% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+   \end{center}
+  }
+\makeatother
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]\songti}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Solution]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\1{\mathds{1}}
+% \newcommand\1{\mathbf{1}}
+\newcommand\R{\mathbb{R}}
+\newcommand\E{\mathbb{E}}
+\newcommand\N{\mathbb{N}}
+\newcommand\NN{\mathcal{N}}
+\newcommand\per{\mathrm{per}}
+\newcommand\PP{\mathbb{P}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\ReLU{\mathrm{ReLU}}
+\newcommand{\Exp}{\mathrm{Exp}}
+\newcommand{\arrp}{\xrightarrow{P}}
+\newcommand{\arrd}{\xrightarrow{d}}
+\newcommand{\arras}{\xrightarrow{a.s.}}
+\newcommand{\arri}{\xrightarrow{n\rightarrow\infty}}
+\newcommand{\iid}{\overset{\text{i.i.d}}{\sim}}
+
+% New math operators
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Corr}{Corr}
+\DeclareMathOperator{\MSE}{MSE}
+\DeclareMathOperator{\Bias}{Bias}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+
+\definecolor{lightgray}{gray}{0.75}
+
+
+\begin{document}
+\kaishu
+
+\pagestyle{fancy}
+\lhead{\CJKfamily{zhkai} 北京大学}
+\chead{}
+\rhead{\CJKfamily{zhkai} 2024年秋\ 信息学中的概率统计(王若松)}
+\fancyfoot[R]{} 
+\fancyfoot[C]{\thepage\ /\ \pageref{LastPage} \\ \textcolor{lightgray}{最后编译时间: \today}}
+
+
+\begin{center}
+    {\LARGE \bf Homework 8}
+
+    {姓名:方嘉聪\ \  学号: 2200017849}            % Write down your name and ID here.
+\end{center}
+
+\begin{problem}{1}
+    给定 $(x_1,y_1), (x_2,y_2), \cdots, (x_n,y_n)$, 其中 $y_i = \alpha + \beta x_i + \varepsilon_i$, 
+    $\varepsilon_i$ 相互独立, 且服从 Laplace 分布, 其概率密度函数(参考作业三第五题)满足, 对于任意实数 $x\in \R$,
+    \begin{align*}
+        f(x) = \frac{1}{2b} e^{-|x|/b}.
+    \end{align*}
+    这里 $\alpha, \beta$ 和 $b > 0$ 是未知参数. 证明 $\alpha, \beta$ 的最大似然估计量为
+    \begin{align*}
+        \argmin_{\alpha, \beta} \sum_{i=1}^n |y_i - (\alpha + \beta x_i)|.
+    \end{align*} 
+\end{problem}
+\begin{answer}
+    似然函数为
+    \begin{align*}
+        L(\alpha, \beta, b) = \prod_{i=1}^{n} f(\varepsilon_i) = \frac{1}{(2b)^{n}} \exp\left(-\frac{1}{b}\sum_{i=1}^{n}|y_i - (\alpha x_i + \beta)|\right)
+    \end{align*}
+    由于 $b > 0$, 那么 $L(\alpha, \beta)$ 关于 $\sum_{i=1}^{n} |y_i - (\alpha x_i + \beta)|$ 单调递减, 故 $\alpha, \beta$ 的最大似然估计量为
+    \begin{align*}
+        \argmin_{\alpha, \beta} \sum_{i=1}^n |y_i - (\alpha + \beta x_i)|.
+    \end{align*}
+    证毕.
+\end{answer}
+
+\begin{problem}{2}
+    给定 $(x_1,y_1), (x_2,y_2), \cdots, (x_n,y_n)$, 令 $\hat{\alpha}, \hat{\beta}$ 为最小二乘估计量, $\hat{y}_i = \hat{\alpha} + \hat{\beta} x_i$为$y_i$的预测值. 令
+    $\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$, $\bar{y} = \frac{1}{n}\sum_{i=1}^n y_i$, 证明
+    \begin{align*}
+        \sum_{i=1}^n (y_i - \bar{y})^2 = \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \sum_{i=1}^{n} (\hat{y}_i - \bar{y})^2.
+    \end{align*}
+    {\kaishu 提示: 利用正规方程, 并证明 $\hat{y}_i = \bar{y} + \hat{\beta}(x_i - \bar{x})$.}
+\end{problem}
+\begin{answer}
+    由正规方程, 我们有
+    \begin{align*}
+        \hat{\alpha} = \bar{y} - \hat{\beta}\bar{x}, \quad \hat{\beta} = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2}.
+    \end{align*}
+    那么
+    \begin{align*}
+        \hat{y}_i = \hat{\alpha} + \hat{\beta}x_i = \bar{y} - \hat{\beta}\bar{x} + \hat{\beta}x_i = \bar{y} + \hat{\beta}(x_i - \bar{x}).
+    \end{align*}
+    又有
+    \begin{align*}
+        \sum_{i=1}^{n}(y_i - \bar{y})^2 = \sum_{i=1}^{n}(y_i - \hat{y}_i + \hat{y}_i - \bar{y})^2 = \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \sum_{i=1}^{n} (\hat{y}_i - \bar{y})^2 + 2\sum_{i=1}^{n} (y_i - \hat{y}_i)(\hat{y}_i - \bar{y}).
+    \end{align*}
+    而
+    \begin{align*}
+        \sum_{i=1}^{n} (y_i - \hat{y}_i)(\hat{y}_i - \bar{y}) &= \sum_{i=1}^{n} \hat{\beta}(x_i - \bar{x})(y_i - \bar{y} - \hat{\beta}(x_i - \bar{x})) \\
+        &= \hat{\beta}\left[\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y}) - \hat{\beta}\sum_{i=1}^{n}(x_i-\bar{x})^2\right] = 0.
+    \end{align*}
+    故有 $\sum_{i=1}^n (y_i - \bar{y})^2 = \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \sum_{i=1}^{n} (\hat{y}_i - \bar{y})^2$. 证毕.
+\end{answer}
+
+\begin{problem}{3}
+    给定 $(x_1,y_1), (x_2,y_2), \cdots, (x_n,y_n)$, 其中 $y_i = \alpha + \beta x_i + \varepsilon_i$, $\varepsilon_i \iid \mathcal{N}(0,\sigma^2)$. 
+    沿用第二题中的记号, 并令 $s^2 = \frac{1}{n-2}\sum_{i=1}^n (y_i - \hat{y}_i)^2$, $s_{xx} = \sum_{i=1}^n (x_i - \bar{x})^2$. 
+    \begin{enumerate}[label = (\arabic*)]
+        \item 令
+        \begin{gather*}
+            q_1 = \left[1/\sqrt{n}, 1/\sqrt{n}, \cdots, 1/\sqrt{n} \right]^{\top} \in \R^n, \\
+            q_2 = \left[\frac{x_1 - \bar{x}}{\sqrt{s_{xx}}}, \frac{x_2 - \bar{x}}{\sqrt{s_{xx}}}, \cdots,\frac{x_n - \bar{x}}{\sqrt{s_{xx}}}\right]^{\top} \in \R^n.
+        \end{gather*}
+        证明: 存在 $q_3, q_4, \cdots, q_n \in \R^n$, 使得 $q_1, q_2, q_3, \cdots, q_n$ 构成 $\R^n$ 的一组标准正交基.
+        \item 将 $y$ 视作 $\R^n$ 中的一个向量. 对于 $1 \le i \le n$, 令 $z_i = q_i^{\top} y$, 也即 $z = Qy \in \R^n$, 
+        其中 $Q \in \R^{n\times n}$ 的第$i$行为$q_i \in \R^n$. 给出 $n$ 维随机变量 $z$ 服从的分布. 
+        {\kaishu 提示: 计算随机向量 $y$ 的数学期望, 并验证其与 $q_3, q_4, \cdots, q_n$ 的正交性.}
+        \item 证明: $z_1 = \sqrt{n}\bar{y}$, $z_2 = \sqrt{s_{xx}}\hat{\beta}$. 
+        \item 利用第二题中提示和结论, 证明 $\sum_{i=1}^{n} (\hat{y}_i - \bar{y})^2 = z_2^2 $ 及 $(n-2)s^2 = \sum (y_i - \hat{y}_i)^2 = \sum_{i=3}^{n} z_i^2$.
+        \item 给出 $(n-2)s^2/\sigma^2$ 服从的分布, 并证明 $s^2$ 与 $\hat{\alpha}, \hat{\beta}$ 均相互独立.
+        \item 当 $\beta = 0$, 给出统计量 $t = \frac{\hat{\beta}}{\sqrt{s^2}/\sqrt{s_{xx}}}$ 服从的分布.
+        \item 若 $\sigma^2$ 未知, 考虑假设检验问题, 原假设 $H_0: \beta = 0$, 备择假设 $H_1: \beta \neq 0$. 拒绝域为
+        \begin{align*}
+            W = \{((x_1, y_1), (x_2, y_2), \cdots, (x_n, y_n)) ~|~ |t|\ge c\},
+        \end{align*}
+        其中 $c$ 是待定常数. 若显著性水平为 $\alpha$, 给出 $c$ 的取值.
+    \end{enumerate}
+\end{problem}
+\begin{answer}
+    \begin{enumerate}[label = (\arabic*)]
+        \item 显然 $q_1, q_2$ 的模长均为 $1$, 且有
+        \begin{align*}
+            q_1^{\top} q_2 = \frac{1}{\sqrt{n}\sqrt{s_{xx}}}\sum_{i=1}^{n} (x_i - \bar{x}) = 0.
+        \end{align*}
+        故 $q_1, q_2$ 正交. 由于 $q_1, q_2$ 线性无关, 故存在非零向量 $q'_3, q'_4, \cdots, q'_n$ 使得 $q_1, q_2, q'_3, \cdots, q'_n$ 构成 $\R^n$ 的一组基. 对其进行Schmidt正交化(并归一化), 即可得到一组标准正交基, 注意到在正交化过程中, $q_1, q_2$ 保持不变. 故存在 $q_3, q_4, \cdots, q_n$ 使得 $q_1, q_2, q_3, \cdots, q_n$ 构成 $\R^n$ 的一组标准正交基.
+        \item 记$\varepsilon = (\varepsilon_1, \varepsilon_2, \cdots, \varepsilon_n) \in \R^n$. 待定系数, 设
+        \begin{align*}
+            y = (\alpha+\beta x_1 + \varepsilon_1, \cdots, \alpha+\beta x_n + \varepsilon_n) = k_1 q_1 + k_2 q_2 + \varepsilon.
+        \end{align*}
+        解得:
+        \begin{align*}
+            y = \sqrt{n}(\alpha + \beta\bar{x})\cdot q_1 + \beta \sqrt{s_{xx}}\cdot q_2 + \varepsilon.
+        \end{align*}
+        那么有
+        \begin{gather*}
+            z_1 = q_1^{\top} y = \sqrt{n}(\alpha + \beta \bar{x})\cdot \|q_1\|^2 + q_1^\top \varepsilon \sim \NN(\sqrt{n}\alpha+\sqrt{n}\beta\bar{x}, \sigma^2), \\
+            z_2 = q_2^\top y = \beta\sqrt{s_{xx}} \cdot \|q_2\|^2 + q_2^{\top}\varepsilon  \sim \NN(\beta\sqrt{s_{xx}}, \sigma^2).
+        \end{gather*}
+        对于 $i\in \{3, 4, \cdots, n\}$, 由正交性有 $q_i^\top q_1 = q_i^\top q_2 = 0$, 故(注意到 $q_i$ 的模长为 $1$)
+        \begin{align*}
+            z_i = q_i^{\top} y = q_i^{\top}\varepsilon \sim \NN(0, \sigma^2).
+        \end{align*}
+        记$z_1' = z_1 - \sqrt{n}\alpha-\sqrt{n}\beta \bar{x} \sim \NN(0, \sigma^2), z_2' = z_2 - \beta\sqrt{s_{xx}} \sim \NN(0, \sigma^2)$.
+        记
+        \[
+        z' = (z_1',z_2',z_3, \cdots, z_n) = (q_1^{\top} \varepsilon, q_2^{\top} \varepsilon, q_3^{\top} \varepsilon, \cdots, q_n^{\top} \varepsilon) = Q\varepsilon.
+        \] 我们来证明 随机变量 $z_1', z_2', z_3, \cdots, z_n$ 是相互独立的. 设 $t = (t_1, t_2, \cdots, t_n) \in \R^n$, 有
+        \begin{align*}
+            f_{z'}(z' = t) &= f_{z'}(Q\varepsilon = t) = f_{\varepsilon}(\varepsilon = Q^{\top}t) \\
+            &= \prod_{i=1}^{n} f_{\varepsilon_i}(\varepsilon_i = q_i^{\top}t) = \frac{1}{(2\pi)^{n/2}\sigma^n} \exp\left(-\frac{1}{2\sigma^2}\|Q^{\top}t\|^2\right).
+        \end{align*}
+        而
+        \begin{align*}
+            \prod_{i=1}^{2} f_{z_i'}(z_i' = t_i) \cdot \prod_{i=3}^{n} f_{z_i}(z_i = t_i) = \frac{1}{(2\pi)^{n/2}\sigma^n} \exp\left(-\frac{1}{2\sigma^2}\|t\|^2\right).
+        \end{align*}
+        由于 $Q$ 是正交矩阵, 故 $\|Q^{\top}t\|^2 = \|t\|^2$, 故
+        \begin{align*}
+            f_{z'}(z' = t) = \prod_{i=1}^{2} f_{z_i'}(z_i' = t_i) \cdot \prod_{i=3}^{n} f_{z_i}(z_i = t_i).
+        \end{align*}
+        故 $z_1', z_2', z_3, \cdots, z_n$ 是相互独立的. 又我们有
+        \begin{align*}
+            z = (z_1', z_2', z_3, \cdots, z_n)^{\top} + (\sqrt{n}\alpha+\sqrt{n}\beta\bar{x}, \beta\sqrt{s_{xx}}, 0, \cdots, 0)^{\top}.
+        \end{align*}
+        故 $z \sim \NN\left(\mu, \Sigma\right)$, 其中$\mu = (\sqrt{n}\alpha+\sqrt{n}\beta\bar{x}, \beta\sqrt{s_{xx}}, 0, \cdots, 0)^{\top}, \Sigma = \sigma^2 I_n$. 
+        \item 注意到 $\hat{\beta} = s_{xy}/s_{xx}$, 故
+        \begin{gather*}
+            z_1 = q_1^{\top} y = \frac{1}{\sqrt{n}}\sum_{i=1}^{n} y_i = \sqrt{n}\bar{y}, \\
+            z_2 = q_2^{\top} y = \frac{1}{\sqrt{s_{xx}}}\sum_{i=1}^{n} (x_i - \bar{x})y_i = \frac{1}{\sqrt{s_{xx}}} \sum_{i=1}^{n} (x_i - \bar{x})(y_i - \hat{y}_i) = \sqrt{s_{xx}}\hat{\beta}.
+        \end{gather*}
+        \item 第二题中有 $\hat{y}_i = \bar{y} + \hat{\beta}(x_i - \bar{x})$, 那么有
+        \begin{align*}
+            \sum_{i=1}^{n} (\hat{y}_i - \bar{y})^2 = \sum_{i=1}^{n} \hat{\beta}^2(x_i - \bar{x})^2 = \hat{\beta}^2 \cdot s_{xx} = z_2^2.
+        \end{align*}
+        由于 $Q$ 为正交矩阵, 故有 $\|z\|^2 = \|Qy\|^2 = \|y\|^2$, 即
+        \begin{align*}
+            \sum_{i=1}^{n} y_i^2 = \sum_{i=1}^{n} z_i^2 \implies \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 = \sum_{i=1}^{n} y_i^2 - n\bar{y}^2 = \sum_{i=1}^{n}z_i^2 - z_1^2 = \sum_{i=2}^{n} z_i^2.
+        \end{align*}
+        故我们有
+        \begin{align*}
+            (n-2)s^2 = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 = \sum_{i=1}^{n}(y_i - \bar{y})^2 - \sum_{i=1}^{n} (\hat{y}_i - \bar{y})^2 = \sum_{i=2}^{n} z_i^2 - z_2^2 = \sum_{i=3}^{n} z_i^2.
+        \end{align*}
+        证毕.
+        \item 在(2)中我们证明了对于 $i\in \{3, 4, \cdots, n\}$, $z_i \iid \NN(0, \sigma^2) \implies z_i/\sigma \iid \NN(0, 1)$. 故
+        \begin{align*}
+            \frac{(n-2)s^2}{\sigma^2} = \sum_{i=3}^{n} \left(\frac{z_i}{\sigma}\right)^2 \sim \chi^2(n-2).
+        \end{align*}
+        由于 $z_1, z_2$ 与 $z_3, z_4, \cdots, z_n$ 相互独立, 而
+        \begin{align*}
+            s^2 = \frac{1}{n-2}\sum_{i=3}^{n} z_i^2, \quad \hat{\beta} = \frac{z_2}{\sqrt{s_{xx}}}, \quad \hat{\alpha} = \bar{y} - \hat{\beta}\bar{x} = \frac{z_1}{\sqrt{n}} - \frac{z_2}{\sqrt{s_{xx}}}\bar{x}.
+        \end{align*}
+        故 $s^2$ 与 $\hat{\alpha}, \hat{\beta}$ 均相互独立. 
+        \item 当 $\beta = 0$ 时, $z_2 \sim \NN(0, \sigma^2)\implies z_2/\sigma \sim \NN(0, 1)$, 由(5)知 $(n-2)s^2/\sigma^2 \sim \chi^2(n-2)$. 且 $z_2/\sigma$ 与 $(n-2)s^2/\sigma^2$ 相互独立, 故
+        \begin{align*}
+            t = \frac{\hat{\beta}}{\sqrt{s^2}/\sqrt{s_{xx}}} = \frac{z_2/\sqrt{s_{xx}}}{\sqrt{s^2}/ \sqrt{s_{xx}}}= \frac{z_2/\sigma}{\sqrt{\frac{(n-2)s^2}{\sigma^2}/(n-2)}} \sim t(n-2).
+        \end{align*}
+        \item 当 $\sigma^2$ 未知时, 给定显著性水平 $\alpha$, 原假设成立时, $t \sim t(n-2)$, 故由Neyman-Pearson原则有
+        \begin{align*}
+            \PP(|t| \ge c) = \alpha \implies c = t_{\alpha/2}(n-2).
+        \end{align*}
+        其中 $t_{\alpha/2}(n-2)$ 表示自由度为 $n-2$ 的 $t$ 分布上侧 $\alpha/2$ 分位点, 即 $\PP(t \ge t_{\alpha/2}(n-2)) = \alpha/2$.
+    \end{enumerate}
+\end{answer}
+
+\end{document}
