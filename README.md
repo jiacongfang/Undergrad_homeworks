@@ -1,5 +1,5 @@
 # Undergrad_homeworks
-The repository contains the homework or some notes when I study in Peking University.
+The repository contains the homework or some notes when I study in Peking University. 
 
 ## For now the repo includes 
 - Algorithm Design and Analysis(Honor Track), 2024 Spring, Guojie Luo
@@ -7,6 +7,8 @@ The repository contains the homework or some notes when I study in Peking Univer
 - Machine Learning, 2024 Fall, Liwei Wang
 - Probability and Statistics in Informatics, 2024 Fall, Ruosong Wang
 - Social Statistics, 2024 Fall, Chunni Zhang
+
+You can switch to the corresponding branch to check more details about the course.
 
 ## Wait for Update
 - Modern Western Political Thoughts, 2024 Fall, Zengding Wu
