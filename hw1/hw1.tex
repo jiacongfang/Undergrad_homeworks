@@ -1,0 +1,345 @@
+\documentclass[11pt]{article}           
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.25cm}
+
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=3pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{sgame} % For Game Theory Matrices 
+% \usepackage{diagbox} % Conflict with sgame
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+\usepackage{algorithm,algorithmicx}
+% \usepackage[ruled]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage[hidelinks]{hyperref}
+\usepackage{extarrows}
+\usepackage{totcount}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+\usepackage{helvet}
+\usepackage{dsfont}
+% \usepackage{newtxmath}
+\usepackage[labelfont=bf]{caption}
+\renewcommand{\figurename}{Figure}
+\usepackage[english]{babel}
+\usepackage{datetime}
+\usepackage{lastpage}
+\usepackage{istgame}
+\usepackage{sgame}
+\usepackage{tcolorbox}
+
+\usepackage{bussproofs}
+% \newlength{\ProofTreeWidth} % Define the length for proof tree width
+% \newlength{\inferLineSkip}  % Define the length for inference line skip
+% \setlength{\ProofTreeWidth}{0.8\linewidth} % Adjust the total width of the proof tree
+% \setlength{\fboxsep}{1pt} % Reduce the padding inside boxes
+% \setlength{\inferLineSkip}{1pt}
+
+\newenvironment{scprooftree}[1]%
+  {\gdef\scalefactor{#1}\begin{center}\proofSkipAmount \leavevmode}%
+  {\scalebox{\scalefactor}{\DisplayProof}\proofSkipAmount \end{center} }
+
+
+\newenvironment{question}[2][Question]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]\songti}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Answer]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\1{\mathds{1}}
+% \newcommand\1{\mathbf{1}}
+\newcommand\R{\mathbb{R}}
+\newcommand\E{\mathbb{E}}
+\newcommand\N{\mathbb{N}}
+\newcommand\NN{\mathcal{N}}
+\newcommand\per{\mathrm{per}}
+% \newcommand\Pr{\mathbb{Pr}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\Var{\mathrm{Var}}
+\newcommand\Cov{\mathrm{Cov}}
+\newcommand{\Exp}{\mathrm{Exp}}
+\newcommand{\arrp}{\xrightarrow{P}}
+\newcommand{\arrd}{\xrightarrow{d}}
+\newcommand{\arras}{\xrightarrow{a.s.}}
+\newcommand{\arri}{\xrightarrow{n\rightarrow\infty}}
+\newcommand{\ed}{\textbf{Q.E.D.}}
+\newcommand{\pro}{\texttt{Prop}}
+
+\definecolor{lightgray}{gray}{0.75}
+
+
+\DeclareMathOperator*{\argmax}{argmax} % 定义 \argmax 运算符
+\DeclareMathOperator*{\argmin}{argmin} % 定义 \argmin 运算符
+
+
+\title{Homework Set \#1}
+\usetikzlibrary{positioning}
+
+\begin{document}
+
+    \pagestyle{fancy}
+    \lhead{Peking University}
+    \chead{\kaishu }
+    \rhead{Introduction to Logic, Spring 2025}
+    \fancyfoot[R]{} 
+    \fancyfoot[C]{\thepage\ /\ \pageref{LastPage} \\ \textcolor{lightgray}{Last Compile: \today}}
+
+    \begin{center}
+        {\LARGE \bf Homework \#1}\\
+        {Name: \kaishu 方嘉聪 $\quad$ ID: 2200017849}
+    \end{center}
+
+\begin{question}{1 (10分)}
+    如下公式满足题目真值表要求 $( (p_0 \to \lnot p_1) \land (p_2 \lor p_3) )$.
+\end{question}
+
+\begin{question}{2 (60分)}
+    具体如下, 将需要填的地方用红色标出且保留了对应的题号.
+
+    第一个推演:
+    \begin{scprooftree}{0.85}
+        \RightLabel{\(\)}
+        \noLine
+        \AxiomC{}
+        \UnaryInfC{\([\textcolor{red}{(1)\lnot\varphi}]^3\)}
+        \RightLabel{\(\)}
+        \noLine
+        \AxiomC{}
+        \UnaryInfC{\((\varphi \lor \psi)\)}
+        \RightLabel{\(\)}
+        \noLine
+        \AxiomC{}
+        \UnaryInfC{\([\textcolor{red}{(2)\varphi}]^1\)}
+        \RightLabel{\(\)}
+        \noLine
+        \AxiomC{}
+        \UnaryInfC{\([\textcolor{red}{(3)\lnot \varphi}]^2\)}
+        \RightLabel{\(\text{(RAA)}\)}
+        \BinaryInfC{\(\psi\)}
+        \RightLabel{\(\)}
+        \noLine
+        \AxiomC{}
+        \UnaryInfC{\([\textcolor{red}{(4)\psi}]^1\)}
+        \RightLabel{\((\lor\text{E}),1\)}
+        \TrinaryInfC{\(\psi\)}
+        \RightLabel{\((\to\text{I}),2\)}
+        \UnaryInfC{\(\textcolor{red}{(5)(\lnot\varphi \to \psi)}\)}
+        \RightLabel{\((\to\text{E})\)}
+        \BinaryInfC{\(\psi\)} 
+        \RightLabel{\(\)} 
+        \noLine
+        \AxiomC{} 
+        \UnaryInfC{\([\textcolor{red}{(6)\lnot \psi}]^4\)}
+        \RightLabel{\((\text{RAA}),3\)}
+        \BinaryInfC{\(\textcolor{red}{(7)\varphi}\)}
+        \RightLabel{\((\lor\text{I})\)}
+        \UnaryInfC{\((\varphi \lor \psi )\)}
+        \RightLabel{\(\)}
+        \noLine
+        \AxiomC{}
+        \UnaryInfC{\(\textcolor{red}{(8)\lnot(\varphi \lor \psi)}\)}
+        \RightLabel{\((\text{RAA}),4\)}
+        \BinaryInfC{\(\textcolor{red}{(9) \psi}\)}
+        \RightLabel{\((\lor\text{I})\)}
+        \UnaryInfC{\((\varphi \lor \psi )\)}
+\end{scprooftree}
+第二个推演:
+
+\begin{prooftree}
+    \RightLabel{\(\)}
+    \noLine
+    \AxiomC{}
+    \UnaryInfC{\([\textcolor{red}{(10)\varphi}]^1\)}
+    \RightLabel{\(\)}
+    \noLine
+    \AxiomC{}
+    \UnaryInfC{\([\textcolor{red}{(11)\lnot \varphi}]^2\)}
+    \RightLabel{\((\text{RAA})\)}
+    \BinaryInfC{\(\psi\)}
+    \RightLabel{\((\to\text{I})\),1}
+    \UnaryInfC{\(\textcolor{red}{(12)(\varphi \to \psi)}\)}
+    \RightLabel{\(\)}
+    \noLine
+    \AxiomC{}
+    \UnaryInfC{\((\varphi \land \lnot \psi)\)}
+    \RightLabel{\((\land\text{E})\)}
+    \UnaryInfC{\(\varphi\)}
+    \RightLabel{\(\)}
+    \noLine
+    \AxiomC{}
+    \UnaryInfC{\([\textcolor{red}{(13)(\varphi \to \psi)}]^3\)}
+    \RightLabel{\((\to\text{E})\)}
+    \BinaryInfC{\(\psi\)}
+    \RightLabel{\(\)}
+    \noLine
+    \AxiomC{}
+    \UnaryInfC{\((\varphi \land \lnot \psi)\)}
+    \RightLabel{\((\land \text{E})\)}
+    \UnaryInfC{\(\textcolor{red}{(14)\lnot \psi}\)}
+    \RightLabel{\((\lnot\text{I})\),3}
+    \BinaryInfC{\(\textcolor{red}{(15)\lnot(\varphi \to \psi) }\)}
+    \RightLabel{\(\text{(RAA)}\),2}
+    \BinaryInfC{\(\varphi\)}
+\end{prooftree}
+第三个推演:
+\begin{prooftree}
+    \RightLabel{\(\)}
+    \noLine
+    \AxiomC{}
+    \UnaryInfC{\([\textcolor{red}{(16)\psi}]^2\)}
+    \RightLabel{\((\to\text{I})\)}
+    \UnaryInfC{\(\textcolor{red}{(17)(\varphi \to \psi)}\)}
+    \RightLabel{\(\)}
+    \noLine
+    \AxiomC{}
+    \UnaryInfC{\((\varphi \land \lnot \psi)\)}
+    \RightLabel{\((\land\text{E})\)}
+    \UnaryInfC{\(\varphi\)}
+    \RightLabel{\(\)}
+    \noLine
+    \AxiomC{}
+    \UnaryInfC{\([\textcolor{red}{(18)(\varphi \to \psi)}]^1\)}
+    \RightLabel{\((\to\text{E})\)}
+    \BinaryInfC{\(\psi\)}
+    \RightLabel{\(\)}
+    \noLine
+    \AxiomC{}
+    \UnaryInfC{\((\varphi \land \lnot \psi)\)}
+    \RightLabel{\((\land\text{E})\)}
+    \UnaryInfC{\(\textcolor{red}{(19)\lnot \psi}\)}
+    \RightLabel{\((\lnot\text{I}),1\)}
+    \BinaryInfC{\(\textcolor{red}{(20)\lnot (\varphi \to \psi)}\)}
+    \RightLabel{\((\lnot\text{I}),2\)}
+    \BinaryInfC{\(\lnot \psi\)}
+\end{prooftree}
+\ed
+\end{question}
+\begin{question}{3 (40分)}
+    判断如下:
+    \begin{enumerate}
+        \item 令 $p$ 表示 ``每个非零概率事件终将发生'', $q$ 表示 ``存在不可靠的认知来源'', $r$ 表示 ``知识被彻底误导是非零概率的事件'', $t$ 表示 ``知识终将被彻底误导''.
+        那么各前提条件对应的公式为:
+        \begin{itemize}
+            \item $p$.
+            \item $(q \to r)$.
+            \item $((p \land r) \to t)$.
+        \end{itemize}
+        结论对应公式为 $(\lnot q \to t)$. 由于 $\{ p, (q \to r), ((p \land r) \to t) \} \not\models \lnot q \to t$, 故以上论证形式不是有效的.
+        \item 令 $p$ 表示 ``外部世界真实存在'', $q$ 表示 ``存在系统性幻觉'', $r$ 表示 ``感官经验应当具有
+        持续稳定性''. 那么各前提条件对应的公式为:
+        \begin{itemize}
+            \item $((p\land \lnot q) \to r)$.
+            \item $p$.
+            \item $\lnot r$.
+        \end{itemize}
+        结论对应公式为 $q$. 由于 $\{ ((p\land \lnot q) \to r), p, \lnot r \} \models q$, 故以上论证形式有效.
+        \item 令 $p$ 表示 ``你意识到你存在'', $q$ 表示 ``你存在'', $r$ 表示 ``你意识到某些事物''. 那么各前提条件对应的公式为:
+        \begin{itemize}
+            \item $(\lnot p \to \lnot q)$.
+            \item $(\lnot p \to r)$.
+            \item $(r \to q)$.
+        \end{itemize}
+        结论对应公式为 $q$. 由于 $\{ (\lnot p \to \lnot q), (\lnot p \to r), (r \to q) \} \not\models q$, 故以上论证形式不是有效的.
+        \item 论证形式不是有效的.
+        \item 论证形式不是有效的.
+        \item 论证形式有效.
+        \item 论证形式有效.
+        \item 论证形式有效.
+        \item 论证形式不是有效的.
+        \item 论证形式有效.
+    \end{enumerate}
+\ed
+\end{question}
+
+\begin{question}{4 (15分)}
+    \begin{enumerate}
+        \item 对于 $(p_1 \leftrightarrow p_2) \leftrightarrow p_1$ 真值表如下:
+        \begin{table}[htbp]
+            \centering
+            \begin{tabular}{cccc}
+                \toprule
+                $p_1$ & $p_2$ & $p_1 \leftrightarrow p_2$ & $(p_1 \leftrightarrow p_2) \leftrightarrow p_1$ \\
+                \midrule
+                T & T & T & T \\
+                T & F & F & F \\
+                F & T & F & T \\
+                F & F & T & F \\
+                \bottomrule
+            \end{tabular}
+        \end{table}
+
+        故 $(p_1 \leftrightarrow p_2) \leftrightarrow p_1$ 的真假实质上依赖于 $p_2$, 实质上不依赖于 $p_1$.
+        \item 三个符合要求的公式如下:
+        \begin{itemize}
+            \item $(p_1\land (p_2 \to p_2)) \lor p_1$.
+            \item $p_1 \land ((p_2 \to p_2) \lor p_1)$.
+            \item \textcolor{blue}{$p_1\land (p_2 \to (p_2 \lor p_1))$}.
+        \end{itemize}
+
+        真值表见表~\ref{tab:4.2}. 故这三个公式的真假实质上依赖 $p_1$ 但不依赖 $p_2$.
+        \begin{table}[htbp]
+            \centering
+            \caption{Truth Table for question 4.2}
+            \label{tab:4.2}
+            \begin{tabular}{ccccc}
+                \toprule
+                $p_1$ & $p_2$ & $(p_1\land (p_2 \to p_2)) \lor p_1$ & $p_1 \land ((p_2 \to p_2) \lor p_1)$ & $p_1\land (p_2 \to (p_2 \lor p_1))$ \\
+                \midrule
+                T & T & T & T & T \\
+                T & F & T & T & T \\
+                F & T & F & F & F \\
+                F & F & F & F & F \\
+                \bottomrule
+            \end{tabular}
+        \end{table}
+
+        \item $((p_1 \land p_2) \to (p_2 \lor p_1))$ 真值表见表~\ref{tab:4.3}.     
+        故该公式的真假实质上既不依赖 $p_1$ 也不依赖 $p_2$.
+        \begin{table}[htbp]
+            \centering
+            \caption{Truth Table for question 4.3}
+            \label{tab:4.3}
+            \begin{tabular}{ccc}
+                \toprule
+                $p_1$ & $p_2$ & $((p_1 \land p_2) \to (p_2 \lor p_1))$ \\
+                \midrule
+                T & T & T \\
+                T & F & T \\
+                F & T & T \\
+                F & F & T \\
+                \bottomrule
+            \end{tabular}
+        \end{table}
+    \end{enumerate}
+    \ed
+\end{question}
+
+\begin{question}{5 (5分)}
+    考虑如下的规则, 设
+    \begin{align*}
+        \varphi_A = \lnot\left(\bigvee_{i=1}^5 p_{i,A}\right), \varphi_L = \lnot\left(\bigvee_{i=1}^5 p_{i,L}\right), \varphi_N = \lnot\left(\bigvee_{i=1}^5 p_{i,N}\right).
+    \end{align*}
+    其中:
+    \begin{align*}
+        \left(\bigvee_{i=1}^5 p_{i,j}\right) \quad \text{表示} \quad  (p_{1,j} \lor p_{2,j} \lor p_{3,j} \lor p_{4,j} \lor p_{5,j}).
+    \end{align*}
+    设 $\psi = (p_{1, R} \lor p_{3,R} \lor p_{5,R})$, 那么题目所给信息可以用如下逻辑公式表示:
+    \begin{align*}
+        (\varphi_A \land \varphi_L \land \varphi_N \land p_{2,E} \land \lnot p_{4, R} \land \psi).
+    \end{align*}
+    \ed
+\end{question}
+\end{document}
