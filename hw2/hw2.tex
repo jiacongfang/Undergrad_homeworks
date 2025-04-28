@@ -1,0 +1,302 @@
+\documentclass[11pt]{article}           
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper]{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.25cm}
+
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=3pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=0pt,topsep=0pt}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{sgame} % For Game Theory Matrices 
+% \usepackage{diagbox} % Conflict with sgame
+\usepackage{amsmath,amsfonts,graphicx,amssymb,bm,amsthm}
+\usepackage{algorithm,algorithmicx}
+% \usepackage[ruled]{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{quiver}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{graphicx}
+\usetikzlibrary{arrows,automata}
+\usepackage[hidelinks]{hyperref}
+\usepackage{extarrows}
+\usepackage{totcount}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.5 em}
+\usepackage{helvet}
+\usepackage{dsfont}
+% \usepackage{newtxmath}
+\usepackage[labelfont=bf]{caption}
+\renewcommand{\figurename}{Figure}
+\usepackage[english]{babel}
+\usepackage{datetime}
+\usepackage{lastpage}
+\usepackage{istgame}
+\usepackage{sgame}
+\usepackage{tcolorbox}
+\usepackage{bussproofs}
+\usepackage{dsfont}
+
+% \newlength{\ProofTreeWidth} % Define the length for proof tree width
+% \newlength{\inferLineSkip}  % Define the length for inference line skip
+% \setlength{\ProofTreeWidth}{0.8\linewidth} % Adjust the total width of the proof tree
+% \setlength{\fboxsep}{1pt} % Reduce the padding inside boxes
+% \setlength{\inferLineSkip}{1pt}
+
+\newenvironment{scprooftree}[1]%
+  {\gdef\scalefactor{#1}\begin{center}\proofSkipAmount \leavevmode}%
+  {\scalebox{\scalefactor}{\DisplayProof}\proofSkipAmount \end{center} }
+
+
+\newenvironment{question}[2][Question]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]\songti}{\hfill$\blacktriangleleft$\end{trivlist}}
+\newenvironment{answer}[1][Answer]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1.}\hskip \labelsep]}{\hfill$\lhd$\end{trivlist}}
+
+\newcommand\1{\mathds{1}}
+% \newcommand\1{\mathbf{1}}
+\newcommand\R{\mathbb{R}}
+\newcommand\E{\mathbb{E}}
+\newcommand\N{\mathbb{N}}
+\newcommand\NN{\mathcal{N}}
+\newcommand\per{\mathrm{per}}
+% \newcommand\Pr{\mathbb{Pr}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\Var{\mathrm{Var}}
+\newcommand\Cov{\mathrm{Cov}}
+\newcommand{\Exp}{\mathrm{Exp}}
+\newcommand{\arrp}{\xrightarrow{P}}
+\newcommand{\arrd}{\xrightarrow{d}}
+\newcommand{\arras}{\xrightarrow{a.s.}}
+\newcommand{\arri}{\xrightarrow{n\rightarrow\infty}}
+\newcommand{\ed}{\textbf{Q.E.D.}}
+\newcommand{\pro}{\texttt{Prop}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\I}{\mathcal{I}}
+
+\definecolor{lightgray}{gray}{0.75}
+
+
+\DeclareMathOperator*{\argmax}{argmax} % 定义 \argmax 运算符
+\DeclareMathOperator*{\argmin}{argmin} % 定义 \argmin 运算符
+
+
+\title{Homework Set \#2}
+\usetikzlibrary{positioning}
+
+\begin{document}
+
+    \pagestyle{fancy}
+    \lhead{Peking University}
+    \chead{\kaishu }
+    \rhead{Introduction to Logic, Spring 2025}
+    \fancyfoot[R]{} 
+    \fancyfoot[C]{\thepage\ /\ \pageref{LastPage} \\ \textcolor{lightgray}{Last Compile: \today}}
+
+    \begin{center}
+        {\LARGE \bf Homework \#2}\\
+        {Name: \kaishu 方嘉聪 $\quad$ ID: 2200017849}
+    \end{center}
+
+\begin{question}{1 (40分)}
+    我们来证明, 
+    \begin{align*}
+        \text{对任意框架 $\F$:} \quad \F \models \lnot \Box p \to \Box\lnot\Box p \Leftrightarrow \F \text{ 满足欧几里德性质} 
+    \end{align*}
+    其中欧几里得性质指 $\forall x \forall y \forall z \left( Rxy \land Rxz \to Ryz \right)$.
+    分别证明两边:
+    
+    首先证明: \underline{对于任何框架 $\F$, 如果$\F$ 满足欧几里得性质, 则$\F\models\lnot \Box p \to \Box\lnot\Box p$.} 
+    
+    对任意的赋值$V$ 与真实世界$w$:
+    
+    (1)若$\F, V, w \not\models \lnot \Box p$, 那么有 $\F, V, w \models \lnot \Box p \to \Box\lnot\Box p$.
+    
+    (2)考虑$\F, V, w \models \lnot \Box p $时, 即存在$v_0$使得$wRv_0$且$\F, V, v_0 \models \lnot p$.
+    目标是证明 $\F, V, w \models \Box\lnot\Box p$. 
+
+    %由欧几里得性质知, $\forall x\forall y (Rxy \land Rxy \to Ryy)$. 
+    对于任意一个世界 $k$, 如果 $wRk$, 那么存在 $v_k = v_0$, 有$wRk \land wRv_k$. 由欧几里得性质知, $kRv_k$且有
+    $\F, V, v_k \models \lnot p$. 又注意到
+    \begin{align*}
+        \F, V, w \models \Box\lnot\Box p ~\Leftrightarrow~ \text{任意}~ k: wRk, \text{ 存在}~ v_k \text{ 使得}~ kRv_k \text{ 且}~ \F, V, v_k \models \lnot p
+    \end{align*}
+    因此有 $\F, V, w \models \Box\lnot\Box p$.
+    % \begin{itemize}
+    %     \item 若$ k = v_0$, 那么存在$v_k = v_0$,  $v_0Rv_k$且$\F, V, v_k \models \lnot p$.
+    %     \item 若$ k \neq v_0$, 那么有 $wRk \land wRv_0$. 故存在$v_k = v_0$,  $kRv_k$ 且$\F, V, v_0 \models \lnot p$.
+    % \end{itemize}
+    % 因此, 对于任意一个世界$k$如果$wRk$, 则存在一个世界$v_k$使得$kRv_k$且$\F, V, v_k \models \lnot p$. 即有
+        % \begin{align*}
+        %     \F, V, w \models \Box\lnot\Box p
+        % \end{align*}
+    
+    综合(1)与(2)知, 对于任何框架 $\F$, 如果$\F$ 满足欧几里得性质, $\F \models \lnot \Box p \to \Box\lnot\Box p$.
+    
+    下面证明: \underline{对任何框架$\F$, 若$\F \models \lnot \Box p \to \Box\lnot\Box p$, 则$\F$ 满足欧几里得性质.} 考虑逆否命题:
+    \begin{align*}
+        \text{任给框架}~ \F \text{ 不满足欧几里得性质, 则有}~  \F \not\models \lnot \Box p \to \Box\lnot\Box p
+    \end{align*}
+    目标是任给一个框架 $\F$ 不满足欧几里得性质, 我们都能找到一个世界 $w$ 和 赋值 $V$, 使得
+    \begin{align*}
+        \F, V, w \models \lnot \Box p, \text{ 但}~ \F, V, w \not\models \Box\lnot\Box p
+    \end{align*}
+    首先注意到
+    \begin{gather*}
+        \F, V, w \not\models \Box\lnot\Box p \Leftrightarrow \F, V, w \models \lnot\Box\lnot\Box p \Leftrightarrow  \F, V, w \models \Diamond\Box p \\
+        \Leftrightarrow \text{存在}~ k: wRk \text{ 且}~ \F, V, k \models \Box p \\
+        \Leftrightarrow \text{存在}~ k: wRk \text{ 且}~ \text{任意}~ v_{k}: kRv_k, \text{有}~ \F, V, v_k \models p.
+    \end{gather*}
+    由于$\F$ 不满足欧几里得性质, 那么总是存在世界 $w, v, k$ 满足$wRv$, $wRk$ 但 $v \notin \{v_k: kRv_k\}$.
+    % https://q.uiver.app/#q=WzAsNCxbMSwwLCJ3Il0sWzAsMSwidiA6XFx7XFxsbm90IHBcXH0iXSxbMiwxLCJrIl0sWzIsMiwiXFx7dl9rOiBrUnZfa1xcfTpcXHtwXFx9Il0sWzAsMV0sWzAsMl0sWzIsM11d
+    \[\begin{tikzcd}
+        & w \\
+        {v :\{\lnot p\}} && k \\
+        && {\{v_k: kRv_k\}:\{p\}}
+        \arrow[from=1-2, to=2-1]
+        \arrow[from=1-2, to=2-3]
+        \arrow[from=2-3, to=3-3]
+    \end{tikzcd}\]
+    因此考虑上图的赋值$V$, 令$V(v) = \{\lnot p\}$, $V(\{v_k: kRv_k\}) = \{p\}$ (这里只展示了部分赋值, 在完成上述赋值后, 其他世界的赋值可以任意). 那么我们有:
+    \begin{align*}
+        \F, V, w \models \lnot \Box p, \text{ 但}~ \F, V, w \not\models \Box\lnot\Box p
+    \end{align*}
+    注: 这里$v$与$k$可以是同一个世界, 使用相同的赋值策略即可. 综上所述, 待证对应成立. \ed
+\end{question}
+
+\begin{question}{2 (40分)}
+    \begin{enumerate}[label=(\arabic*).]
+        \item $W  = \{(m,n)|0<m<n\le 6, m,n \in \mathbb{N}^+\}$初始知识模型见 \textbf{Figure \ref{fig:original}}, 无方向的连线表示不可区分关系, $h$ 指向何先生, $j$ 指向季小姐. 
+        \begin{figure}[htbp] % 使用 [H] 确保图表固定在当前位置
+            \centering
+            % https://q.uiver.app/#q=WzAsMTUsWzEsMCwiKDMsMikiXSxbMiwxLCIoNSwyKSJdLFswLDAsIig0LDEpIl0sWzMsMCwiKDUsMSkiXSxbNCwwLCIoNCwyKSJdLFszLDEsIig0LDMpIl0sWzEsMSwiKDYsMSkiXSxbMCwyLCIoNiwzKSJdLFsxLDIsIig1LDQpIl0sWzQsMiwiKDUsMykiXSxbMywyLCIoNiwyKSJdLFsyLDAsIigyLDEpIl0sWzIsMiwiKDMsMSkiXSxbMCwxLCIoNiw0KSJdLFs0LDEsIig2LDUpIl0sWzIsMCwiaCIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMyw0LCJoIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs2LDEsImgiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEsNSwiaCIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMCw2LCJqIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs3LDgsImgiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEwLDksImgiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzUsMTAsImoiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzYsNSwiaCIsMSx7ImN1cnZlIjozLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d
+            \[\begin{tikzcd}
+                {(1,4)} & {(2,3)} & {(1,2)} & {(1,5)} & {(2,4)} \\
+                {(4,6)} & {(1,6)} & {(2,5)} & {(3,4)} & {(5,6)} \\
+                {(3,6)} & {(4,5)} & {(1,3)} & {(2,6)} & {(3,5)}
+                \arrow["h", no head, from=1-1, to=1-2]
+                \arrow["j", no head, from=1-2, to=2-2]
+                \arrow["h", no head, from=1-4, to=1-5]
+                \arrow["h", no head, from=2-2, to=2-3]
+                \arrow["h"{description}, curve={height=18pt}, no head, from=2-2, to=2-4]
+                \arrow["h", no head, from=2-3, to=2-4]
+                \arrow["j", no head, from=2-4, to=3-4]
+                \arrow["h", no head, from=3-1, to=3-2]
+                \arrow["h", no head, from=3-4, to=3-5]
+            \end{tikzcd}\]
+            \caption{初始状态的知识模型}
+            \label{fig:original}
+        \end{figure}
+        \item 何先生第一句话对应的知识逻辑公式为:
+        \begin{align*}
+            \chi = \bigwedge_{(m,n)} (\lnot \K_h q_{m,n}) 
+        \end{align*}
+        即对于任意一个世界, 何先生不知道真实世界是$(m,n)$. 
+        由于在$(1,2)$, $(1,3)$, $(4,6)$, $(5,6)$这四个世界上不满足$\chi$,
+        此后知识模型为
+        \begin{figure}[htbp] % 使用 [H] 确保图表固定在当前位置
+            \centering
+            \[\begin{tikzcd}
+                {(1,4)} & {(2,3)} &  & {(1,5)} & {(2,4)} \\
+                 & {(1,6)} & {(2,5)} & {(3,4)} &  \\
+                {(3,6)} & {(4,5)} &  & {(2,6)} & {(3,5)}
+                \arrow["h", no head, from=1-1, to=1-2]
+                \arrow["j", no head, from=1-2, to=2-2]
+                \arrow["h", no head, from=1-4, to=1-5]
+                \arrow["h", no head, from=2-2, to=2-3]
+                \arrow["h"{description}, curve={height=18pt}, no head, from=2-2, to=2-4]
+                \arrow["h", no head, from=2-3, to=2-4]
+                \arrow["j", no head, from=2-4, to=3-4]
+                \arrow["h", no head, from=3-1, to=3-2]
+                \arrow["h", no head, from=3-4, to=3-5]
+            \end{tikzcd}\]
+            \caption{何先生第一句话后的知识模型}
+            \label{fig:step1}
+        \end{figure}
+    \item 对应知识模型为:
+    \begin{figure}[htbp] % 使用 [H] 确保图表固定在当前位置
+        \centering
+        \[\begin{tikzcd}
+            {(2,3)} & {(1,6)} & {(3,4)} & {(2,6)} 
+            \arrow["j", no head, from=1-1, to=1-2]
+            \arrow["h", no head, from=1-2, to=1-3]
+            \arrow["j", no head, from=1-3, to=1-4]
+        \end{tikzcd}\]
+        \caption{季小姐第一句话后的知识模型}
+        \label{fig:step2}
+    \end{figure}
+    \item 何先生第二句话后的知识模型为: 
+    \begin{align*}
+        (2,3) \quad (2,6)
+    \end{align*}
+    可能的两个数为 $(2,3)$或$(2,6)$.
+    \end{enumerate}
+    \ed
+\end{question}
+
+\newpage
+\begin{question}{3 (20分)}
+    依次解答如下: 
+    \begin{itemize}
+        \item 二阶无知定义为 $\I\I p := \I(\I p) = \lnot \K(\I p) \land \lnot \K(\lnot \I p)$. 考虑下面这个点模型 $\mathcal{M}, w_0$:
+        % https://q.uiver.app/#q=WzAsMyxbMSwwLCJcXGJveGVke3dfMDpwfSJdLFswLDEsIlxcYm94ZWR7d18xOlxcbG5vdCBwfSJdLFsyLDEsIlxcYm94ZWR7d18yOlxcbG5vdCBwfSJdLFswLDBdLFsxLDEsIiIsMix7InJhZGl1cyI6LTN9XSxbMiwyLCIiLDAseyJyYWRpdXMiOi0zfV0sWzAsMV0sWzAsMl1d
+        \[\begin{tikzcd}
+            & {\boxed{w_0:p}} \\
+            {\boxed{w_1:p}} && {\boxed{w_2:\lnot p}}
+            \arrow[from=1-2, to=1-2, loop, in=55, out=125, distance=10mm]
+            \arrow[from=1-2, to=2-1]
+            \arrow[from=1-2, to=2-3]
+            \arrow[from=2-1, to=2-1, loop, in=305, out=235, distance=10mm]
+            \arrow[from=2-3, to=2-3, loop, in=305, out=235, distance=10mm]
+        \end{tikzcd}\]
+        其中世界集 $W = \{w_0,w_1, w_2\}$, 可达关系为 $\{(w_0, w_0), (w_0, w_1), (w_0, w_2), (w_1, w_1), (w_2, w_2)\}$.
+        赋值为$V(w_0) = \{p\}$, $V(w_1) = \{p\}$, $V(w_2) = \{\lnot p\}$. 可以验证上述可达关系满足自反与传递性.
+        \begin{itemize}
+            \item 首先证明 $\mathcal{M}, w_0 \models \I p$: 注意到对于 $w_0$ 可达世界为 $\{v|w_0Rv\} = \{w_0, w_1, w_2\}$, 而 $V(w_1) = \{p\}$, $V(w_2) = \{\lnot p\}$, 
+            因此有 $\mathcal{M}, w_0 \models \lnot \K p$. 类似的有 $\mathcal{M}, w_0 \models \lnot \K(\lnot p)$. 故 $\mathcal{M}, w_0 \models \I p$.
+            \item 又由于$w_1$的可达世界为 $w_1$ 且 $V(w_1) = \{p\}$, 故 $\mathcal{M}, w_1 \models \K p$, 进而有 $\mathcal{M}, w_1 \not\models \I p$.
+            类似的我们有 $\mathcal{M}, w_2 \models \K(\lnot p)$, 进而有 $\mathcal{M}, w_2 \not\models \I p$.
+        \end{itemize}
+        现在我们证明 $\mathcal{M}, w_0 \models \I\I p$: 由于 $\mathcal{M}, w_0 \models \I p$, 且 $\mathcal{M}, w_1 \not\models \I p$, $\mathcal{M}, w_2 \not\models \I p$, 
+        即并非所有$w_0$ 的可达世界都满足 $\I p$, 同理并非所有$w_0$ 的可达世界都满足 $\lnot \I p$. 故 
+        \begin{align*}
+            \mathcal{M}, w_0 \models \lnot\K(\I p) \land \lnot\K(\lnot \I p) \Leftrightarrow \mathcal{M}, w_0 \models \I\I p
+        \end{align*}
+        \item 对于任意一个点模型 $\M, w \models \I\I p$, 那么有 $\M, w \models \lnot\K\lnot \I p$, 故存在 $u: wRu$ 使得 $\M, u \models \I p$.
+        而 $\M, u \models \I p \Leftrightarrow \M, u \models \lnot\K p \land \lnot\K(\lnot p)$, 即
+        \begin{gather*}
+            \text{存在}~ u_1: uRu_1 \text{ 使得}~ \M, u_1 \models p \\
+            \text{存在}~ u_2: uRu_2 \text{ 使得}~ \M, u_2 \models \lnot p
+        \end{gather*}
+        由传递性知, $wRu_1$且$wRu_2$. 故 
+        \begin{align*}
+            \M, w \models \lnot\K p \land \lnot\K(\lnot p) \Leftrightarrow \M, w \models \I p
+        \end{align*}
+        因此, 每一个每个二阶无知 $\I\I p$ 的点模型也都是一阶无知 $\I p$ 的点模型.
+        \item 假设存在一个点模型 $\mathcal{M}, w$ 使得 $\mathcal{M}, w \models \K\I\I p$, 那么对于任意 $v: wRv$, 都有 $\mathcal{M}, v \models \I\I p$.
+        由于考虑的关系是自反的, 因此有 $wRw$, 那么$\M, w \models \I\I p$, 即
+        \begin{align*}
+            \M, w \models \lnot\K\I p \land \lnot\K(\lnot \I p) 
+        \end{align*}
+        那么存在 $u_1, u_2$ 使得 $wRu_1$,$wRu_2$, 且
+        \begin{align}
+            \label{eq:1}
+            \M, u_1 \models \I p, \quad \M, u_2 \models \lnot \I p
+        \end{align}
+        而由(2)知每个二阶无知 $\I\I p$ 的点模型也都是一阶无知 $\I p$ 的点模型, 故对于任意$v: wRv$都有 $\M, v \models \I p$.
+        这与式\eqref{eq:1}矛盾. 故$\K\I\I p$的没有点模型, 即二阶无知不可知.
+    \end{itemize}
+    \ed
+\end{question}
+
+\end{document}
